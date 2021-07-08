@@ -5,6 +5,22 @@
     <title>automactic</title>
 </head>
 <body>
-Hello, world!
+
+<form action="post">
+    {% csrf_token %}
+    <label for="id">ID:</label>
+    <input type="text" name="id" required>
+    <br>
+
+    <label for="token">Access Token:</label>
+    <input type="text" name="token" required>
+    <br>
+
+    <label for="token">Device Name:</label>
+    <input type="text" name="device_name">
+
+    <button type="submit">Submit</button>
+</form>
+
 </body>
 </html>
