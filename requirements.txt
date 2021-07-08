@@ -1,0 +1,5 @@
+python-dotenv
+Django>=3.2.0
+daphne
+django-macaddress
+django-ipware
