@@ -84,11 +84,21 @@ WSGI_APPLICATION = 'automactic.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'dev': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    # 'prod': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.environ.get('AMAC_POSTGRES_DB_NAME'),
+    #     'USER': os.environ.get('AMAC_POSTGRES_USERNAME'),
+    #     'PASSWORD': os.environ.get('AMAC_POSTGRES_PASSWORD'),
+    #     'HOST': os.environ.get('AMAC_POSTGRES_HOST'),
+    #     'PORT:': os.environ.get('AMAC_POSTGRES_PORT'),
+    # },
 }
+
+DATABASES['default'] = DATABASES['dev' if DEBUG else 'prod']
 
 
 # Password validation
@@ -125,6 +135,8 @@ USE_TZ = True
 
 FIXTURE_DIRS = [BASE_DIR / 'fixtures']
 
+AUTH_USER_MODEL = 'login.User'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -154,17 +166,17 @@ logging.config.dictConfig({
     'disable_existing_loggers': False,
     'formatters': {
         'standard': {
-            'format': '%(asctime)-15s | %(name)-26s | %(levelname)-8s: %(message)s',
+            'format': '%(asctime)-15s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
         'standard_nodate': {
-            'format': '%(asctime)-8s | %(process)-6s | %(name)-26s | %(levelname)-8s: %(message)s',
+            'format': '%(asctime)-8s | %(process)-6s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         }
     },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'formatter': 'standard',
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',

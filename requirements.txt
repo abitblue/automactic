@@ -1,5 +1,6 @@
 python-dotenv
 Django>=3.2.0
 daphne
+psycopg2
 django-macaddress
 django-ipware
