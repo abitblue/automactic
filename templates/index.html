@@ -6,20 +6,10 @@
 </head>
 <body>
 
-<form action="post">
+<form action="/" method="post">
     {% csrf_token %}
-    <label for="id">ID:</label>
-    <input type="text" name="id" required>
-    <br>
-
-    <label for="token">Access Token:</label>
-    <input type="text" name="token" required>
-    <br>
-
-    <label for="token">Device Name:</label>
-    <input type="text" name="device_name">
-
-    <button type="submit">Submit</button>
+    {{ form }}
+    <input type="submit" value="Submit">
 </form>
 
 </body>

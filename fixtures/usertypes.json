@@ -3,6 +3,17 @@
     "model": "login.usertype",
     "pk": 1,
     "fields": {
+      "name": "Sentinel",
+      "disable_in": null,
+      "device_limit": null,
+      "device_validity_period": null,
+      "modified_warning_threshold": null
+    }
+  },
+  {
+    "model": "login.usertype",
+    "pk": 2,
+    "fields": {
       "name": "Student",
       "disable_in": "1460 00:00:00",
       "device_limit": 1,
@@ -12,7 +23,7 @@
   },
   {
     "model": "login.usertype",
-    "pk": 2,
+    "pk": 3,
     "fields": {
       "name": "Staff",
       "disable_in": null,
@@ -23,7 +34,7 @@
   },
   {
     "model": "login.usertype",
-    "pk": 3,
+    "pk": 4,
     "fields": {
       "name": "Guest",
       "disable_in": null,
