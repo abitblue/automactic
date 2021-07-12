@@ -16,10 +16,12 @@ class LoginConfig(AppConfig):
     def ready(self):
         logger.info('Starting automactic service')
         if all(x in connection.introspection.table_names() for x in ['login_usertype', 'login_user']):
-            from .models import User
+            from .models import User, UserType
+            if not UserType.objects.filter(pk=1).exists():
+                return
+
             logger.debug('Creating superuser if it does not exist')
             try:
-
                 assert os.environ.get('AMAC_SUPERUSER_USERNAME') is not None, 'Undefined: AMAC_SUPERUSER_USERNAME'
                 assert os.environ.get('AMAC_SUPERUSER_PASSWORD') is not None, 'Undefined: AMAC_SUPERUSER_PASSWORD'
 
