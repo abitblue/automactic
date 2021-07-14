@@ -28,12 +28,27 @@ class Index(View):
         return HttpResponseRedirect('/')
 
 
+class Homepage(View):
+    template_name = 'instructions.html'
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        print("JKSLDJASA")
+        return render(request, self.template_name, {'form': DeviceForm()})
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        form = DeviceForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+        else:
+            return render(request, self.template_name, {'form': form})
+        return HttpResponseRedirect('/')
+
 class Error(View):
     template_name = 'index.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
         print("JKSLDJASA")
-        return render(request, self.template_name, {'form': DeviceForm()})
+        return render(request, self.template_name)
 
 
 class Success(View):

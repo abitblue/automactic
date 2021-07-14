@@ -71,7 +71,6 @@ class IndexAuthenticationForm(AuthenticationForm):
 
         return self.cleaned_data
 
-
     def confirm_login_allowed(self, user):
         # We have the ability to login by the time we reach here in the code
         # and can proceed to rate limiting
@@ -142,15 +141,16 @@ class UserChangeForm(forms.ModelForm):
         fields = '__all__'
         field_classes = {'username': UsernameField}
 
+
 class DeviceForm(forms.Form):
-    device_choices_1 = [
-        ('placeholder', 'Select'),
+    device_types = [
+        ('', 'Select'),
         ('lapcomp', 'Laptop/Computer'),
         ('phonetab', 'Phone/Tablet')
     ]
 
-    device_choices_2 = [
-        ('placeholder', 'Select'),
+    device_oses = [
+        ('', 'Select'),
         ('l_windows', 'Windows'),
         ('l_mac', 'Macintosh'),
         ('p_ios', 'iOS/iPadOS'),
@@ -158,8 +158,8 @@ class DeviceForm(forms.Form):
         ('other', 'Other'),
     ]
 
-    device_type =forms.ChoiceField(choices=device_choices_1)
-    device_os = forms.ChoiceField(choices=device_choices_2)
+    device_type = forms.ChoiceField(choices=device_types, label="I have a ", label_suffix="", error_messages={'required': 'Please select a device type.'})
+    device_os = forms.ChoiceField(choices=device_oses, label="running on", label_suffix="", error_messages={'required': 'Please select a device os.'})
 
     class Media:
         js = ('deviceforms.js',)

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>automactic</title>
+</head>
+<body>
+
+<form action="/" method="post">
+    {% csrf_token %}
+    {{ form }}
+</form>
+
+{{ form.media }}
+</body>
+</html>

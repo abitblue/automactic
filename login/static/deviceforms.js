@@ -18,5 +18,9 @@ const dynamic_devices = function () {
         change_display(phonetab_device_select, "inline");
         change_display(laptop_device_select, "none");
     })
+    document.querySelector('select[name="device_os"]').addEventListener("change", function() {
+        this.parentElement.submit();
+    })
 }
+
 dynamic_devices()
