@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from netaddr import IPNetwork
 
-from .forms import IndexAuthenticationForm
+from .forms import IndexAuthenticationForm, DeviceForm
 from .models import User, LoginHistory
 from .utils import attach_mac_to_session, restrict_to
 
@@ -32,7 +32,8 @@ class Error(View):
     template_name = 'index.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
-        return render(request, self.template_name)
+        print("JKSLDJASA")
+        return render(request, self.template_name, {'form': DeviceForm()})
 
 
 class Success(View):

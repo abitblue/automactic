@@ -141,3 +141,25 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = '__all__'
         field_classes = {'username': UsernameField}
+
+class DeviceForm(forms.Form):
+    device_choices_1 = [
+        ('placeholder', 'Select'),
+        ('lapcomp', 'Laptop/Computer'),
+        ('phonetab', 'Phone/Tablet')
+    ]
+
+    device_choices_2 = [
+        ('placeholder', 'Select'),
+        ('l_windows', 'Windows'),
+        ('l_mac', 'Macintosh'),
+        ('p_ios', 'iOS/iPadOS'),
+        ('p_android', 'Android'),
+        ('other', 'Other'),
+    ]
+
+    device_type =forms.ChoiceField(choices=device_choices_1)
+    device_os = forms.ChoiceField(choices=device_choices_2)
+
+    class Media:
+        js = ('deviceforms.js',)
