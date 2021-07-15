@@ -1,9 +1,26 @@
+import os
+from functools import wraps
 from pathlib import Path
 
 from django.conf import settings
 from django.http import HttpRequest, HttpResponseForbidden
 from ipware import get_client_ip
 from netaddr import IPNetwork
+
+from interface.cppm_api import CppmApi
+
+
+def mutually_exclusive(keyword, *keywords):
+    keywords = (keyword,) + keywords
+    def wrapper(func):
+        @wraps(func)
+        def inner(*args, **kwargs):
+            if sum(k in keywords for k in kwargs) != 1:
+                raise TypeError('You must specify exactly one of {}'.format(', '.join(keywords)))
+            return func(*args, **kwargs)
+
+        return inner
+    return wrapper
 
 
 def attach_mac_to_session(view):
