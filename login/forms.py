@@ -162,4 +162,7 @@ class DeviceForm(forms.Form):
     device_os = forms.ChoiceField(choices=device_oses, label="running on", label_suffix="", error_messages={'required': 'Please select a device os.'})
 
     class Media:
+        css = {
+            'all': ('style.css',)
+        }
         js = ('deviceforms.js',)

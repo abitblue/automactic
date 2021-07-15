@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from netaddr import IPNetwork
@@ -29,7 +30,7 @@ class Index(View):
 
 
 class Homepage(View):
-    template_name = 'instructions.html'
+    template_name = 'index.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
         print("JKSLDJASA")
@@ -41,7 +42,13 @@ class Homepage(View):
             print(form.cleaned_data)
         else:
             return render(request, self.template_name, {'form': form})
-        return HttpResponseRedirect('/')
+
+        request.session['device_selection_formdata'] = request.POST
+        os = form.cleaned_data['device_os']
+        if os != 'other':
+            os = os[2:]
+        return redirect(reverse('instructions') + f'?os={os}')
+
 
 class Error(View):
     template_name = 'index.html'
@@ -56,3 +63,24 @@ class Success(View):
 
     def get(self, request: HttpRequest, *args, **kwargs):
         return render(request, self.template_name)
+
+
+class InstructionsPage(View):
+    template_name = 'instructions.html'
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        device_os = request.GET.get('os', None)
+        if device_os is None:
+            return redirect('index')
+
+        if device_os == 'mac':
+            return redirect('login')
+
+        form_data = request.session.get('device_selection_formdata', None)
+        # print(request.session.items())
+        return render(request, self.template_name, {
+            'form': DeviceForm(form_data) if form_data is not None else DeviceForm(),
+            'device_os': device_os,
+        })
+
+

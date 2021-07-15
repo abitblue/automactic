@@ -3,14 +3,31 @@
 <head>
     {% load static %}
     <meta charset="UTF-8">
-    <title>automactic</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructions-MAC</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-
 <form action="/" method="post">
     {% csrf_token %}
     {{ form }}
 </form>
+
+{% if device_os == "other" %}
+    {% include 'device_instructions/other.html' %}
+{% else %}
+    {% if device_os == "windows" %}
+        {% include 'device_instructions/windows.html' %}
+    {% elif device_os == 'mac' %}
+    {% elif device_os == 'ios' %}
+        {% include 'device_instructions/ios.html' %}
+    {% elif device_os == 'android' %}
+        {% include 'device_instructions/android.html' %}
+
+
+    {% endif %}
+{% endif %}
 
 {{ form.media }}
 </body>
