@@ -1,4 +1,3 @@
-import os
 from functools import wraps
 from pathlib import Path
 
@@ -6,8 +5,6 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponseForbidden
 from ipware import get_client_ip
 from netaddr import IPNetwork
-
-from interface.cppm_api import CppmApi
 
 
 def mutually_exclusive(keyword, *keywords):
