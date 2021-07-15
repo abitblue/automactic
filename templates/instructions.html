@@ -9,25 +9,33 @@
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-<form action="/" method="post">
-    {% csrf_token %}
-    {{ form }}
-</form>
+<div class="header-pictures">
+    <img src="{% static 'logo1.svg' %}">
+    <p class="header-para">Wi-Fi Device Registration</p>
+    <img src="{% static 'logo2.svg' %}">
+</div>
+<div class="form-sentence">
+    <form action="/" method="post">
+        {% csrf_token %}
+        {{ form }}
+    </form>
+</div>
 
-{% if device_os == "other" %}
-    {% include 'device_instructions/other.html' %}
-{% else %}
-    {% if device_os == "windows" %}
-        {% include 'device_instructions/windows.html' %}
-    {% elif device_os == 'mac' %}
-    {% elif device_os == 'ios' %}
-        {% include 'device_instructions/ios.html' %}
-    {% elif device_os == 'android' %}
-        {% include 'device_instructions/android.html' %}
+<div class="instructions-txt">
+    {% if device_os == "other" %}
+        {% include 'device_instructions/other.html' %}
+    {% else %}
+        {% if device_os == "windows" %}
+            {% include 'device_instructions/windows.html' %}
+        {% elif device_os == 'mac' %}
+        {% elif device_os == 'ios' %}
+            {% include 'device_instructions/ios.html' %}
+        {% elif device_os == 'android' %}
+            {% include 'device_instructions/android.html' %}
+            </div>
 
-
+        {% endif %}
     {% endif %}
-{% endif %}
 
 {{ form.media }}
 </body>

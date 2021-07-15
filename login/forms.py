@@ -143,26 +143,21 @@ class UserChangeForm(forms.ModelForm):
 
 
 class DeviceForm(forms.Form):
-    device_types = [
-        ('', 'Select'),
-        ('lapcomp', 'Laptop/Computer'),
-        ('phonetab', 'Phone/Tablet')
-    ]
-
     device_oses = [
         ('', 'Select'),
-        ('l_windows', 'Windows'),
-        ('l_mac', 'Macintosh'),
-        ('p_ios', 'iOS/iPadOS'),
-        ('p_android', 'Android'),
+        ('windows', 'Windows'),
+        ('mac', 'Macintosh'),
+        ('ios', 'iOS/iPadOS'),
+        ('android', 'Android'),
         ('other', 'Other'),
     ]
 
-    device_type = forms.ChoiceField(choices=device_types, label="I have a ", label_suffix="", error_messages={'required': 'Please select a device type.'})
-    device_os = forms.ChoiceField(choices=device_oses, label="running on", label_suffix="", error_messages={'required': 'Please select a device os.'})
+    device_os = forms.ChoiceField(choices=device_oses, label="I am using", label_suffix=" ", error_messages={'required': 'Please select a device os.'})
 
     class Media:
         css = {
             'all': ('style.css',)
         }
-        js = ('deviceforms.js',)
+        js = (
+            'devicechoices.js',
+        )

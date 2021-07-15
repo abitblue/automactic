@@ -43,10 +43,7 @@ class Homepage(View):
         else:
             return render(request, self.template_name, {'form': form})
 
-        request.session['device_selection_formdata'] = request.POST
         os = form.cleaned_data['device_os']
-        if os != 'other':
-            os = os[2:]
         return redirect(reverse('instructions') + f'?os={os}')
 
 
@@ -76,10 +73,10 @@ class InstructionsPage(View):
         if device_os == 'mac':
             return redirect('login')
 
-        form_data = request.session.get('device_selection_formdata', None)
-        # print(request.session.items())
         return render(request, self.template_name, {
-            'form': DeviceForm(form_data) if form_data is not None else DeviceForm(),
+            'form': DeviceForm({
+                'device_os': device_os
+            }),
             'device_os': device_os,
         })
 
