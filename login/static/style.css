@@ -1,0 +1,19 @@
+
+html,
+body {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 1%;
+    font-size: 1.6rem;
+}
+
+.para-head {
+  font-size: 1.6rem;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+.para-body {
+  font-size: 0.8rem;
+  font-weight: 200;
+}
