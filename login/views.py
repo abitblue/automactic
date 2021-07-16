@@ -12,7 +12,7 @@ from .utils import attach_mac_to_session, restrict_to
 
 @method_decorator(restrict_to(IPNetwork('192.0.2.0/23')), name='dispatch')
 class Index(View):
-    template_name = 'index.html'
+    template_name = 'login_page.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
         print(dict(request.session))
@@ -79,5 +79,3 @@ class InstructionsPage(View):
             }),
             'device_os': device_os,
         })
-
-

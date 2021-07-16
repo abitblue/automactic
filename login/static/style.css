@@ -67,6 +67,52 @@ select {
     margin-top: 5rem;
 }
 
+.button {
+  background-color: #c4b55f;
+  text-align: center;
+  text-transform: uppercase;
+  border: none;
+  font-size: 3vh;
+  padding: 1vw;
+  width: 35vh;
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  display: inline-block;
+  padding-left: 0;
+  padding-right: 0;
+  border-radius: 1000vh;
+}
+
+.button .buttonSpan {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.button .buttonSpan:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  top: 0;
+  right: -20px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.button:hover .buttonSpan {
+  padding-right: 25px;
+}
+
+.button:hover .buttonSpan:after {
+  opacity: 1;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  right: 0;
+}
+
 @media only screen and (min-width: 1280px) {
     .header-para {
         font-size: 3rem;
@@ -74,5 +120,11 @@ select {
 
     .form-sentence {
         font-size: 2rem;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    img {
+        width: 20vw;
     }
 }

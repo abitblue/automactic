@@ -36,7 +36,21 @@
 
         {% endif %}
     {% endif %}
+<button class="button" id="loginSubmit" onclick="location.href = '/login'"><span class="buttonSpan">Continue</span></button>
 
+<script>
+    document.getElementById("loginSubmit").style.display = "none";
+
+    function showButton() {
+            document.getElementById("loginSubmit").style.display = "inline";
+        }
+
+    function Function() {
+            window.location = "instructions.html"
+        }
+
+    setTimeout(showButton, 1000);
+</script>
 {{ form.media }}
 </body>
 </html>
