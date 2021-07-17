@@ -1,28 +1,130 @@
-
-html,
-body {
+html {
+    --color-techgold: #C4B55F;
     box-sizing: border-box;
-    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
     margin: 1%;
-    font-size: 1.6rem;
+}
+
+.centerDiv {
+    text-align: center;
+    margin: auto;
+    width: 85%;
 }
 
 img {
-    width: 15vw;
+    height: 1.5em;
+    vertical-align: middle;
 }
 
-.header-pictures {
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin-bottom: 1rem;
+.header {
+    text-align: left;
+    border-bottom: 1px solid #222222;
+    margin-bottom: 1.2em;
+    font-size: 4.5vh;
+    vertical-align: middle;
 }
 
-.header-para {
-    text-align: center;
-    font-size: 7vw;
+.headerText {
+    font-size: 4.5vh;
+    font-weight: bold;
+    margin: 1vh 1vh 2.25vh 1vh;
+    display: inline-block;
 }
+
+@media only screen and (max-width: 480px) {
+    body {
+        margin: 3% 1% 1%;
+    }
+
+    .headerText {
+        font-size: 3.5vh;
+    }
+}
+
+.bodyText {
+    font-size: 2.5vh;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*align-items: center;*/
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.button2{
+    margin-bottom: 4vh !important;
+}
+
+.bodyTextInsignificant {
+    color: gray;
+    font-size: 1.5vh !important;
+}
+
+.footerStroke {
+    margin: 5vh auto auto;
+    width: 60vw;
+    border-radius: 1000px;
+    height: 1vh;
+    background-color: palegoldenrod;
+}
+
+.footerText{
+    margin-bottom: 0.5vh;
+    margin-top: 0.5vh;
+    color: darkgrey;
+    font-size: 1.5vh;
+}
+
+.lastFooter{
+    margin-bottom: 3vh;
+}
+
+.innerWidth {
+  max-width: 37.5rem;
+  margin: auto;
+}
+
+h1.login {
+  font-size: 2rem;
+  margin: 40px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-weight: 400;
+}
+
+.formField {
+  background: none;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid;
+  padding: 10px 6px;
+  font-size: 14px;
+  margin: 20px 0;
+  min-width: 80%;
+  max-width: 80%;
+}
+
+
+.formLeftAligned {
+    max-width: 80%;
+    margin: auto;
+    text-align: left;
+}
+
+.errorText {
+    color: red;
+}
+
+.requiredText {
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    text-align: right;
+}
+
 
 select {
     background-color: transparent;
@@ -68,20 +170,18 @@ select {
 }
 
 .button {
-  background-color: #c4b55f;
+  background-color: var(--color-techgold);
   text-align: center;
-  text-transform: uppercase;
   border: none;
   font-size: 3vh;
-  padding: 1vw;
   width: 35vh;
   cursor: pointer;
   outline: none;
   text-decoration: none;
   display: inline-block;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 1vw 0;
   border-radius: 1000vh;
+  margin: 1vh 1vw;
 }
 
 .button .buttonSpan {
@@ -111,20 +211,4 @@ select {
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   right: 0;
-}
-
-@media only screen and (min-width: 1280px) {
-    .header-para {
-        font-size: 3rem;
-    }
-
-    .form-sentence {
-        font-size: 2rem;
-    }
-}
-
-@media only screen and (max-width: 500px) {
-    img {
-        width: 20vw;
-    }
 }
