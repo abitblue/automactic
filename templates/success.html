@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Instructions{% endblock %}
+
+{% block content %}
+
+    <header class="headerText">SUCCESS</header>
+    <header class="header-para">Your device has been successfully registered.</header>
+
+    <p class="bodyText">What to Do Next</p>
+    <p class="header-para">1) <b>Disconnect</b> from JoinForWifi</p>
+    <p class="header-para">2) Copy the following password and connect to <b>ncpsp</b></p>
+    <p class="bodyText errorText"><b>MAKE SURE YOU DISABLE RANDOMIZE MAC ADDRESS AGAIN ON NCPSP OR YOU CANNOT USE THE WIFI</b></p>
+    <input type="text" value="605D785001@rackID78R605" id="wifipass">
+    <br>
+    <button class="button" onclick="Copy()">Copy</button>
+    <script>
+        function Copy() {
+            const copyText = document.getElementById("wifipass");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+
+        }
+    </script>
+{% endblock %}

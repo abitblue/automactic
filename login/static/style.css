@@ -217,8 +217,23 @@ select {
   right: 0;
 }
 
+#wifipass {
+    width: 15vw;
+    height: 8vh;
+    border-radius: 3rem;
+    font-size: 1rem;
+    text-align: center;
+}
+
 @media screen and (max-width: 1300px) {
     .instructions-img {
         width: 50vw;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    #wifipass {
+        width: 35vw;
+        font-size: 0.8rem;
     }
 }
