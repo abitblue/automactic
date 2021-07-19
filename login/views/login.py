@@ -66,7 +66,7 @@ class Login(View):
                 user.device_modified_count += 1
                 user.save()
 
-                if user.device_modified_count >= user.device_modified_warning_count:
+                if user.device_modified_warning_count is not None and user.device_modified_count >= user.device_modified_warning_count:
                     try:
                         msg = f'This is an automated message.\n\nThe user: {user} has registered {user.device_modified_count} devices.' \
                               f'This email triggers after f{user.device_modified_count} registrations.' \
@@ -87,10 +87,10 @@ class Login(View):
         if user_type != 'student' or registered['count'] == 0:
             exp_time = 0
             if user.device_validity_period is not None:
-                exp_time = timezone.now() + timedelta(user.device_validity_period)
+                exp_time = timezone.now() + user.device_validity_period
             return run_cppm_cmd(Clearpass.create_device, name=name, mac=mac_addr,
                                 notes=form.cleaned_data.get('device_name'), expire_time=exp_time)
 
         else:
-            return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']), mac=mac_addr,
-                                data={'notes': device_name})
+            return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']),
+                                data={'notes': device_name, 'mac': mac_addr})

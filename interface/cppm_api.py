@@ -108,7 +108,7 @@ class CppmApi:
         return await self._base_action('POST', '/device', params={'change_of_authorization': True}, data={
             'visitor_name': name,
             'mac': mac.format(dialect=mac_bare),
-            'expire_time': int(expire_time.timestamp()) if isinstance(expire_action, datetime) else expire_time,
+            'expire_time': int(expire_time.timestamp()) if isinstance(expire_time, datetime) else expire_time,
             "do_expire": expire_action,
             'role_id': 2,  # Guest
             'enabled': True,
