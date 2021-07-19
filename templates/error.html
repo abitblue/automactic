@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+    <div class="formLeftAligned">
+
+
+    <h1>Uh oh. {{ witty_line }}</h1>
+    <h2> Error: {{ error_message }} </h2>
+
+    <p>We were unable to process your request. Please try again later, or get in contact with relevant administration if
+        you believe this was a mistake.</p>
+    <p>Report any problems to Mr. Whalen in Room C56. Be prepared to get yelled at if you do.</p>
+
+    <br>
+    <a href="{% url 'index' %}">
+        <button><span class="buttonSpan">Go Back</span></button>
+    </a>
+
+    </div>
+{% endblock %}
+
+{# Remove footer entirely #}
+{% block footer %}{% endblock %}

@@ -1,34 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instructions-MAC</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}">
-</head>
-<body>
-<form action="/" method="post">
-    {% csrf_token %}
-    {{ form }}
-</form>
+{% extends "base.html" %}
 
-{% if device_os == "other" %}
-    {% include 'device_instructions/other.html' %}
-{% else %}
-    {% if device_os == "windows" %}
-        {% include 'device_instructions/windows.html' %}
-    {% elif device_os == 'mac' %}
-    {% elif device_os == 'ios' %}
-        {% include 'device_instructions/ios.html' %}
-    {% elif device_os == 'android' %}
-        {% include 'device_instructions/android.html' %}
+{% block title %}Instructions{% endblock %}
 
+{% block content %}
 
+    {% if not device_os %}
+        <p class="bodyText">We have detected that your device is using a randomized MAC address. <br> You cannot proceed
+            without disabling this. Please select your
+            device type for instructions on disabling.</p>
+        <span class="headerText">I am using...</span>
+        <br>
+
+        <a href="{% url 'instructions' %}?os=windows">
+            <button class="button"><span class="buttonSpan">Windows</span></button>
+        </a>
+        <br>
+        <a href="{% url 'instructions' %}?os=mac">
+            <button class="button"><span class="buttonSpan">Macintosh</span></button>
+        </a>
+        <br>
+        <a href="{% url 'instructions' %}?os=ios">
+            <button class="button"><span class="buttonSpan">iOS / iPadOS</span></button>
+        </a>
+        <br>
+        <a href="{% url 'instructions' %}?os=android">
+            <button class="button2 button"><span class="buttonSpan">Android</span></button>
+        </a>
+
+        <br>
+        <span class="bodyText bodyTextInsignificant gray smallText">If your device type is not listed above, please ensure MAC Address randomization is disabled on your device.
+        Once that is done, please click <a href="{% url 'index' %}">here</a> to reload the page.
+    </span>
+
+    {% else %}
+        {% if device_os == "windows" %}
+            {% include 'device_instructions/windows.html' %}
+        {% elif device_os == 'mac' %}
+            macOS does not supply a method of MAC randomization by default.
+            If you use a third party application to do this, or have manually done so, please use the original MAC address of the device before proceeding.
+        {% elif device_os == 'ios' %}
+            {% include 'device_instructions/ios.html' %}
+        {% elif device_os == 'android' %}
+            {% include 'device_instructions/android.html' %}
+        {% else %}
+            <span class="bodyText">Unknown device type: {{ device_os }}</span>
+        {% endif %}
+
+        <br>
+        <a href="{% url 'instructions' %}"><button class="button"><span class="buttonSpan">Go Back</span></button></a>
+        <a href="{% url 'index' %}"><button class="button"><span class="buttonSpan">Continue</span></button></a>
     {% endif %}
-{% endif %}
 
-{{ form.media }}
-</body>
-</html>
+{% endblock %}

@@ -107,6 +107,7 @@ class User(AbstractBaseUser):
     def save(self, *args, **kwargs):
         if self._state.adding and self.disable_on is None and self.type.disable_in is not None:
             self.disable_on = timezone.now() + self.type.disable_in
+        self.username = self.username.lower()
         super().save(*args, **kwargs)
 
     class Meta:

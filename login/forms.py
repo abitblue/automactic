@@ -18,13 +18,14 @@ class IndexAuthenticationForm(AuthenticationForm):
         super().__init__(request, *args, **kwargs)
         self.fields['username'].label = ''
         self.fields['password'].label = ''
-        self.fields['username'].widget.attrs['placeholder'] = 'ID'
-        self.fields['password'].widget.attrs['placeholder'] = 'Token'
+        self.fields['username'].widget.attrs['placeholder'] = 'ID *'
+        self.fields['password'].widget.attrs['placeholder'] = 'Token *'
         self.password_correct = False
 
     error_messages = {
         **AuthenticationForm.error_messages,
-        'rate_limit': 'Too many login attempts. Please try again later.',
+        'invalid_login': "Incorrect username and/or password",
+        'rate_limit': 'Too many attempts. Please try again tomorrow.',
         'mac_missing': 'Unable to determine the MAC address of this device'
     }
 
@@ -33,10 +34,10 @@ class IndexAuthenticationForm(AuthenticationForm):
             return
 
         # Rate Limit - Preventing abuse (rapidly changing devices) and account brute-forcing
-        # Always rate limit if 5 incorrect passwords in an hour
+        # Always rate limit if 5 incorrect passwords in an hour, unless is Guest account
         # No other limit on first 3 successful modifications
         # After that, rate limit to 5 modifications per hour and one unique mac address per 18 hours
-        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > 3
+        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).exclude(user__username__exact='guest').count() > 3
         passwd_per_hour_limit = LoginHistory.objects.filter(user=user, logged_in=False,
                                                             time__gt=timezone.now() - timedelta(
                                                                 hours=1)).count() > 5
@@ -140,29 +141,3 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = '__all__'
         field_classes = {'username': UsernameField}
-
-
-class DeviceForm(forms.Form):
-    device_types = [
-        ('', 'Select'),
-        ('lapcomp', 'Laptop/Computer'),
-        ('phonetab', 'Phone/Tablet')
-    ]
-
-    device_oses = [
-        ('', 'Select'),
-        ('l_windows', 'Windows'),
-        ('l_mac', 'Macintosh'),
-        ('p_ios', 'iOS/iPadOS'),
-        ('p_android', 'Android'),
-        ('other', 'Other'),
-    ]
-
-    device_type = forms.ChoiceField(choices=device_types, label="I have a ", label_suffix="", error_messages={'required': 'Please select a device type.'})
-    device_os = forms.ChoiceField(choices=device_oses, label="running on", label_suffix="", error_messages={'required': 'Please select a device os.'})
-
-    class Media:
-        css = {
-            'all': ('style.css',)
-        }
-        js = ('deviceforms.js',)
