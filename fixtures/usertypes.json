@@ -7,7 +7,7 @@
       "disable_in": null,
       "device_limit": null,
       "device_validity_period": null,
-      "modified_warning_threshold": null
+      "device_modified_warning_count": null
     }
   },
   {
@@ -18,7 +18,7 @@
       "disable_in": "1460 00:00:00",
       "device_limit": 1,
       "device_validity_period": "1460 00:00:00",
-      "modified_warning_threshold": null
+      "device_modified_warning_count": null
     }
   },
   {
@@ -29,7 +29,7 @@
       "disable_in": null,
       "device_limit": null,
       "device_validity_period": null,
-      "modified_warning_threshold": 15
+      "device_modified_warning_count": 15
     }
   },
   {
@@ -40,7 +40,7 @@
       "disable_in": null,
       "device_limit": null,
       "device_validity_period": "1 00:00:00",
-      "modified_warning_threshold": null
+      "device_modified_warning_count": null
     }
   }
 ]
