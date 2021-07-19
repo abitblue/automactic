@@ -31,9 +31,6 @@ class Instructions(View):
         if device_os is None:
             return render(request, self.template_name)
 
-        if device_os == 'mac':
-            return redirect('login')
-
         return render(request, self.template_name, {
             'device_os': device_os,
         })

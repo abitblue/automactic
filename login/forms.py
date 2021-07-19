@@ -34,10 +34,10 @@ class IndexAuthenticationForm(AuthenticationForm):
             return
 
         # Rate Limit - Preventing abuse (rapidly changing devices) and account brute-forcing
-        # Always rate limit if 5 incorrect passwords in an hour
+        # Always rate limit if 5 incorrect passwords in an hour, unless is Guest account
         # No other limit on first 3 successful modifications
         # After that, rate limit to 5 modifications per hour and one unique mac address per 18 hours
-        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > 3
+        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).exclude(user__username__exact='guest').count() > 3
         passwd_per_hour_limit = LoginHistory.objects.filter(user=user, logged_in=False,
                                                             time__gt=timezone.now() - timedelta(
                                                                 hours=1)).count() > 5

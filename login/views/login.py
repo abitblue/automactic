@@ -22,5 +22,21 @@ class Login(View):
         if not form.is_valid():
             LoginHistory.log(user=form.cleaned_data.get('username'), logged_in=form.password_correct)
             return render(request, self.template_name, {'form': form})
+
+        # Clearpass:
+        # Check for devices with the name start with "S:{OSIS}:"/"T:{email}:"/"G:{123}:" and sponsor profile oauth2:automactic
+
+        # If no devices exist or limitless account:
+            # create new device
+        # else: (devices exist and not limitless acct)
+            # if limit == 1, replace old device with new one
+            # elif limit > 1, ask which devices to revoke, if any, and enforce limit if limit reached
+            # else (limit < 1), error, cannot register any devices
+
+        # Construct search
+
+        # If error, show error to user
+        # Else, show success page
+
         # Temporary:
         return redirect(reverse('error') + '?error=success')
