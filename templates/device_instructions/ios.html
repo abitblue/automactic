@@ -1,6 +1,13 @@
+{% load static %}
 <header class="para-head">Instructions for Disabling MAC Address Randomization for iOS/iPadOS Devices</header>
 
-<p class="para-body">- Step 1: Navigate to the settings app of your iOS device.</p>
-<p class="para-body">- Step 2: Click on Wi-Fi</p>
-<p class="para-body">- Step 3: Tap the Information button next to the network</p>
-<p class="para-body">- Step 4: Locate "Private Address" and switch it off</p>
+<p class="bodyText" style="color: red"><b>Make to sure apply these settings to both ncpsp and JoinForWifi</b></p>
+<p class="bodyText"><b>Step 1:</b> Navigate to the settings app of your iOS device.</p>
+<img class="instructions-img" src="{% static 'images/home_settings_ios.jpg' %}">
+<p class="bodyText"><b>Step 2:</b> Click on Wi-Fi</p>
+<img class="instructions-img" src="{% static 'images/wifi_settings_ios.jpg' %}">
+<p class="bodyText"><b>Step 3:</b> Tap the Information button next to JoinForWifi</p>
+<img class="instructions-img" src="{% static 'images/wifi_info_ios.jpg' %}">
+<p class="bodyText"><b>Step 4:</b> Locate "Private Address" and switch it off</p>
+<img class="instructions-img" src="{% static 'images/ios_mac_address.jpg' %}">
+<p class="bodyText" style="color: red"><b>Step 5: Repeat for ncpsp</b></p>

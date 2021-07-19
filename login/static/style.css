@@ -169,6 +169,10 @@ select {
     margin-top: 5rem;
 }
 
+.instructions-img {
+    width: 20vw;
+    height: auto;
+}
 .button {
   background-color: var(--color-techgold);
   text-align: center;
@@ -211,4 +215,10 @@ select {
   opacity: 1;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   right: 0;
+}
+
+@media screen and (max-width: 1300px) {
+    .instructions-img {
+        width: 50vw;
+    }
 }
