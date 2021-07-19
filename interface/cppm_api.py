@@ -2,9 +2,10 @@ import asyncio
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Union
 
 import httpx
+from asgiref.sync import async_to_sync
 from netaddr import EUI, mac_bare
 
 from login.utils import mutually_exclusive
@@ -94,7 +95,9 @@ class CppmApi:
             raise CppmApiException('Multiple devices with same name returned')
         return int(named_device['items'][0]['id'])
 
-    async def create_device(self, name: str, mac: EUI, expire_time: Optional[datetime] = None,
+    @async_to_sync
+    async def create_device(self, name: str, mac: EUI, notes: Optional[str] = None,
+                            expire_time: Optional[Union[datetime, int]] = None,
                             expire_action: int = 2) -> dict:
         # expire_action docs:
         # https://www.arubanetworks.com/techdocs/ClearPass/CPGuest_UG_HTML_6.5/Content/Reference/GuestManagerStandardFields.htm
@@ -105,18 +108,22 @@ class CppmApi:
         return await self._base_action('POST', '/device', params={'change_of_authorization': True}, data={
             'visitor_name': name,
             'mac': mac.format(dialect=mac_bare),
-            'expire_time': int(expire_time.timestamp()),
+            'expire_time': int(expire_time.timestamp()) if isinstance(expire_action, datetime) else expire_time,
             "do_expire": expire_action,
             'role_id': 2,  # Guest
             'enabled': True,
             'start_time': int(datetime.now().astimezone().timestamp()),
+            'notes': '' if notes is None else notes
         })
 
     @mutually_exclusive('name', 'mac')
-    async def get_device(self, name: Optional[str] = None, mac: Optional[EUI] = None, sort='-id'):
+    @async_to_sync
+    async def get_device(self, name: Optional[str] = None, mac: Optional[EUI] = None, sort: str = '-id',
+                         additional_filers: dict = None) -> dict:
         if name is not None:
             return await self._base_action('GET', '/device', params={
-                'filter': json.dumps({'visitor_name': name}),
+                'filter': json.dumps({'visitor_name': name, **additional_filers} if additional_filers is not None else {
+                    'visitor_name': name}),
                 'sort': sort,
                 'calculate_count': True,
                 'limit': 1000,
@@ -126,8 +133,9 @@ class CppmApi:
             return await self._base_action('GET', f'/device/mac/{mac.format(dialect=mac_bare)}')
 
     @mutually_exclusive('device_id', 'name', 'mac')
+    @async_to_sync
     async def update_device(self, device_id: Optional[int] = None, name: Optional[str] = None,
-                            mac: Optional[EUI] = None, data: dict = None):
+                            mac: Optional[EUI] = None, data: dict = None) -> dict:
         if data is None or len(data) == 0:
             raise TypeError('data cannot be empty')
 
@@ -141,8 +149,9 @@ class CppmApi:
                                            params={'change_of_authorization': True}, data=data)
 
     @mutually_exclusive('device_id', 'name', 'mac')
+    @async_to_sync
     async def remove_device(self, device_id: Optional[int] = None, name: Optional[str] = None,
-                            mac: Optional[EUI] = None):
+                            mac: Optional[EUI] = None) -> dict:
         if name is not None:
             device_id = self._get_device_id_from_name(name)
         if device_id is not None:
