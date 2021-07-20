@@ -9,17 +9,17 @@ from django.shortcuts import render, redirect, reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
-from netaddr import IPNetwork
+from netaddr import IPNetwork, EUI, mac_bare
 
 from automactic.settings import EMAIL_RECIPIENTS
 from interface.cppm_api import CppmApiException
 from login.forms import IndexAuthenticationForm
 from login.models import LoginHistory, User, UserType
-from login.utils import restrict_to, attach_mac_to_session
+from login.utils import restrict_to, attach_mac_to_session, MacAddr
 from interface.cppm_iface import Clearpass
 
-
 logger = logging.getLogger('views.login')
+
 
 @method_decorator(restrict_to(IPNetwork('192.168.0.0/16')), name='dispatch')
 class Login(View):
@@ -56,13 +56,13 @@ class Login(View):
         elif user_type == 'staff':
             name = f'T:{user.username}'
 
-        mac_addr = request.session['macaddr']
+        mac_addr = MacAddr.deserialize_from(request)
         device_name = form.cleaned_data.get('device_name')
         registered = Clearpass.get_device(name=name, additional_filers={'sponsor_name': 'oauth2:automactic'})
 
-        def run_cppm_cmd(func, *args, **kwargs):
+        def run_cppm_cmd(func, *func_args, **func_kwargs):
             try:
-                func(*args, **kwargs)
+                func(*func_args, **func_kwargs)
                 user.device_modified_count += 1
                 user.save()
 
@@ -72,7 +72,8 @@ class Login(View):
                               f'This email triggers after f{user.device_modified_count} registrations.' \
                               f'Please check login history for any suspicious activity. ' \
                               f'If none can be found, you may reset the modified count using the administrative actions.'
-                        send_mail('[automactic] Warning: Possible suspicious activity in user device registrations', msg,
+                        send_mail('[automactic] Warning: Possible suspicious activity in user device registrations',
+                                  msg,
                                   None, EMAIL_RECIPIENTS)
                     except smtplib.SMTPException as err:
                         logger.error(err)

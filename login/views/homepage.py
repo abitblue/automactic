@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from netaddr import EUI
 
-from login.utils import attach_mac_to_session, is_locally_administered
+from login.utils import attach_mac_to_session, MacAddr
 
 
 class Index(View):
@@ -14,9 +14,9 @@ class Index(View):
 
     @method_decorator(attach_mac_to_session)
     def get(self, request: HttpRequest, *args, **kwargs):
-        macaddr: Optional[EUI] = request.session['macaddr']
+        macaddr: Optional[EUI] = MacAddr.deserialize_from(request)
 
-        if macaddr is None or is_locally_administered(macaddr):
+        if macaddr is None or MacAddr.is_locally_administered(macaddr):
             return redirect(reverse('login'))
         else:
             return redirect(reverse('instructions'))
