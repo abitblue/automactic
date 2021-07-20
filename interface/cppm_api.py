@@ -10,7 +10,7 @@ from netaddr import EUI, mac_bare
 
 from login.utils import mutually_exclusive
 
-log = logging.getLogger('CppmApi')
+logger = logging.getLogger('CppmApi')
 
 
 class CppmApiException(Exception):
@@ -32,6 +32,10 @@ class CppmApi:
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
+        self._proxies = {
+            'http://': 'http://10.8.0.6:8080',
+            'https://': 'http://10.8.0.6:8080',
+        }
         self._token_syncing.set()
 
     async def get_token(self) -> str:
@@ -45,7 +49,7 @@ class CppmApi:
 
         else:
             self._token_syncing.clear()
-            async with httpx.AsyncClient(base_url=self._base_url, verify=self._ssl_validation,
+            async with httpx.AsyncClient(base_url=self._base_url, verify=self._ssl_validation, proxies=self._proxies,
                                          headers=self._headers) as client:
                 resp = await client.post('/oauth', json={
                     'grant_type': 'client_credentials',
@@ -58,17 +62,17 @@ class CppmApi:
                     self._token_exp = datetime.now().astimezone() + timedelta(seconds=data['expires_in'] - 5)
                 else:
                     msg = 'Unable to obtain Clearpass token: ' + resp.text
-                    log.error(msg)
+                    logger.error(msg)
                     raise CppmApiException(msg)
 
                 self._token_syncing.set()
-                log.debug('Obtained new API token: ' + self._token)
+                logger.debug('Obtained new API token: ' + self._token)
                 return self._token
 
     async def _base_action(self, method: str, url: str, params: Optional[dict] = None,
                            data: Optional[dict] = None) -> dict:
         token = await self.get_token()
-        async with httpx.AsyncClient(base_url=self._base_url,
+        async with httpx.AsyncClient(base_url=self._base_url, proxies=self._proxies,
                                      headers={**self._headers, 'Authorization': 'Bearer ' + token},
                                      verify=self._ssl_validation) as client:
             resp = await client.request(method, url, params=params, json=data)
@@ -86,7 +90,7 @@ class CppmApi:
                 if resp.text:
                     msg += f' {resp.json()["detail"]}'
 
-                log.error(msg)
+                logger.error(msg)
                 raise CppmApiException(msg)
 
     async def _get_device_id_from_name(self, name: str):

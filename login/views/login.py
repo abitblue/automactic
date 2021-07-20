@@ -1,6 +1,5 @@
 import logging
 import smtplib
-from datetime import timedelta
 from urllib.parse import quote
 
 from django.core.mail import send_mail
@@ -9,14 +8,14 @@ from django.shortcuts import render, redirect, reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
-from netaddr import IPNetwork, EUI, mac_bare
+from netaddr import IPNetwork, EUI
 
 from automactic.settings import EMAIL_RECIPIENTS
 from interface.cppm_api import CppmApiException
-from login.forms import IndexAuthenticationForm
-from login.models import LoginHistory, User, UserType
-from login.utils import restrict_to, attach_mac_to_session, MacAddr
 from interface.cppm_iface import Clearpass
+from login.forms import IndexAuthenticationForm
+from login.models import LoginHistory
+from login.utils import restrict_to, attach_mac_to_session, MacAddr
 
 logger = logging.getLogger('views.login')
 
@@ -45,6 +44,11 @@ class Login(View):
         # If error, show error to user
         # Else, show success page
 
+        mac_addr = MacAddr.deserialize_from(request)
+        if Clearpass.get_device(mac=mac_addr).status_code == 200:
+            msg = "This device is already registered. Please connect to the WiFi network ncpsp, with the password 605D785001@rackID78R605"
+            return redirect(reverse('error') + f'?error={quote(msg)}')
+
         name = ""
         user = form.user_cache
         user_type = str(user.type).lower()
@@ -56,7 +60,6 @@ class Login(View):
         elif user_type == 'staff':
             name = f'T:{user.username}'
 
-        mac_addr = MacAddr.deserialize_from(request)
         device_name = form.cleaned_data.get('device_name')
         registered = Clearpass.get_device(name=name, additional_filers={'sponsor_name': 'oauth2:automactic'})
 
@@ -71,7 +74,7 @@ class Login(View):
                         msg = f'This is an automated message.\n\nThe user: {user} has registered {user.device_modified_count} devices.' \
                               f'This email triggers after f{user.device_modified_count} registrations.' \
                               f'Please check login history for any suspicious activity. ' \
-                              f'If none can be found, you may reset the modified count using the administrative actions.'
+                              f'If none can be found, you may reset the modified count via the administrative portal.'
                         send_mail('[automactic] Warning: Possible suspicious activity in user device registrations',
                                   msg,
                                   None, EMAIL_RECIPIENTS)
