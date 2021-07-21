@@ -6,21 +6,21 @@
 <p class="bodyText">Open the Settings on your phone.</p>
 <p class="bodyText">Scroll down until you locate the About tab</p>
 <p class="bodyText"><i>(Can be about phone/about device)</i></p>
-<img class="instructions-img" src="{% static 'images/about_android.jpg' %}">
+<img class="instructions-img" src="{% static 'instructions/about_android.jpg' %}" alt="android about phone settings">
 <p class="bodyText">Locate your Android Version</p>
-<img class="instructions-img" src="{% static 'images/versioncheck_android.jpg' %}">
+<img class="instructions-img" src="{% static 'instructions/versioncheck_android.jpg' %}" alt="location of android version info">
 <br>
-<p class="bodyText">Step 1: Navigate to the Wi-Fi settings of your Android Device.</p>
+<p class="bodyText"><b>Step 1:</b> Navigate to the Wi-Fi settings of your Android Device.</p>
 <p class="bodyText"><i>This may appear differently per device.</i></p>
-<img class="instructions-img" src="{% static 'images/wifi_network_android.jpg' %}">
-<p class="bodyText">Step 2: Click on the Gear next to the Wifi name.</p>
-<img class="instructions-img" src="{% static 'images/gear_android.jpg' %}">
-<p class="bodyText">Step 3: Open up Advanced settings in the network.</p>
-<img class="instructions-img" src="{% static 'images/details_android.jpg' %}">
-<p class="bodyText">Step 4: Locate the Privacy setting and make sure you are using your Device MAC.</p>
-<img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'images/advanced_android.jpg' %}">
+<img class="instructions-img" src="{% static 'instructions/wifi_network_android.jpg' %}" alt="wifi and network settings on android">
+<p class="bodyText"><b>Step 2:</b> Click on the Gear next to the Wifi name.</p>
+<img class="instructions-img" src="{% static 'instructions/gear_android.jpg' %}" alt="gear icon next to the wifi network">
+<p class="bodyText"><b>Step 3:</b> Open up Advanced settings in the network.</p>
+<img class="instructions-img" src="{% static 'instructions/details_android.jpg' %}" alt="advanced settings dropdown">
+<p class="bodyText"><b>Step 4:</b> Locate the Privacy setting and make sure you are using your Device MAC.</p>
+<img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'instructions/advanced_android.jpg' %}" alt="location of the privacy setting">
 <br>
-<img class="instructions-img" src="{% static 'images/mac_address_android.jpg' %}">
+<img class="instructions-img" src="{% static 'instructions/mac_address_android.jpg' %}" alt="selection of use device MAC">
 
 <br>
 <a href="{% url 'instructions' %}?os=android&versioncheck=true">
