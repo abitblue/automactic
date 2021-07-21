@@ -1,12 +1,29 @@
-<header class="para-head">Instructions for Disabling MAC Address Randomization for Android Devices</header>
-<p class="para-body">{Any Android Version 9 or lower users can directly skip this}</p>
-<p class="para-body">To check your Android Version: </p>
-<p class="para-body">Open the Settings on your phone.</p>
-<p class="para-body">Scroll down until you locate a about tab (Can be about phone/about device)</p>
-<p class="para-body">Locate your Android Version</p>
+{% load static %}
+
+<header class="headerText">Instructions for Disabling MAC Address Randomization for Android Devices</header>
+<p class="bodyText">{Any Android Version 9 or lower users can directly skip this}</p>
+<p class="bodyText">To check your Android Version: </p>
+<p class="bodyText">Open the Settings on your phone.</p>
+<p class="bodyText">Scroll down until you locate the About tab</p>
+<p class="bodyText"><i>(Can be about phone/about device)</i></p>
+<img class="instructions-img" src="{% static 'images/about_android.jpg' %}">
+<p class="bodyText">Locate your Android Version</p>
+<img class="instructions-img" src="{% static 'images/versioncheck_android.jpg' %}">
+<br>
+<p class="bodyText">Step 1: Navigate to the Wi-Fi settings of your Android Device.</p>
+<p class="bodyText"><i>This may appear differently per device.</i></p>
+<img class="instructions-img" src="{% static 'images/wifi_network_android.jpg' %}">
+<p class="bodyText">Step 2: Click on the Gear next to the Wifi name.</p>
+<img class="instructions-img" src="{% static 'images/gear_android.jpg' %}">
+<p class="bodyText">Step 3: Open up Advanced settings in the network.</p>
+<img class="instructions-img" src="{% static 'images/details_android.jpg' %}">
+<p class="bodyText">Step 4: Locate the Privacy setting and make sure you are using your Device MAC.</p>
+<img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'images/advanced_android.jpg' %}">
+<br>
+<img class="instructions-img" src="{% static 'images/mac_address_android.jpg' %}">
 
 <br>
-<p class="para-body">- Step 1: Navigate to the settings of your Windows 10 device.</p>
-<p class="para-body">- Step 2: Click on Network & Internet</p>
-<p class="para-body">- Step 3: Select the Wifi Tab</p>
-<p class="para-body">- Step 4: Locate "Use Random Hardware Address" and switch it off</p>
+<a href="{% url 'instructions' %}?os=android&versioncheck=true">
+            <button class="button2 button"><span class="buttonSpan">Yes</span></button>
+        </a>
+

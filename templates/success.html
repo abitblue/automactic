@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Success{% endblock %}
+
+{% block content %}
+
+    <h1 class="headerText">Success!</h1>
+    <br>
+    <span class="bodyText"><b>Your device has been successfully registered. Here's what to do next:</b></span>
+    <p class="bodyText">1) <b>Disconnect</b> from JoinForWifi</p>
+    <p class="bodyText">2) Copy the following password and connect to <b>ncpsp</b></p>
+    <div class="innerWidth">
+        <p class="bodyText errorText"><b>iOS/iPadOS/Android Users:</b> ENSURE RANDOM/PRIVATE MAC ADDRESS ARE DISABLED ON NCPSP</p>
+        <input type="text" class="formField wifipass" value="605D785001@rackID78R605" readonly>
+        <button class="button">Copy</button>
+    </div>
+
+    <script>
+        document.querySelector("button.button").addEventListener('click', function () {
+            console.log('copyText!')
+            const copyText = document.querySelector("input.wifipass");
+            copyText.setSelectionRange(0, copyText.value.length);
+            copyText.select();
+            document.execCommand("copy")
+            this.innerHTML = "Copied!"
+        })
+    </script>
+{% endblock %}

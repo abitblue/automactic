@@ -5,7 +5,7 @@
 {% block content %}
 
     {% if not device_os %}
-        <p class="bodyText">We have detected that your device is using a randomized MAC address. <br> You cannot proceed
+        <p class="bodyText">We have detected that your device is using a randomized MAC address. <br> You <b>cannot</b> proceed
             without disabling this. Please select your
             device type for instructions on disabling.</p>
         <span class="headerText">I am using...</span>
@@ -36,15 +36,18 @@
         {% if device_os == "windows" %}
             {% include 'device_instructions/windows.html' %}
         {% elif device_os == 'mac' %}
-            macOS does not supply a method of MAC randomization by default.
-            If you use a third party application to do this, or have manually done so, please use the original MAC address of the device before proceeding.
+            <div class="innerWidth2 bodyText">macOS does not supply a method of MAC randomization by default.
+                If you use a third party application to do this, or have manually done so, please use the original MAC
+                address of the device before proceeding.
+            </div>
         {% elif device_os == 'ios' %}
             {% include 'device_instructions/ios.html' %}
-        {% elif device_os == 'android' %}
+        {% elif device_os == 'android'%}
             {% include 'device_instructions/android.html' %}
         {% else %}
             <span class="bodyText">Unknown device type: {{ device_os }}</span>
         {% endif %}
+
 
         <br>
         <a href="{% url 'instructions' %}"><button class="button"><span class="buttonSpan">Go Back</span></button></a>
