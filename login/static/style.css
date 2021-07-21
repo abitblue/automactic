@@ -88,6 +88,11 @@ img {
   margin: auto;
 }
 
+.innerWidth2 {
+  margin: auto;
+  max-width: 50rem;
+}
+
 h1.login {
   font-size: 2rem;
   margin: 40px;
@@ -217,23 +222,13 @@ select {
   right: 0;
 }
 
-#wifipass {
-    width: 15vw;
-    height: 8vh;
-    border-radius: 3rem;
-    font-size: 1rem;
+.wifipass {
+    font-size: 2.75vh;
     text-align: center;
 }
 
 @media screen and (max-width: 1300px) {
     .instructions-img {
         width: 50vw;
-    }
-}
-
-@media screen and (max-width: 800px) {
-    #wifipass {
-        width: 35vw;
-        font-size: 0.8rem;
     }
 }

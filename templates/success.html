@@ -1,26 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}Instructions{% endblock %}
+{% block title %}Success{% endblock %}
 
 {% block content %}
 
-    <header class="headerText">SUCCESS</header>
-    <header class="header-para">Your device has been successfully registered.</header>
-
-    <p class="bodyText">What to Do Next</p>
-    <p class="header-para">1) <b>Disconnect</b> from JoinForWifi</p>
-    <p class="header-para">2) Copy the following password and connect to <b>ncpsp</b></p>
-    <p class="bodyText errorText"><b>MAKE SURE YOU DISABLE RANDOMIZE MAC ADDRESS AGAIN ON NCPSP OR YOU CANNOT USE THE WIFI</b></p>
-    <input type="text" value="605D785001@rackID78R605" id="wifipass">
+    <h1 class="headerText">Success!</h1>
     <br>
-    <button class="button" onclick="Copy()">Copy</button>
-    <script>
-        function Copy() {
-            const copyText = document.getElementById("wifipass");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            document.execCommand("copy");
+    <span class="bodyText"><b>Your device has been successfully registered. Here's what to do next:</b></span>
+    <p class="bodyText">1) <b>Disconnect</b> from JoinForWifi</p>
+    <p class="bodyText">2) Copy the following password and connect to <b>ncpsp</b></p>
+    <div class="innerWidth">
+        <p class="bodyText errorText"><b>iOS/iPadOS/Android Users:</b> ENSURE RANDOM/PRIVATE MAC ADDRESS ARE DISABLED ON NCPSP</p>
+        <input type="text" class="formField wifipass" value="605D785001@rackID78R605" readonly>
+        <button class="button">Copy</button>
+    </div>
 
-        }
+    <script>
+        document.querySelector("button.button").addEventListener('click', function () {
+            console.log('copyText!')
+            const copyText = document.querySelector("input.wifipass");
+            copyText.setSelectionRange(0, copyText.value.length);
+            copyText.select();
+            document.execCommand("copy")
+            this.innerHTML = "Copied!"
+        })
     </script>
 {% endblock %}
