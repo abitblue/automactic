@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
-from netaddr import IPNetwork, EUI
+from netaddr import IPNetwork, mac_bare
 
 from automactic.settings import EMAIL_RECIPIENTS
 from interface.cppm_api import CppmApiException
@@ -44,10 +44,16 @@ class Login(View):
         # If error, show error to user
         # Else, show success page
 
+        # Early exit if macaddr is already in Clearpass
         mac_addr = MacAddr.deserialize_from(request)
-        if Clearpass.get_device(mac=mac_addr).status_code == 200:
+        try:
+            Clearpass.get_device(mac=mac_addr)
+            LoginHistory.log(user=form.cleaned_data.get('username'), logged_in=form.password_correct)
             msg = "This device is already registered. Please connect to the WiFi network ncpsp, with the password 605D785001@rackID78R605"
             return redirect(reverse('error') + f'?error={quote(msg)}')
+        except CppmApiException as err:
+            if err.error_code != 404:
+                raise err
 
         name = ""
         user = form.user_cache
@@ -97,4 +103,4 @@ class Login(View):
 
         else:
             return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']),
-                                data={'notes': device_name, 'mac': mac_addr})
+                                data={'notes': device_name, 'mac': mac_addr.format(mac_bare)})

@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import sys
 from datetime import datetime, timedelta
 from typing import Optional, Union
 
@@ -14,7 +15,9 @@ logger = logging.getLogger('CppmApi')
 
 
 class CppmApiException(Exception):
-    def __init__(self, message):
+    def __init__(self, error_code, message='', *args, **kwargs):
+        self.error_code = error_code
+        self.traceback = sys.exc_info()
         super().__init__(message)
 
 
@@ -33,8 +36,8 @@ class CppmApi:
             'Accept': 'application/json'
         }
         self._proxies = {
-            'http://': 'http://10.8.0.6:8080',
-            'https://': 'http://10.8.0.6:8080',
+            'http://': None,
+            'https://': None,
         }
         self._token_syncing.set()
 
@@ -63,7 +66,7 @@ class CppmApi:
                 else:
                     msg = 'Unable to obtain Clearpass token: ' + resp.text
                     logger.error(msg)
-                    raise CppmApiException(msg)
+                    raise CppmApiException(resp.status_code, msg)
 
                 self._token_syncing.set()
                 logger.debug('Obtained new API token: ' + self._token)
@@ -91,12 +94,12 @@ class CppmApi:
                     msg += f' {resp.json()["detail"]}'
 
                 logger.error(msg)
-                raise CppmApiException(msg)
+                raise CppmApiException(resp.status_code, msg)
 
     async def _get_device_id_from_name(self, name: str):
         named_device = await self.get_device(name=name)
         if named_device['count'] != 1:
-            raise CppmApiException('Multiple devices with same name returned')
+            raise CppmApiException(406, 'Multiple devices with same name returned')
         return int(named_device['items'][0]['id'])
 
     @async_to_sync
