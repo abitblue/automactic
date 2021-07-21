@@ -13,12 +13,10 @@ class UserType(models.Model):
     name = models.CharField(max_length=160)
     disable_in = models.DurationField(null=True,
                                       help_text="When to disable the user account. Blank values mean never disable")
-    device_limit = models.PositiveIntegerField(blank=True, null=True,
-                                               help_text="Blank values mean no limit")
     device_validity_period = models.DurationField(null=True,
                                                   help_text="Clearpass device expiry. Blank values mean never expire")
-    modified_warning_threshold = models.PositiveIntegerField(blank=True, null=True,
-                                                             help_text="Blank values mean never warn")
+    device_modified_warning_count = models.PositiveIntegerField(blank=True, null=True,
+                                                                help_text="Blank values mean never warn")
 
     class Meta:
         verbose_name = 'User Type'
@@ -42,6 +40,7 @@ class UserManager(BaseUserManager):
                                 UserType.objects.get(name='Sentinel'),
                                 password=password)
         user.is_staff = True
+        user.bypass_rate_limit = True
         user.save(using=self._db)
         return user
 
@@ -73,14 +72,10 @@ class User(AbstractBaseUser):
     # Values implicitly inherited from user type
     disable_on = models.DateTimeField(blank=True, null=True,
                                       help_text='When to disable user account. Implicitly defined by user type.')
-    device_limit = models.PositiveIntegerField(blank=True, null=True,
-                                               help_text="Implicitly defined by profile type. Write to override.")
-    device_validity_period = models.DurationField(blank=True, null=True,
-                                                  help_text="Implicitly defined by profile type. Write to override.")
-    device_modified_warning_count = models.PositiveIntegerField(blank=True, null=True,
-                                                                help_text="Implicitly defined by profile type. Write to override.")
-    modified_warning_threshold = models.PositiveIntegerField(blank=True, null=True,
-                                                             help_text="Implicitly defined by profile type Write to override.")
+    _device_validity_period = models.DurationField(blank=True, null=True,
+                                                   help_text="Implicitly defined by profile type. Write to override.")
+    _device_modified_warning_count = models.PositiveIntegerField(blank=True, null=True,
+                                                                 help_text="Implicitly defined by profile type. Write to override.")
 
     objects = UserManager()
     USERNAME_FIELD = 'username'
@@ -93,16 +88,12 @@ class User(AbstractBaseUser):
         return timezone.now() <= self.disable_on
 
     @property
-    def _device_limit(self):
-        return self.type.device_limit if self.device_limit is None else self.device_limit
+    def device_modified_warning_count(self):
+        return self.type.device_modified_warning_count if self._device_modified_warning_count is None else self._device_modified_warning_count
 
     @property
-    def _modified_warning_threshold(self):
-        return self.type.modified_warning_threshold if self.modified_warning_threshold is None else self.modified_warning_threshold
-
-    @property
-    def _device_validity_period(self):
-        return self.type.device_validity_period if self.device_validity_period is None else self.device_validity_period
+    def device_validity_period(self):
+        return self.type.device_validity_period if self._device_validity_period is None else self._device_validity_period
 
     def save(self, *args, **kwargs):
         if self._state.adding and self.disable_on is None and self.type.disable_in is not None:

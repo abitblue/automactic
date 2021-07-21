@@ -36,8 +36,8 @@ SECRET_KEY = os.environ.get('AMAC_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.environ.get('AMAC_DEBUG', '') == 'True')
 
-ALLOWED_HOSTS_PRE = os.environ.get("AMAC_ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS = [] if not any(ALLOWED_HOSTS_PRE) else ALLOWED_HOSTS_PRE
+_ALLOWED_HOSTS = os.environ.get("AMAC_ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = [] if not any(_ALLOWED_HOSTS) else _ALLOWED_HOSTS
 
 
 # Application definition
@@ -158,6 +158,17 @@ CSRF_COOKIE_SECURE = (not DEBUG)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('SMTP_HOST')
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.environ.get('SMTP_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('SMTP_PASS')
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = os.environ.get('SMTP_USER')
+
+_EMAIL_RECIPIENTS = os.environ.get("EMAIL_RECIPIENTS", "").split(",")
+EMAIL_RECIPIENTS = [] if not any(_EMAIL_RECIPIENTS) else _EMAIL_RECIPIENTS
 
 # Logging
 

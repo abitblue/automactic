@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm, UsernameField, ReadOnl
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
+from interface.rotating_passwd import RotatingCode
 from .models import LoginHistory, User
 
 
@@ -34,10 +35,10 @@ class IndexAuthenticationForm(AuthenticationForm):
             return
 
         # Rate Limit - Preventing abuse (rapidly changing devices) and account brute-forcing
-        # Always rate limit if 5 incorrect passwords in an hour, unless is Guest account
+        # Always rate limit if 5 incorrect passwords in an hour
         # No other limit on first 3 successful modifications
         # After that, rate limit to 5 modifications per hour and one unique mac address per 18 hours
-        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).exclude(user__username__exact='guest').count() > 3
+        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > 3
         passwd_per_hour_limit = LoginHistory.objects.filter(user=user, logged_in=False,
                                                             time__gt=timezone.now() - timedelta(
                                                                 hours=1)).count() > 5
@@ -65,19 +66,21 @@ class IndexAuthenticationForm(AuthenticationForm):
 
         if username is not None and password:
             self.user_cache = authenticate(self.request, username=username, password=password)
+
+            if username == 'guest' and RotatingCode.verify(password):
+                self.user_cache = User.objects.get(username__exact='guest')
+
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
             else:
+                self.password_correct = True
                 self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
 
     def confirm_login_allowed(self, user):
-        # We have the ability to login by the time we reach here in the code
-        # and can proceed to rate limiting
-        self.password_correct = True
-
         super().confirm_login_allowed(user)
+        self.rate_limit_check(user)
 
 
 class UserCreationForm(forms.ModelForm):
@@ -100,8 +103,8 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'type', 'is_staff', 'disable_on', 'device_limit', 'device_validity_period',
-                  'device_modified_warning_count')
+        fields = ('username', 'type', 'is_staff', 'disable_on', '_device_validity_period',
+                  '_device_modified_warning_count')
         field_classes = {'username': UsernameField}
 
     def __init__(self, *args, **kwargs):

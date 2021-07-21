@@ -14,9 +14,13 @@ admin.site.index_title = 'Administrative Portal'
 
 @admin.register(UserType)
 class UserTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'disable_in', 'device_limit', 'device_validity_period', 'modified_warning_threshold',)
+    list_display = ('name', 'disable_in', 'device_validity_period', 'device_modified_warning_count',)
     search_fields = ('name',)
     ordering = ('id',)
+
+    # Cannot delete user types. Prevents user error
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.action(description='Reset modified count')
@@ -55,7 +59,7 @@ class UserAdmin(BaseUserAdmin):
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     list_display = (
-        'username', 'get_type', 'disable_on', '_device_limit', '_device_validity_period',
+        'username', 'get_type', 'disable_on', 'get_device_validity_period',
         'get_modified_warning_threshold')
     list_display_links = ('username',)
     search_fields = ('username',)
@@ -66,17 +70,17 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password', 'is_staff', 'bypass_rate_limit')
         }),
         ('Profile', {
-            'fields': ('type', 'disable_on', 'device_limit', 'device_validity_period', 'device_modified_warning_count',
+            'fields': ('type', 'disable_on', '_device_validity_period', '_device_modified_warning_count',
                        'device_modified_count')
         }),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'is_staff',),
+            'fields': ('username', 'password1', 'password2', 'is_staff', 'bypass_rate_limit'),
         }),
         ('Profile',
-         {'fields': ('type', 'disable_on', 'device_limit', 'device_validity_period', 'device_modified_warning_count',
+         {'fields': ('type', 'disable_on', '_device_validity_period', '_device_modified_warning_count',
                      'device_modified_count')}),
     )
     ordering = ('username',)
@@ -90,9 +94,13 @@ class UserAdmin(BaseUserAdmin):
             return f'{obj.type} (Site Admin)'
         return str(obj.type)
 
+    @admin.display(description='Device Validity Period')
+    def get_device_validity_period(self, obj: User):
+        return obj.device_validity_period
+
     @admin.display(description='Modified Warning Threshold')
     def get_modified_warning_threshold(self, obj: User):
-        return f'{obj.modified_warning_threshold} / {(lambda x: "-" if x is None else x)(obj._modified_warning_threshold)}'
+        return f'{obj.device_modified_count} / {(lambda x: "-" if x is None else x)(obj.device_modified_warning_count)}'
 
 
 # Remove Groups from admin page
