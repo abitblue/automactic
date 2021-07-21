@@ -73,12 +73,15 @@ class CppmApi:
                 return self._token
 
     async def _base_action(self, method: str, url: str, params: Optional[dict] = None,
-                           data: Optional[dict] = None) -> dict:
+                           data: Optional[dict] = None, ret_resp: bool = False) -> dict:
         token = await self.get_token()
         async with httpx.AsyncClient(base_url=self._base_url, proxies=self._proxies,
                                      headers={**self._headers, 'Authorization': 'Bearer ' + token},
                                      verify=self._ssl_validation) as client:
             resp = await client.request(method, url, params=params, json=data)
+
+            if ret_resp:
+                return resp
 
             # Process data if there are no errors
             if not resp.is_error:
@@ -105,7 +108,7 @@ class CppmApi:
     @async_to_sync
     async def create_device(self, name: str, mac: EUI, notes: Optional[str] = None,
                             expire_time: Optional[Union[datetime, int]] = None,
-                            expire_action: int = 2) -> dict:
+                            expire_action: int = 2, ret_resp: bool = False) -> dict:
         # expire_action docs:
         # https://www.arubanetworks.com/techdocs/ClearPass/CPGuest_UG_HTML_6.5/Content/Reference/GuestManagerStandardFields.htm
 
@@ -121,12 +124,12 @@ class CppmApi:
             'enabled': True,
             'start_time': int(datetime.now().astimezone().timestamp()),
             'notes': '' if notes is None else notes
-        })
+        }, ret_resp=ret_resp)
 
     @mutually_exclusive('name', 'mac')
     @async_to_sync
     async def get_device(self, name: Optional[str] = None, mac: Optional[EUI] = None, sort: str = '-id',
-                         additional_filers: dict = None) -> dict:
+                         additional_filers: dict = None, ret_resp: bool = False) -> dict:
         if name is not None:
             return await self._base_action('GET', '/device', params={
                 'filter': json.dumps({'visitor_name': name, **additional_filers} if additional_filers is not None else {
@@ -134,15 +137,15 @@ class CppmApi:
                 'sort': sort,
                 'calculate_count': True,
                 'limit': 1000,
-            })
+            }, ret_resp=ret_resp)
 
         elif mac is not None:
-            return await self._base_action('GET', f'/device/mac/{mac.format(dialect=mac_bare)}')
+            return await self._base_action('GET', f'/device/mac/{mac.format(dialect=mac_bare)}', ret_resp=ret_resp)
 
     @mutually_exclusive('device_id', 'name', 'mac')
     @async_to_sync
     async def update_device(self, device_id: Optional[int] = None, name: Optional[str] = None,
-                            mac: Optional[EUI] = None, data: dict = None) -> dict:
+                            mac: Optional[EUI] = None, data: dict = None, ret_resp: bool = False) -> dict:
         if data is None or len(data) == 0:
             raise TypeError('data cannot be empty')
 
@@ -150,19 +153,20 @@ class CppmApi:
             device_id = self._get_device_id_from_name(name)
         if device_id is not None:
             return await self._base_action('PATCH', f'/device/{device_id}', params={'change_of_authorization': True},
-                                           data=data)
+                                           data=data, ret_resp=ret_resp)
         elif mac is not None:
             return await self._base_action('PATCH', f'/device/mac/{mac.format(dialect=mac_bare)}',
-                                           params={'change_of_authorization': True}, data=data)
+                                           params={'change_of_authorization': True}, data=data, ret_resp=ret_resp)
 
     @mutually_exclusive('device_id', 'name', 'mac')
     @async_to_sync
     async def remove_device(self, device_id: Optional[int] = None, name: Optional[str] = None,
-                            mac: Optional[EUI] = None) -> dict:
+                            mac: Optional[EUI] = None, ret_resp: bool = False) -> dict:
         if name is not None:
             device_id = self._get_device_id_from_name(name)
         if device_id is not None:
-            return await self._base_action('DELETE', f'/device/{device_id}', params={'change_of_authorization': True})
+            return await self._base_action('DELETE', f'/device/{device_id}', params={'change_of_authorization': True},
+                                           ret_resp=ret_resp)
         elif mac is not None:
             return await self._base_action('DELETE', f'/device/mac/{mac.format(dialect=mac_bare)}',
-                                           params={'change_of_authorization': True})
+                                           params={'change_of_authorization': True}, ret_resp=ret_resp)

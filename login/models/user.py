@@ -1,28 +1,9 @@
-import logging
-from typing import Union, Optional
-
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils import timezone
-from macaddress.fields import MACAddressField
 
-
-class UserType(models.Model):
-    name = models.CharField(max_length=160)
-    disable_in = models.DurationField(null=True,
-                                      help_text="When to disable the user account. Blank values mean never disable")
-    device_validity_period = models.DurationField(null=True,
-                                                  help_text="Clearpass device expiry. Blank values mean never expire")
-    device_modified_warning_count = models.PositiveIntegerField(blank=True, null=True,
-                                                                help_text="Blank values mean never warn")
-
-    class Meta:
-        verbose_name = 'User Type'
-
-    def __str__(self):
-        return self.name
+from .usertype import UserType
 
 
 class UserManager(BaseUserManager):
@@ -123,27 +104,3 @@ class User(AbstractBaseUser):
 
     def get_short_name(self):
         return self.username
-
-
-class LoginHistory(models.Model):
-    _logger = logging.getLogger('LoginLog')
-
-    time = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='loginlog')
-    logged_in = models.BooleanField(help_text='Did the user enter the correct password?')
-    mac_address = MACAddressField(null=True, help_text='MAC Addr of new device. Null means did not register,')
-
-    @classmethod
-    def log(cls, user: Union[User, str], logged_in: bool, mac_address: Optional[str] = None):
-        userobj = user
-        if isinstance(user, str):
-            userqs = User.objects.filter(username__exact=user)
-            if not userqs.exists():
-                return False
-            userobj = userqs.first()
-        try:
-            cls.objects.create(user=userobj, logged_in=logged_in, mac_address=mac_address)
-            return True
-        except Exception as err:
-            cls._logger.error(err)
-            return False

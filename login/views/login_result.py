@@ -6,7 +6,7 @@ from django.views import View
 
 
 class Success(View):
-    template_name = 'error.html'
+    template_name = 'success.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
         return render(request, self.template_name)

@@ -1,26 +1,11 @@
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import Group
 from django.db.models import Q
 from django.utils import timezone
 
-from .forms import UserChangeForm, UserCreationForm
-from .models import UserType, User
-
-admin.site.site_header = 'automactic'
-admin.site.index_title = 'Administrative Portal'
-
-
-@admin.register(UserType)
-class UserTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'disable_in', 'device_validity_period', 'device_modified_warning_count',)
-    search_fields = ('name',)
-    ordering = ('id',)
-
-    # Cannot delete user types. Prevents user error
-    def has_delete_permission(self, request, obj=None):
-        return False
+from login.forms import UserChangeForm, UserCreationForm
+from login.models import User
 
 
 @admin.action(description='Reset modified count')
@@ -101,7 +86,3 @@ class UserAdmin(BaseUserAdmin):
     @admin.display(description='Modified Warning Threshold')
     def get_modified_warning_threshold(self, obj: User):
         return f'{obj.device_modified_count} / {(lambda x: "-" if x is None else x)(obj.device_modified_warning_count)}'
-
-
-# Remove Groups from admin page
-admin.site.unregister(Group)
