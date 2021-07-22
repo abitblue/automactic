@@ -35,6 +35,7 @@ SECRET_KEY = os.environ.get('AMAC_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = (os.environ.get('AMAC_DEBUG', '') == 'True')
+print(f'DEBUG: {DEBUG}')
 
 _ALLOWED_HOSTS = os.environ.get("AMAC_ALLOWED_HOSTS", "").split(",")
 ALLOWED_HOSTS = [] if not any(_ALLOWED_HOSTS) else _ALLOWED_HOSTS

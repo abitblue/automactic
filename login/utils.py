@@ -65,7 +65,8 @@ def attach_mac_to_session(view):
                     l = line.strip().split(maxsplit=4)
                     if l[2] == get_client_ip(request)[0]:
                         MacAddr.serialize_to(request, l[1])
-        MacAddr.serialize_to(request, 'aa-bb-cc-dd-ee-ff')
+        # Hardcoded localhost testing
+        #MacAddr.serialize_to(request, 'aa-bb-cc-dd-ee-ff')
         return view(request, *args, **kwargs)
     return wrapper
 

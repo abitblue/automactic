@@ -16,7 +16,7 @@ class Index(View):
     def get(self, request: HttpRequest, *args, **kwargs):
         macaddr: Optional[EUI] = MacAddr.deserialize_from(request)
 
-        if macaddr is None or MacAddr.is_locally_administered(macaddr):
+        if macaddr is None or not MacAddr.is_locally_administered(macaddr):
             return redirect(reverse('login'))
         else:
             return redirect(reverse('instructions'))
