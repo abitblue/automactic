@@ -72,6 +72,7 @@ class Login(View):
                 func(*func_args, **func_kwargs)
                 user.device_modified_count += 1
                 user.save()
+                logger.info(f'Registered {mac_addr} to {name}:{device_name}')
 
                 if user.device_modified_warning_count is not None and user.device_modified_count >= user.device_modified_warning_count:
                     try:

@@ -1,7 +1,9 @@
 import logging
+from datetime import timedelta
 from typing import Union, Optional
 
 from django.db import models
+from django.utils import timezone
 from macaddress.fields import MACAddressField
 
 from . import User
@@ -36,3 +38,18 @@ class LoginHistory(models.Model):
         except Exception as err:
             cls._logger.error(err)
             return False
+
+
+class LastLoginAttempt(models.Model):
+    ip = models.GenericIPAddressField()
+    time = models.DateTimeField(null=True, default=None)
+
+    @classmethod
+    def allowed(cls, ip) -> bool:
+        retval = False
+        attempt, _ = cls.objects.get_or_create(ip=ip)
+        if attempt.time is None or timezone.now() > attempt.time + timedelta(seconds=1):
+            retval = True
+        attempt.time = timezone.now()
+        attempt.save()
+        return retval

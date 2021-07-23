@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('_internal/guestpasswd', views.InternalGuestPasswd.as_view(), name='internal-guestpasswd'),
     path('debug/', views.Debug.as_view(), name='debug'),
     path('error/', views.Error.as_view(), name='error'),
     path('success/', views.Success.as_view(), name='success'),

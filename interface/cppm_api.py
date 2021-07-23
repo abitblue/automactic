@@ -52,8 +52,8 @@ class CppmApi:
 
         else:
             self._token_syncing.clear()
-            async with httpx.AsyncClient(base_url=self._base_url, verify=self._ssl_validation, proxies=self._proxies,
-                                         headers=self._headers) as client:
+            async with httpx.AsyncClient(base_url=self._base_url, verify=self._ssl_validation, timeout=10.0,
+                                         proxies=self._proxies, headers=self._headers) as client:
                 resp = await client.post('/oauth', json={
                     'grant_type': 'client_credentials',
                     'client_id': self._client_id,
@@ -75,7 +75,7 @@ class CppmApi:
     async def _base_action(self, method: str, url: str, params: Optional[dict] = None,
                            data: Optional[dict] = None, ret_resp: bool = False) -> dict:
         token = await self.get_token()
-        async with httpx.AsyncClient(base_url=self._base_url, proxies=self._proxies,
+        async with httpx.AsyncClient(base_url=self._base_url, proxies=self._proxies, timeout=10.0,
                                      headers={**self._headers, 'Authorization': 'Bearer ' + token},
                                      verify=self._ssl_validation) as client:
             resp = await client.request(method, url, params=params, json=data)

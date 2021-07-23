@@ -29,7 +29,7 @@ class MacIsNoneFilter(SimpleListFilter):
 class LoginHistoryAdmin(admin.ModelAdmin):
     list_display = ('time', 'user', 'logged_in', 'mac_address')
     search_fields = ('user', 'mac_address')
-    list_filter = ('time', 'logged_in', MacIsNoneFilter)
+    list_filter = ('time', 'logged_in', 'user__type', MacIsNoneFilter)
     ordering = ('time',)
     readonly_fields = ('time', 'user', 'logged_in', 'mac_address')
 

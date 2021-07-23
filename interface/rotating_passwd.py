@@ -8,7 +8,7 @@ from automactic.settings import SECRET_KEY
 
 class RotatingCode:
     totp = pyotp.TOTP(base64.b32encode(SECRET_KEY.encode()).decode()[:32],
-                      digits=8,
+                      digits=9,
                       interval=86400)
 
     @classmethod
@@ -16,9 +16,9 @@ class RotatingCode:
         return cls.totp.now()
 
     @classmethod
-    def verify(cls, code):
+    def verify(cls, code) -> bool:
         return cls.totp.verify(code)
 
     @classmethod
-    def remaining_time(cls):
+    def remaining_time(cls) -> float:
         return cls.totp.interval - datetime.now().timestamp() % cls.totp.interval
