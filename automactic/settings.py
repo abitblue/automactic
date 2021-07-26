@@ -94,14 +94,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    # 'prod': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.environ.get('AMAC_POSTGRES_DB_NAME'),
-    #     'USER': os.environ.get('AMAC_POSTGRES_USERNAME'),
-    #     'PASSWORD': os.environ.get('AMAC_POSTGRES_PASSWORD'),
-    #     'HOST': os.environ.get('AMAC_POSTGRES_HOST'),
-    #     'PORT:': os.environ.get('AMAC_POSTGRES_PORT'),
-    # },
+    'prod': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('AMAC_PG_DBNAME'),
+        'USER': os.environ.get('AMAC_PG_USER'),
+        'PASSWORD': os.environ.get('AMAC_PG_PASS'),
+        'HOST': os.environ.get('AMAC_PG_HOST'),
+        'PORT:': os.environ.get('AMAC_PG_PORT'),
+    },
 }
 
 DATABASES['default'] = DATABASES['dev' if DEBUG else 'prod']
@@ -152,8 +152,8 @@ STATIC_ROOT = BASE_DIR / "static"
 
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = (not DEBUG)
-CSRF_COOKIE_SECURE = (not DEBUG)
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SAMESITE = None
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
