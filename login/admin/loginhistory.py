@@ -34,5 +34,8 @@ class LoginHistoryAdmin(admin.ModelAdmin):
     ordering = ('time',)
     readonly_fields = ('time', 'user', 'logged_in', 'mac_address')
 
-    def has_add_persmission(self, request, obj=None):
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
         return False
