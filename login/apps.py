@@ -20,8 +20,7 @@ class LoginConfig(AppConfig):
                 return
 
             try:
-                if settings.DEBUG \
-                        and 'AMAC_SUPERUSER_USERNAME' in os.environ \
+                if 'AMAC_SUPERUSER_USERNAME' in os.environ \
                         and 'AMAC_SUPERUSER_PASSWORD' in os.environ \
                         and not User.objects.filter(username__exact=os.environ['AMAC_SUPERUSER_USERNAME'].lower()).exists():
                     User.objects.create_superuser(os.environ['AMAC_SUPERUSER_USERNAME'],
