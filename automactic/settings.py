@@ -152,8 +152,8 @@ STATIC_ROOT = BASE_DIR / "static"
 
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = (not DEBUG)
-CSRF_COOKIE_SECURE = (not DEBUG)
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SAMESITE = None
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
