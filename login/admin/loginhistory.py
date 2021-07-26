@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
+from django.db.models import Q
 
 from login.models import LoginHistory
 
@@ -10,7 +11,7 @@ class MacIsNoneFilter(SimpleListFilter):
     title = 'MAC Address is null'
 
     # Parameter for the filter that will be used in the URL query.
-    parameter_name = 'is_macnuull'
+    parameter_name = 'is_macnull'
 
     def lookups(self, request, model_admin):
         return (
