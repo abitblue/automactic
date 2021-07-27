@@ -132,8 +132,10 @@ class CppmApi:
                          additional_filers: dict = None, ret_resp: bool = False) -> dict:
         if name is not None:
             return await self._base_action('GET', '/device', params={
-                'filter': json.dumps({'visitor_name': name, **additional_filers} if additional_filers is not None else {
-                    'visitor_name': name}),
+                'filter': json.dumps({
+                    'visitor_name': name,
+                    **(additional_filers or {})
+                }),
                 'sort': sort,
                 'calculate_count': True,
                 'limit': 1000,

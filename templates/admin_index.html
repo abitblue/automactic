@@ -5,40 +5,74 @@
 <div id="content-main">
     {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
     <b>Guest Token: </b><b id="guestPassword"></b> <i id="guestPasswordRefresh" class="quiet"></i>
+    <br><br>
+    <form id="bulkUserUpload" enctype="multipart/form-data">
+        {% csrf_token %}
+        <b>{{ bulkImportForm.file.label_tag }}</b>
+        <br>
+        {{ bulkImportForm.file }}
+        <button type="submit">Submit</button>
+        <br>
+        <span id="bulkUserUploadError"></span>
+    </form>
     <script>
     window.addEventListener('load', (event) => {
         const guestPassElem = document.querySelector("#guestPassword");
         const guestPassRefreshElem = document.querySelector("#guestPasswordRefresh");
+        const bulkUserUploadFormElem = document.querySelector("#bulkUserUpload");
+        const bulkUserUploadErrorElem = document.querySelector("#bulkUserUploadError");
+
         const nowInSeconds = () => Math.floor(new Date().getTime() / 1000);
 
-        let passwd = "";
-        let timeRefresh = 0;
-        const getData = async () => {
-            await fetch("{% url 'internal-guestpasswd' %}").then(response => response.json()).then(data => {
-                passwd = data.passwd;
-                timeRefresh = nowInSeconds() + data.expire;
-            })
-        };
-
-        async function updateGuestTokenValue() {
-            const getRemainingTime = () => {
-                const pad = (n) => (n < 10 ? "0" + n : n);
-                const secondsLeft = timeRefresh - nowInSeconds();
-                const hours = Math.floor(secondsLeft / 3600);
-                const minutes = Math.floor(secondsLeft / 60) - (hours * 60);
-                const seconds = Math.floor(secondsLeft - hours * 3600 - minutes * 60);
-                return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+        // Guest Password
+        (async () => {
+            let passwd = "";
+            let timeRefresh = 0;
+            const getData = async () => {
+                await fetch("{% url 'internal-guestpasswd' %}").then(response => response.json()).then(data => {
+                    passwd = data.passwd;
+                    timeRefresh = nowInSeconds() + data.expire;
+                })
             };
 
-            const numberWithSpaces = (str) => str.replace(/\B(?=(\d{3})+(?!\d))/g, "\u200A");
+            async function updateGuestTokenValue() {
+                const getRemainingTime = () => {
+                    const pad = (n) => (n < 10 ? "0" + n : n);
+                    const secondsLeft = timeRefresh - nowInSeconds();
+                    const hours = Math.floor(secondsLeft / 3600);
+                    const minutes = Math.floor(secondsLeft / 60) - (hours * 60);
+                    const seconds = Math.floor(secondsLeft - hours * 3600 - minutes * 60);
+                    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+                };
 
-            if (nowInSeconds() >= timeRefresh) {
-                await getData();
-                guestPassElem.innerHTML = numberWithSpaces(passwd);
+                const numberWithSpaces = (str) => str.replace(/\B(?=(\d{3})+(?!\d))/g, "\u200A");
+
+                if (nowInSeconds() >= timeRefresh) {
+                    await getData();
+                    guestPassElem.innerHTML = numberWithSpaces(passwd);
+                }
+                guestPassRefreshElem.innerHTML = `(Refreshes in ${getRemainingTime()})`;
             }
-            guestPassRefreshElem.innerHTML = `(Refreshes in ${getRemainingTime()})`;
-        }
-        setInterval(updateGuestTokenValue, 500);
+            setInterval(updateGuestTokenValue, 500);
+        })();
+
+        // Upload
+        bulkUserUploadFormElem.addEventListener('submit', (event) => {
+            event.preventDefault();
+            bulkUserUploadErrorElem.innerHTML = `<b>Success!</b> Modified ${data.count} accounts`;
+            fetch("{% url 'internal-bulkuserupload' %}", {
+                method: "POST",
+                body:  new FormData(bulkUserUploadFormElem),
+            }).then(response => response.json()).then(data => {
+                if (data.status === "ok") {
+                    bulkUserUploadErrorElem.innerHTML = `<b>Success!</b> Modified ${data.count} accounts`;
+                } else {
+                    bulkUserUploadErrorElem.innerHTML = `<b>Error:</b> ${data.errors}`;
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
     });
     </script>
 </div>

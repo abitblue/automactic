@@ -45,7 +45,7 @@ ALLOWED_HOSTS = [] if not any(_ALLOWED_HOSTS) else _ALLOWED_HOSTS
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'admin.apps.CustomAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
