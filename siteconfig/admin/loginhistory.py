@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
 
-from login.models import LoginHistory
+from siteconfig.models import LoginHistory, LastLoginAttempt
 
 
 class MacIsNoneFilter(SimpleListFilter):
@@ -37,5 +37,27 @@ class LoginHistoryAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 
+    def has_change_permission(self, request, obj=None):
+        return False
+
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(LastLoginAttempt)
+class LastLoginAttemptAdmin(admin.ModelAdmin):
+    list_display = ('ip', 'time')
+    search_fields = ('ip',)
+    ordering = ('time',)
+    readonly_fields = ('ip', 'time')
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
