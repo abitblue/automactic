@@ -27,10 +27,20 @@ class Instructions(View):
 
     def get(self, request: HttpRequest, *args, **kwargs):
         device_os = request.GET.get('os', None)
+        versioncheck = request.GET.get('versioncheck', None)
 
-        if device_os is None:
-            return render(request, self.template_name)
+        if versioncheck not in ['left', 'right', None]:
+            return redirect(reverse('instructions'))
+
+        verbose_os_name_nodefault = {
+            'windows': 'Versions below Windows 10 do not',
+            'mac': 'macOS does not',
+            'android': 'Versions below Android 10 do not',
+            'ios': 'Versions below iOS/iPadOS 14 do not',
+        }.get(device_os, 'Your device does not')
 
         return render(request, self.template_name, {
             'device_os': device_os,
+            'version_check': versioncheck,
+            'verbose_os_name_nodefault': verbose_os_name_nodefault
         })

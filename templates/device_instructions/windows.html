@@ -1,10 +1,26 @@
 {% load static %}
-<header class="headerText">Instructions for Disabling MAC Address Randomization for Windows 10 Devices</header>
-<p class="bodyText">{Any Windows 7 users can directly skip this}</p>
 
-<br>
-<p class="bodyText">- <b>Step 1:</b> Navigate to the settings of your Windows 10 device.</p>
-<p class="bodyText">- <b>Step 2:</b> Click on Network & Internet</p>
-<img class="instructions-img" src="{% static 'instructions/settings_windows.jpg' %}" alt="windows 10 network and internet settings">
-<p class="bodyText">- <b>Step 3:</b> Locate "Use Random Hardware Address" and switch it off</p>
-<img class="instructions-img" src="{% static 'instructions/random_mac_address.png' %}" alt="location of private address setting toggle">
+<header class="headerText">Disabling MAC Address Randomization on Windows</header>
+{% if not version_check %}
+    <h1>What version of Windows are you using?</h1>
+    <p class="bodyText">You can check by running <i>"winver"</i> from the search box.</p>
+    <a href="{% url 'instructions' %}?os=windows&versioncheck=left"><button class="button"><span class="buttonSpan">Windows 8.1 or lower</span></button></a>
+    <a href="{% url 'instructions' %}?os=windows&versioncheck=right"><button class="button"><span class="buttonSpan">Windows 10 or higher</span></button></a>
+{% else %}
+
+    {% if version_check == "left" %}
+        {% include 'device_instructions/nodefault.html' %}
+
+    {% else %} {# version_check == "right" #}
+        <p class="bodyText">- <b>Step 1:</b> Navigate to the settings of your Windows 10 device.</p>
+        <p class="bodyText">- <b>Step 2:</b> Click on Network & Internet</p>
+        <img class="instructions-img" src="{% static 'instructions/settings_windows.jpg' %}" alt="windows 10 network and internet settings">
+        <p class="bodyText">- <b>Step 3:</b> Locate "Use Random Hardware Address" and switch it off</p>
+        <img class="instructions-img" src="{% static 'instructions/random_mac_address.png' %}" alt="location of private address setting toggle">
+
+    {% endif %}
+
+    <br>
+    {% include 'device_instructions/bottombuttons.html' %}
+
+{% endif %}

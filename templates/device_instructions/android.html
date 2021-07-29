@@ -1,29 +1,32 @@
 {% load static %}
 
-<header class="headerText">Instructions for Disabling MAC Address Randomization for Android Devices</header>
-<p class="bodyText">{Any Android Version 9 or lower users can directly skip this}</p>
-<p class="bodyText">To check your Android Version: </p>
-<p class="bodyText">Open the Settings on your phone.</p>
-<p class="bodyText">Scroll down until you locate the About tab</p>
-<p class="bodyText"><i>(Can be about phone/about device)</i></p>
-<img class="instructions-img" src="{% static 'instructions/about_android.jpg' %}" alt="android about phone settings">
-<p class="bodyText">Locate your Android Version</p>
-<img class="instructions-img" src="{% static 'instructions/versioncheck_android.jpg' %}" alt="location of android version info">
-<br>
-<p class="bodyText"><b>Step 1:</b> Navigate to the Wi-Fi settings of your Android Device.</p>
-<p class="bodyText"><i>This may appear differently per device.</i></p>
-<img class="instructions-img" src="{% static 'instructions/wifi_network_android.jpg' %}" alt="wifi and network settings on android">
-<p class="bodyText"><b>Step 2:</b> Click on the Gear next to the Wifi name.</p>
-<img class="instructions-img" src="{% static 'instructions/gear_android.jpg' %}" alt="gear icon next to the wifi network">
-<p class="bodyText"><b>Step 3:</b> Open up Advanced settings in the network.</p>
-<img class="instructions-img" src="{% static 'instructions/details_android.jpg' %}" alt="advanced settings dropdown">
-<p class="bodyText"><b>Step 4:</b> Locate the Privacy setting and make sure you are using your Device MAC.</p>
-<img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'instructions/advanced_android.jpg' %}" alt="location of the privacy setting">
-<br>
-<img class="instructions-img" src="{% static 'instructions/mac_address_android.jpg' %}" alt="selection of use device MAC">
+<header class="headerText">Disabling MAC Address Randomization for Android</header>
 
-<br>
-<a href="{% url 'instructions' %}?os=android&versioncheck=true">
-            <button class="button2 button"><span class="buttonSpan">Yes</span></button>
-        </a>
+{% if not version_check %}
+    <h1>What version of Android are you using?</h1>
+    <p class="bodyText">You can check by going to Settings > About Device > Android Version. <br> <i>Note that your device may have a different layout</i></p>
+    <a href="{% url 'instructions' %}?os=android&versioncheck=left"><button class="button"><span class="buttonSpan">Android 9 or lower</span></button></a>
+    <a href="{% url 'instructions' %}?os=android&versioncheck=right"><button class="button"><span class="buttonSpan">Android 10 or higher</span></button></a>
+{% else %}
 
+    {% if version_check == "left" %}
+        {% include 'device_instructions/nodefault.html' %}
+
+    {% else %} {# version_check == "right" #}
+        <p class="bodyText"><b>Step 1:</b> Navigate to the Wi-Fi settings of your Android Device.</p>
+        <img class="instructions-img" src="{% static 'instructions/wifi_network_android.jpg' %}" alt="wifi and network settings on android">
+        <p class="bodyText"><b>Step 2:</b> Click on the Gear next to the Wifi name.</p>
+        <img class="instructions-img" src="{% static 'instructions/gear_android.jpg' %}" alt="gear icon next to the wifi network">
+        <p class="bodyText"><b>Step 3:</b> Open up Advanced settings in the network.</p>
+        <img class="instructions-img" src="{% static 'instructions/details_android.jpg' %}" alt="advanced settings dropdown">
+        <p class="bodyText"><b>Step 4:</b> Locate the Privacy setting and make sure you are using your Device MAC.</p>
+        <img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'instructions/advanced_android.jpg' %}" alt="location of the privacy setting">
+        <br>
+        <img class="instructions-img" src="{% static 'instructions/mac_address_android.jpg' %}" alt="selection of use device MAC">
+
+    {% endif %}
+
+    <br>
+    {% include 'device_instructions/bottombuttons.html' %}
+
+{% endif %}
