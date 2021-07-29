@@ -7,6 +7,7 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UsernameField, ReadOnlyPasswordHashField
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from login.models import User, UserType
 
@@ -112,8 +113,10 @@ class UserBulkImportForm(forms.Form):
                             code='invalid_data')
                     if write:
                         osis, dob = osis_match.group(), ''.join(date_match.groups())
-                        print(osis, dob)
-                        bulk_create_list.append(User(username=osis, type=student_type, password=make_password(dob, None, 'plain')))
+                        bulk_create_list.append(User(username=osis,
+                                                     type=student_type,
+                                                     disable_on=timezone.now() + student_type.disable_in,
+                                                     password=make_password(dob, None, 'plain')))
 
                 # TODO: Other user types
 
