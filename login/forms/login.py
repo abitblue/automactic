@@ -34,13 +34,6 @@ class IndexAuthenticationForm(BaseAuthenticationForm):
     }
 
     def rate_limit_check(self, user):
-        # Always rate limit login attempts per IP
-        if not LastLoginAttempt.allowed(get_client_ip(self.request)[0]):
-            raise ValidationError(
-                self.error_messages['rate_limit'],
-                code='rate_limit',
-            )
-
         if user.bypass_rate_limit:
             return
 
@@ -70,6 +63,13 @@ class IndexAuthenticationForm(BaseAuthenticationForm):
             )
 
     def clean(self):
+        # Always rate limit login attempts per IP before doing anything else
+        if not LastLoginAttempt.allowed(get_client_ip(self.request)[0]):
+            raise ValidationError(
+                self.error_messages['rate_limit'],
+                code='rate_limit',
+            )
+
         username_nowhitespace = self.whitespace_regex.sub('', self.cleaned_data.get('username'))
         password_nowhitespace = self.whitespace_regex.sub('', self.cleaned_data.get('password'))
 
