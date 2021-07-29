@@ -10,13 +10,9 @@ from siteconfig.models import Configuration
 class RotatingCode:
     @classmethod
     def get_totp(cls):
-        import time
-        t0 = time.time()
-        totp = pyotp.TOTP(base64.b32encode(SECRET_KEY.encode()).decode()[:32],
+        return pyotp.TOTP(base64.b32encode(SECRET_KEY.encode()).decode()[:32],
                           digits=Configuration.get('GuestPasswordLength', cast=int)[0],
                           interval=Configuration.get('GuestPasswordUpdateInterval', cast=int)[0])
-        print(time.time() - t0)
-        return totp
 
     @classmethod
     def get(cls):
