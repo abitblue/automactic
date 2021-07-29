@@ -14,20 +14,20 @@ from automactic.settings import EMAIL_RECIPIENTS
 from interface.cppm_api import CppmApiException
 from interface.cppm_iface import Clearpass
 from login.forms import IndexAuthenticationForm
-from login.models import LoginHistory
 from login.utils import restrict_to, attach_mac_to_session, MacAddr
+from siteconfig.models import LoginHistory, Configuration
 
 logger = logging.getLogger('views.login')
 
 
-@method_decorator(restrict_to(IPNetwork('192.168.0.0/16')), name='dispatch')
+@method_decorator([restrict_to(IPNetwork(Configuration.get('LoginIPRestriction', raw=True))),
+                   attach_mac_to_session], name='dispatch')
 class Login(View):
     template_name = 'login.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
         return render(request, self.template_name, {'form': IndexAuthenticationForm()})
 
-    @method_decorator(attach_mac_to_session)
     def post(self, request: HttpRequest, *args, **kwargs):
         form = IndexAuthenticationForm(request, data=request.POST)
         if not form.is_valid():

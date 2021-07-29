@@ -10,6 +10,7 @@ from asgiref.sync import async_to_sync
 from netaddr import EUI, mac_bare
 
 from login.utils import mutually_exclusive
+from siteconfig.models import Configuration
 
 logger = logging.getLogger('CppmApi')
 
@@ -108,12 +109,16 @@ class CppmApi:
     @async_to_sync
     async def create_device(self, name: str, mac: EUI, notes: Optional[str] = None,
                             expire_time: Optional[Union[datetime, int]] = None,
-                            expire_action: int = 2, ret_resp: bool = False) -> dict:
-        # expire_action docs:
-        # https://www.arubanetworks.com/techdocs/ClearPass/CPGuest_UG_HTML_6.5/Content/Reference/GuestManagerStandardFields.htm
-
+                            expire_action: Optional[int] = None, ret_resp: bool = False) -> dict:
         if expire_time is None:
-            expire_time = datetime(datetime.today().year + 4, 9, 4).astimezone()
+            update_val = lambda val, reftime: reftime + eval(val) if val[0] in ('+', '-') else int(val)
+            m, d, y = tuple(map(update_val,
+                                Configuration.get('ClearpassDeviceExpireDate'),
+                                [datetime.today().month, datetime.today().day, datetime.today().year]))
+            expire_time = datetime(y, m, d).astimezone()
+
+        if expire_action is None:
+            expire_action = Configuration.get('ClearpassExpireAction', cast=int)[0]
 
         return await self._base_action('POST', '/device', params={'change_of_authorization': True}, data={
             'visitor_name': name,
