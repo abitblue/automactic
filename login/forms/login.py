@@ -2,14 +2,14 @@ import re
 from datetime import timedelta
 
 from django import forms
-from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from ipware import get_client_ip
 
 from interface.rotating_passwd import RotatingCode
-from login.models import LoginHistory, User, LastLoginAttempt
+from login.models import User
+from siteconfig.models import LoginHistory, LastLoginAttempt, Configuration
 
 
 class IndexAuthenticationForm(BaseAuthenticationForm):
@@ -48,14 +48,20 @@ class IndexAuthenticationForm(BaseAuthenticationForm):
         # Always rate limit if 5 incorrect passwords in an hour
         # No other limit on first 3 successful modifications
         # After that, rate limit to 5 modifications per hour and one unique mac address per 18 hours
-        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > 3
+        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > \
+                       Configuration.get('RatelimitModificationsUntilNotNewUser', cast=int)[0]
+
         passwd_per_hour_limit = LoginHistory.objects.filter(user=user, logged_in=False,
-                                                            time__gt=timezone.now() - timedelta(
-                                                                hours=1)).count() > 5
+                                                            time__gt=timezone.now() - timedelta(hours=1)).count() > \
+                                Configuration.get('RatelimitPasswordPerHourLimit', cast=int)[0]
+
         modifications_limit = LoginHistory.objects.filter(user=user, mac_address__isnull=False,
-                                                          time__gt=timezone.now() - timedelta(hours=1)).count() > 5
+                                                          time__gt=timezone.now() - timedelta(hours=1)).count() > \
+                              Configuration.get('RatelimitModificationsPerHourAfterNotNewUser', cast=int)[0]
+
+        hours = Configuration.get('RatelimitUniqueMacAddressEveryHours', cast=int)[0]
         unique_mac_limit = LoginHistory.objects.filter(user=user, mac_address=self.request.session.get('macaddr'),
-                                                       time__gt=timezone.now() - timedelta(hours=18)).exists()
+                                                       time__gt=timezone.now() - timedelta(hours=hours)).exists()
 
         if passwd_per_hour_limit or (not_new_user and (modifications_limit or unique_mac_limit)):
             raise ValidationError(
@@ -64,13 +70,6 @@ class IndexAuthenticationForm(BaseAuthenticationForm):
             )
 
     def clean(self):
-        # Early exit if MAC address not present.
-        if self.request.session.get('macaddr') is None:
-            raise ValidationError(
-                self.error_messages['mac_missing'],
-                code='mac_missing',
-            )
-
         username_nowhitespace = self.whitespace_regex.sub('', self.cleaned_data.get('username'))
         password_nowhitespace = self.whitespace_regex.sub('', self.cleaned_data.get('password'))
 

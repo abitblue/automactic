@@ -1,9 +1,14 @@
+import csv
+import io
+import re
+
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UsernameField, ReadOnlyPasswordHashField
+from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 
-from login.models import User
+from login.models import User, UserType
 
 
 class UserCreationForm(forms.ModelForm):
@@ -67,3 +72,53 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = '__all__'
         field_classes = {'username': UsernameField}
+
+
+class UserBulkImportForm(forms.Form):
+    #50 MB upload limit
+    file = forms.FileField(label='Bulk Import Users', help_text='Upload limit: 50MB')
+
+    osis_re = re.compile(r'^\d{9}$')
+    date_re = re.compile(r'^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](\d{4})$')
+    error_messages = {
+        'missing_type_header': 'File is missing a header or is not a CSV file',
+        'invalid_data': 'Error in file on line {}: {}',
+        'file_too_big': 'Uploaded file is too large'
+    }
+
+    def clean(self):
+        if self.errors:
+            return
+
+        if self.cleaned_data.get('file').size > 52428800:
+            raise ValidationError(self.error_messages['file_too_big'], code='file_too_big')
+
+        self.validate_data()
+
+    def validate_data(self, write=False):
+        self.cleaned_data.get('file').seek(0)
+        try:
+            filedata = io.StringIO(self.cleaned_data.get('file').read().decode('utf-8'))
+            student_type = UserType.objects.get(name='Student')
+            data = csv.DictReader(filedata, delimiter=',')
+            bulk_create_list = []
+            for cnt, row in enumerate(data):
+                if row['Type'].lower() == 'student':
+                    osis_match, date_match = self.osis_re.match(row['OSIS']), self.date_re.match(row['DOB'])
+                    if not (osis_match and date_match):
+                        # cnt + 2 b/c +1 for 0 index and +1 for DictReader counting from line after header
+                        raise ValidationError(
+                            self.error_messages['invalid_data'].format(cnt + 2, f'"{row}" - OSIS or DOB invalid'),
+                            code='invalid_data')
+                    if write:
+                        osis, dob = osis_match.group(), ''.join(date_match.groups())
+                        print(osis, dob)
+                        bulk_create_list.append(User(username=osis, type=student_type, password=make_password(dob, None, 'plain')))
+
+                # TODO: Other user types
+
+            if write:
+                return len(User.objects.bulk_create(bulk_create_list, ignore_conflicts=True))
+
+        except (csv.Error, ValueError) as err:
+            raise ValidationError(self.error_messages['missing_type_header'], code='missing_type_header')

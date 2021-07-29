@@ -6,7 +6,8 @@ from django.db import models
 from django.utils import timezone
 from macaddress.fields import MACAddressField
 
-from . import User
+from login.models import User
+from .conf import Configuration
 
 
 class LoginHistory(models.Model):
@@ -44,12 +45,18 @@ class LastLoginAttempt(models.Model):
     ip = models.GenericIPAddressField()
     time = models.DateTimeField(null=True, default=None)
 
+    class Meta:
+        verbose_name = 'Login Attempt'
+        verbose_name_plural = 'Login Attempts'
+
     @classmethod
-    def allowed(cls, ip) -> bool:
+    def allowed(cls, ip, update=True) -> bool:
         retval = False
         attempt, _ = cls.objects.get_or_create(ip=ip)
-        if attempt.time is None or timezone.now() > attempt.time + timedelta(seconds=1):
+        seconds = Configuration.get('RatelimitSecondsBetweenAttemptsPerIP', cast=int)[0]
+        if attempt.time is None or timezone.now() > attempt.time + timedelta(seconds=seconds):
             retval = True
-        attempt.time = timezone.now()
-        attempt.save()
+        if update:
+            attempt.time = timezone.now()
+            attempt.save()
         return retval
