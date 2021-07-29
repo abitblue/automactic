@@ -59,18 +59,23 @@
         // Upload
         bulkUserUploadFormElem.addEventListener('submit', (event) => {
             event.preventDefault();
-            bulkUserUploadErrorElem.innerHTML = `<b>Success!</b> Modified ${data.count} accounts`;
+            bulkUserUploadErrorElem.innerHTML = `Working...`;
             fetch("{% url 'internal-bulkuserupload' %}", {
                 method: "POST",
                 body:  new FormData(bulkUserUploadFormElem),
-            }).then(response => response.json()).then(data => {
+            }).then(response => {
+                if (!response.ok) { throw Error(response.statusText); }
+                return response;
+            }).then(response => {
+                return response.json();
+            }).then(data => {
                 if (data.status === "ok") {
                     bulkUserUploadErrorElem.innerHTML = `<b>Success!</b> Modified ${data.count} accounts`;
                 } else {
                     bulkUserUploadErrorElem.innerHTML = `<b>Error:</b> ${data.errors}`;
                 }
             }).catch((error) => {
-                console.log(error);
+                bulkUserUploadErrorElem.innerHTML = `${error}`;
             });
         });
     });

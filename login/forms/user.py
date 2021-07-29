@@ -87,6 +87,9 @@ class UserBulkImportForm(forms.Form):
     }
 
     def clean(self):
+        if self.errors:
+            return
+
         if self.cleaned_data.get('file').size > 52428800:
             raise ValidationError(self.error_messages['file_too_big'], code='file_too_big')
 
@@ -94,24 +97,23 @@ class UserBulkImportForm(forms.Form):
 
     def validate_data(self, write=False):
         self.cleaned_data.get('file').seek(0)
-        filedata = io.StringIO(self.cleaned_data.get('file').read().decode('utf-8'))
-        student_type = UserType.objects.get(name='Student')
         try:
+            filedata = io.StringIO(self.cleaned_data.get('file').read().decode('utf-8'))
+            student_type = UserType.objects.get(name='Student')
             data = csv.DictReader(filedata, delimiter=',')
-            modified_count = 0
             bulk_create_list = []
             for cnt, row in enumerate(data):
                 if row['Type'].lower() == 'student':
                     osis_match, date_match = self.osis_re.match(row['OSIS']), self.date_re.match(row['DOB'])
                     if not (osis_match and date_match):
+                        # cnt + 2 b/c +1 for 0 index and +1 for DictReader counting from line after header
                         raise ValidationError(
-                            self.error_messages['invalid_data'].format(cnt + 1, f'"{row}" - OSIS or DOB invalid'),
+                            self.error_messages['invalid_data'].format(cnt + 2, f'"{row}" - OSIS or DOB invalid'),
                             code='invalid_data')
                     if write:
                         osis, dob = osis_match.group(), ''.join(date_match.groups())
                         print(osis, dob)
-                        # TODO: Make password PBKDF2 on first login
-                        bulk_create_list.append(User(username=osis, type=student_type, password=make_password(dob, None, 'md5')))
+                        bulk_create_list.append(User(username=osis, type=student_type, password=make_password(dob, None, 'plain')))
 
                 # TODO: Other user types
 

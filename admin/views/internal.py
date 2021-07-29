@@ -3,7 +3,6 @@ from django.http import HttpRequest, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from admin.admin import admin_site
 from interface.rotating_passwd import RotatingCode
 from login.forms.user import UserBulkImportForm
 
@@ -24,7 +23,7 @@ class InternalBulkUserUpload(View):
         if not form.is_valid():
             return JsonResponse({
                 'status': 'error',
-                'errors': form.errors
+                'errors': [errors for field, errors in form.errors.items()]
             })
 
         return JsonResponse({

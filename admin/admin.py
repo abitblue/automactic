@@ -4,8 +4,8 @@ from login.forms.user import UserBulkImportForm
 
 
 class CustomAdminSite(admin.AdminSite):
-    site_header = 'automactic TEST'
-    index_title = 'Administrative Portal TEST'
+    site_header = 'automactic'
+    index_title = 'Administrative Portal'
     index_template = 'admin_index.html'
 
     def index(self, request, extra_context=None):
