@@ -48,7 +48,7 @@ class UserAdmin(BaseUserAdmin):
         'get_modified_warning_threshold')
     list_display_links = ('username',)
     search_fields = ('username',)
-    list_filter = ('is_staff', IsActiveFilter)
+    list_filter = ('is_staff', 'type__name', IsActiveFilter)
     fieldsets = (
         (None, {
             'classes': ('wide',),
