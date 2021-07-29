@@ -11,12 +11,25 @@
 
     <p>We were unable to process your request. Please try again later, or get in contact with relevant administration if
         you believe this was a mistake.</p>
-    <p>Report any problems to Mr. Whalen in Room C56. Be prepared to get yelled at if you do. Alternatively, you can email <i>byod@sitechhs.com</i></p>
+    <p>Report any problems to Mr. Whalen in Room C56. Be prepared to get yelled at if you do. Alternatively, you can email <i>byod@sitechhs.com</i> with a screenshot of this page.</p>
 
     <br>
-    <a href="{% url 'index' %}">
-        <button><span class="buttonSpan">Go Back</span></button>
-    </a>
+    <a href="{% url 'index' %}"><button><span class="buttonSpan">Go Back</span></button></a>
+
+    <br>
+    {# TODO: Move inline styling into CSS file #}
+    <p style="margin-top: 5rem;">Debug Info:</p>
+    <iframe src="{% url 'debug' %}" title="debug" width="100%" style="
+        overflow: hidden;
+        border: unset;
+        -ms-zoom: 0.75;
+        -moz-transform: scale(0.75);
+        -moz-transform-origin: 0 0;
+        -o-transform: scale(0.75);
+        -o-transform-origin: 0 0;
+        -webkit-transform: scale(0.75);
+        -webkit-transform-origin: 0 0;
+    "></iframe>
 
     </div>
 {% endblock %}

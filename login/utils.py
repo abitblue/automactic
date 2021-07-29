@@ -1,9 +1,12 @@
 from functools import wraps
 from pathlib import Path
 from typing import Union, Optional
+from urllib.parse import quote
 
 from django.conf import settings
 from django.http import HttpRequest, HttpResponseForbidden
+from django.shortcuts import redirect
+from django.urls import reverse
 from ipware import get_client_ip
 from netaddr import IPNetwork, EUI
 
@@ -58,15 +61,19 @@ def mutually_exclusive(keyword, *keywords):
 def attach_mac_to_session(view):
     def wrapper(request: HttpRequest, *args, **kwargs):
         lease_file = Path('/var/lib/misc/dnsmasq.leases')
-        MacAddr.serialize_to(request, None)
+        mac_addr = None
         if lease_file.is_file():
             with open(lease_file) as fp:
                 for cnt, line in enumerate(fp):
                     l = line.strip().split(maxsplit=4)
                     if l[2] == get_client_ip(request)[0]:
-                        MacAddr.serialize_to(request, l[1])
-        # Hardcoded localhost testing
-        #MacAddr.serialize_to(request, 'aa-bb-cc-dd-ee-ff')
+                        mac_addr = l[1]
+        if (mac_addr is not None) or (settings.DEBUG and mac_addr is None):
+            MacAddr.serialize_to(request, mac_addr)
+            # Hardcoded localhost testing
+            # MacAddr.serialize_to(request, 'aa-bb-cc-dd-ee-ff')
+        else:
+            return redirect(reverse('error') + f'?error={quote("Unable to determine MAC address of this device.")}')
         return view(request, *args, **kwargs)
     return wrapper
 
@@ -76,7 +83,7 @@ def restrict_to(range: IPNetwork):
         def wrapper(request: HttpRequest, *args, **kwargs):
             client_ip, routable = get_client_ip(request)
             if not settings.DEBUG and client_ip not in range:
-                return HttpResponseForbidden('Connecting from wrong network.')
+                return redirect(reverse('error') + f'?error={quote("Connecting from wrong network.")}')
             return view(request, *args, **kwargs)
         return wrapper
     return decorator

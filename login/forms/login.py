@@ -64,13 +64,6 @@ class IndexAuthenticationForm(BaseAuthenticationForm):
             )
 
     def clean(self):
-        # Early exit if MAC address not present.
-        if self.request.session.get('macaddr') is None:
-            raise ValidationError(
-                self.error_messages['mac_missing'],
-                code='mac_missing',
-            )
-
         username_nowhitespace = self.whitespace_regex.sub('', self.cleaned_data.get('username'))
         password_nowhitespace = self.whitespace_regex.sub('', self.cleaned_data.get('password'))
 
