@@ -1,7 +1,6 @@
 python-dotenv
 Django>=3.2.0
 gunicorn
-uvicorn
 psycopg2
 django-macaddress
 django-ipware
