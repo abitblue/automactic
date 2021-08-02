@@ -120,7 +120,7 @@ class CppmApi:
             "do_expire": expire_action,
             'role_id': 2,  # Guest
             'enabled': True,
-            'start_time': int(datetime.now().astimezone().timestamp()),
+            'start_time': int((datetime.now().astimezone() - timedelta(minutes=10)).timestamp()),
             'notes': '' if notes is None else notes
         }, ret_resp=ret_resp)
 
