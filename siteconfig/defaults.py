@@ -22,9 +22,9 @@ defaults = [
     ),
     dict(
         key='ClearpassExpireAction',
-        value='2',
+        value='4',
         doc='Value is from the do_expire field in https://www.arubanetworks.com/techdocs/ClearPass/CPGuest_UG_HTML_6.5/Content/Reference/GuestManagerStandardFields.htm\n'
-            'Default: 2',
+            'Default: 4',
         validator=r'^([0-4])$'
     ),
     dict(
