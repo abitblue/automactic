@@ -4,7 +4,6 @@
     "pk": 1,
     "fields": {
       "name": "Sentinel",
-      "disable_in": null,
       "device_validity_period": null,
       "device_modified_warning_count": null
     }
@@ -14,7 +13,6 @@
     "pk": 2,
     "fields": {
       "name": "Student",
-      "disable_in": "1460 00:00:00",
       "device_validity_period": "1460 00:00:00",
       "device_modified_warning_count": null
     }
@@ -24,7 +22,6 @@
     "pk": 3,
     "fields": {
       "name": "Staff",
-      "disable_in": null,
       "device_validity_period": null,
       "device_modified_warning_count": 15
     }
@@ -34,7 +31,6 @@
     "pk": 4,
     "fields": {
       "name": "Guest",
-      "disable_in": null,
       "device_validity_period": "1 00:00:00",
       "device_modified_warning_count": null
     }

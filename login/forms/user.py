@@ -7,7 +7,7 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UsernameField, ReadOnlyPasswordHashField
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
-from django.utils import timezone
+from django.db.models import Q
 
 from login.models import User, UserType
 
@@ -32,7 +32,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'type', 'is_staff', 'disable_on', '_device_validity_period',
+        fields = ('username', 'type', 'is_staff', '_device_validity_period',
                   '_device_modified_warning_count')
         field_classes = {'username': UsernameField}
 
@@ -76,8 +76,12 @@ class UserChangeForm(forms.ModelForm):
 
 
 class UserBulkImportForm(forms.Form):
+    CHOICES = [('replace', 'Replace'),
+               ('insert', 'Insert')]
+
     #50 MB upload limit
-    file = forms.FileField(label='Bulk Import Users', help_text='Upload limit: 50MB')
+    file = forms.FileField(label='File', help_text='Upload limit: 50MB', required=True)
+    import_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, label='Type', required=True)
 
     osis_re = re.compile(r'^\d{9}$')
     date_re = re.compile(r'^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](\d{4})$')
@@ -106,10 +110,6 @@ class UserBulkImportForm(forms.Form):
             data = csv.DictReader(filedata, delimiter=',')
             bulk_create_list = []
 
-            student_type = UserType.objects.get(name='Student')
-            staff_type = UserType.objects.get(name='Staff')
-
-
             for cnt, row in enumerate(data):
                 if row['Type'].lower() == 'student':
                     osis_match, date_match = self.osis_re.match(row['OSIS']), self.date_re.match(row['DOB'])
@@ -118,7 +118,9 @@ class UserBulkImportForm(forms.Form):
                         raise ValidationError(
                             self.error_messages['invalid_data'].format(cnt + 2, f'"{row}" - OSIS or DOB invalid'),
                             code='invalid_data')
+
                     if write:
+                        student_type = UserType.objects.get(name='Student')
                         osis, dob = osis_match.group(), ''.join(date_match.groups())
                         bulk_create_list.append(User(username=osis, type=student_type,
                                                      password=make_password(dob, None, 'plain')))
@@ -132,11 +134,14 @@ class UserBulkImportForm(forms.Form):
                             code='invalid_data')
 
                     if write:
+                        staff_type = UserType.objects.get(name='Staff')
                         email, token = email_match.group(0), token_match.group()
                         bulk_create_list.append(User(username=email, type=staff_type,
                                                      password=make_password(token, None, 'plain')))
 
             if write:
+                if self.cleaned_data.get('import_type') == 'replace':
+                    User.objects.all().exclude(Q(type__name='Sentinel') | Q(type__name='Guest')).delete()
                 return len(User.objects.bulk_create(bulk_create_list, ignore_conflicts=True))
 
         except (csv.Error, ValueError) as err:

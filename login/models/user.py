@@ -55,8 +55,6 @@ class User(AbstractBaseUser):
                                                       'when troubleshooting. Use with caution.')
 
     # Values implicitly inherited from user type
-    disable_on = models.DateTimeField(blank=True, null=True,
-                                      help_text='When to disable user account. Implicitly defined by user type.')
     _device_validity_period = models.DurationField(blank=True, null=True,
                                                    help_text="Implicitly defined by profile type. Write to override.")
     _device_modified_warning_count = models.PositiveIntegerField(blank=True, null=True,
@@ -68,9 +66,7 @@ class User(AbstractBaseUser):
 
     @property
     def is_active(self):
-        if self.disable_on is None:
-            return True
-        return timezone.now() <= self.disable_on
+        return True
 
     @property
     def device_modified_warning_count(self):
@@ -81,8 +77,6 @@ class User(AbstractBaseUser):
         return self.type.device_validity_period if self._device_validity_period is None else self._device_validity_period
 
     def save(self, *args, **kwargs):
-        if self._state.adding and self.disable_on is None and self.type.disable_in is not None:
-            self.disable_on = timezone.now() + self.type.disable_in
         self.username = self.username.lower()
         super().save(*args, **kwargs)
 

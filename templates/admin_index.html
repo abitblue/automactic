@@ -8,8 +8,14 @@
     <br><br>
     <form id="bulkUserUpload" enctype="multipart/form-data">
         {% csrf_token %}
-        <b>{{ bulkImportForm.file.label_tag }}</b>
+        <b>Bulk Importing/Replacing</b>
         <br>
+        <b>{{ bulkImportForm.import_type.label_tag }}</b>
+        {% for radio in bulkImportForm.import_type %}
+            {{ radio }}
+        {% endfor %}
+        <br>
+        <b>{{ bulkImportForm.file.label_tag }}</b>
         {{ bulkImportForm.file }}
         <button type="submit">Submit</button>
         <br>
@@ -70,7 +76,7 @@
                 return response.json();
             }).then(data => {
                 if (data.status === "ok") {
-                    bulkUserUploadErrorElem.innerHTML = `<b>Success!</b> Modified ${data.count} accounts`;
+                    bulkUserUploadErrorElem.innerHTML = `<b>Success!</b> Read ${data.count} accounts`;
                 } else {
                     bulkUserUploadErrorElem.innerHTML = `<b>Error:</b> ${data.errors}`;
                 }
