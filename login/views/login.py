@@ -75,9 +75,10 @@ class Login(View):
                 logger.info(f'Registered {mac_addr} to {name}:{device_name}')
 
                 if user.device_modified_warning_count is not None and user.device_modified_count >= user.device_modified_warning_count:
+                    logger.warning(f'User: {name} has reached their modified threshold of {user.device_modified_count}/{user.device_modified_warning_count}')
                     try:
                         msg = f'This is an automated message.\n\nThe user: {user} has registered {user.device_modified_count} devices.' \
-                              f'This email triggers after f{user.device_modified_count} registrations.' \
+                              f'This email triggers after f{user.device_modified_warning_count} registrations.' \
                               f'Please check login history for any suspicious activity. ' \
                               f'If none can be found, you may reset the modified count via the administrative portal.'
                         send_mail('[automactic] Warning: Possible suspicious activity in user device registrations',

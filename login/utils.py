@@ -4,7 +4,7 @@ from typing import Union, Optional
 from urllib.parse import quote
 
 from django.conf import settings
-from django.http import HttpRequest, HttpResponseForbidden
+from django.http import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse
 from ipware import get_client_ip
@@ -40,20 +40,6 @@ def mutually_exclusive(keyword, *keywords):
             if sum(k in keywords for k in kwargs) != 1:
                 raise TypeError('You must specify exactly one of {}'.format(', '.join(keywords)))
             return func(*args, **kwargs)
-
-        return inner
-    return wrapper
-
-
-def mutually_exclusive(keyword, *keywords):
-    keywords = (keyword,) + keywords
-    def wrapper(func):
-        @wraps(func)
-        def inner(*args, **kwargs):
-            if sum(k in keywords for k in kwargs) != 1:
-                raise TypeError('You must specify exactly one of {}'.format(', '.join(keywords)))
-            return func(*args, **kwargs)
-
         return inner
     return wrapper
 

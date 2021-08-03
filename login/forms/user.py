@@ -1,5 +1,6 @@
 import csv
 import io
+import logging
 import re
 
 from django import forms
@@ -76,6 +77,8 @@ class UserChangeForm(forms.ModelForm):
 
 
 class UserBulkImportForm(forms.Form):
+    _logger = logging.getLogger('BulkImportUsers')
+
     CHOICES = [('replace', 'Replace'),
                ('insert', 'Insert')]
 
@@ -140,6 +143,7 @@ class UserBulkImportForm(forms.Form):
                                                      password=make_password(token, None, 'plain')))
 
             if write:
+                self._logger.info(f"Importing Users: Mode: {self.cleaned_data.get('import_type')} Count: {len(bulk_create_list)} ")
                 if self.cleaned_data.get('import_type') == 'replace':
                     User.objects.all().exclude(Q(type__name='Sentinel') | Q(type__name='Guest')).delete()
                 return len(User.objects.bulk_create(bulk_create_list, ignore_conflicts=True))
