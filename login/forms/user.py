@@ -81,6 +81,9 @@ class UserBulkImportForm(forms.Form):
 
     osis_re = re.compile(r'^\d{9}$')
     date_re = re.compile(r'^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](\d{4})$')
+    email_re = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+    token_re = re.compile(r"^.{8,}$")
+
     error_messages = {
         'missing_type_header': 'File is missing a header or is not a CSV file',
         'invalid_data': 'Error in file on line {}: {}',
@@ -100,9 +103,13 @@ class UserBulkImportForm(forms.Form):
         self.cleaned_data.get('file').seek(0)
         try:
             filedata = io.StringIO(self.cleaned_data.get('file').read().decode('utf-8'))
-            student_type = UserType.objects.get(name='Student')
             data = csv.DictReader(filedata, delimiter=',')
             bulk_create_list = []
+
+            student_type = UserType.objects.get(name='Student')
+            staff_type = UserType.objects.get(name='Staff')
+
+
             for cnt, row in enumerate(data):
                 if row['Type'].lower() == 'student':
                     osis_match, date_match = self.osis_re.match(row['OSIS']), self.date_re.match(row['DOB'])
@@ -113,12 +120,21 @@ class UserBulkImportForm(forms.Form):
                             code='invalid_data')
                     if write:
                         osis, dob = osis_match.group(), ''.join(date_match.groups())
-                        bulk_create_list.append(User(username=osis,
-                                                     type=student_type,
-                                                     disable_on=timezone.now() + student_type.disable_in,
+                        bulk_create_list.append(User(username=osis, type=student_type,
                                                      password=make_password(dob, None, 'plain')))
 
                 # TODO: Other user types
+                if row['Type'].lower() == 'staff':
+                    email_match, token_match = self.email_re.match(row['Email']), self.token_re.match(row['Token'])
+                    if not (email_match and token_match):
+                        raise ValidationError(
+                            self.error_messages['invalid_data'].format(cnt + 2, f'"{row}" - Email or Token invalid'),
+                            code='invalid_data')
+
+                    if write:
+                        email, token = email_match.group(0), token_match.group()
+                        bulk_create_list.append(User(username=email, type=staff_type,
+                                                     password=make_password(token, None, 'plain')))
 
             if write:
                 return len(User.objects.bulk_create(bulk_create_list, ignore_conflicts=True))
