@@ -15,7 +15,7 @@ from siteconfig.models import LoginHistory, LastLoginAttempt, Configuration
 class IndexAuthenticationForm(BaseAuthenticationForm):
     device_name = forms.CharField(label='',
                                   required=False,
-                                  widget=forms.TextInput(attrs={'maxlength': 40, 'placeholder': 'Device Name'}))
+                                  widget=forms.TextInput(attrs={'maxlength': 40, 'placeholder': 'Device Name (Not Required)'}))
 
     def __init__(self, request=None, *args, **kwargs):
         super().__init__(request, *args, **kwargs)

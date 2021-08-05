@@ -9,6 +9,11 @@ class UserTypeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     ordering = ('id',)
 
-    # Cannot delete user types. Prevents user error
+    # Cannot delete default user types. Manually created ones are still deletable.
     def has_delete_permission(self, request, obj=None):
-        return False
+        if obj is None:
+            return False
+
+        if obj.name in ['Staff', 'Sentinel', 'Guest', 'Student']:
+            return False
+        return True
