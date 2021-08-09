@@ -20,8 +20,7 @@ class UserAdmin(BaseUserAdmin):
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     list_display = (
-        'username', 'get_type', 'get_device_validity_period',
-        'get_modified_warning_threshold')
+        'username', 'get_type', 'get_modified_warning_threshold')
     list_display_links = ('username',)
     search_fields = ('username',)
     list_filter = ('is_staff', 'type__name')
@@ -31,8 +30,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password', 'is_staff', 'bypass_rate_limit')
         }),
         ('Profile', {
-            'fields': ('type', '_device_validity_period', '_device_modified_warning_count',
-                       'device_modified_count')
+            'fields': ('type', '_device_modified_warning_count', 'device_modified_count')
         }),
     )
     add_fieldsets = (
@@ -41,8 +39,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password1', 'password2', 'is_staff', 'bypass_rate_limit'),
         }),
         ('Profile',
-         {'fields': ('type', '_device_validity_period', '_device_modified_warning_count',
-                     'device_modified_count')}),
+         {'fields': ('type', '_device_modified_warning_count', 'device_modified_count')}),
     )
     ordering = ('username',)
     filter_horizontal = ()
@@ -54,10 +51,6 @@ class UserAdmin(BaseUserAdmin):
         if obj.is_staff:
             return f'{obj.type} (Site Admin)'
         return str(obj.type)
-
-    @admin.display(description='Device Validity Period')
-    def get_device_validity_period(self, obj: User):
-        return obj.device_validity_period
 
     @admin.display(description='Modified Warning Threshold')
     def get_modified_warning_threshold(self, obj: User):

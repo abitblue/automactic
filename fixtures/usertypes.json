@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "name": "Sentinel",
-      "device_validity_period": null,
+      "clearpass_device_expire": null,
       "device_modified_warning_count": null
     }
   },
@@ -13,7 +13,7 @@
     "pk": 2,
     "fields": {
       "name": "Student",
-      "device_validity_period": "1460 00:00:00",
+      "clearpass_device_expire": "09/01/+4",
       "device_modified_warning_count": null
     }
   },
@@ -22,7 +22,7 @@
     "pk": 3,
     "fields": {
       "name": "Staff",
-      "device_validity_period": null,
+      "clearpass_device_expire": null,
       "device_modified_warning_count": 15
     }
   },
@@ -31,7 +31,7 @@
     "pk": 4,
     "fields": {
       "name": "Guest",
-      "device_validity_period": "1 00:00:00",
+      "clearpass_device_expire": "+0/+1/+0",
       "device_modified_warning_count": null
     }
   }

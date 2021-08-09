@@ -5,7 +5,7 @@ from login.models import UserType
 
 @admin.register(UserType)
 class UserTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'device_validity_period', 'device_modified_warning_count',)
+    list_display = ('name', 'clearpass_device_expire', 'device_modified_warning_count',)
     search_fields = ('name',)
     ordering = ('id',)
 

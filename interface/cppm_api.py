@@ -97,18 +97,14 @@ class CppmApi:
     def _get_device_id_from_name(self, name: str):
         named_device = self.get_device(name=name)
         if named_device['count'] != 1:
-            raise CppmApiException(406, 'Multiple devices with same name returned')
+            raise CppmApiException(406, 'Multiple devices with same name returned or the name does not exist')
         return int(named_device['items'][0]['id'])
 
     def create_device(self, name: str, mac: EUI, notes: Optional[str] = None,
                       expire_time: Optional[Union[datetime, int]] = None,
                       expire_action: Optional[int] = None, ret_resp: bool = False) -> dict:
         if expire_time is None:
-            update_val = lambda val, reftime: reftime + eval(val) if val[0] in ('+', '-') else int(val)
-            m, d, y = tuple(map(update_val,
-                                Configuration.get('ClearpassDeviceExpireDate'),
-                                [datetime.today().month, datetime.today().day, datetime.today().year]))
-            expire_time = datetime(y, m, d).astimezone()
+            expire_time = 0         # None in Python and 0 in Clearpass means "doesn't expire"
 
         if expire_action is None:
             expire_action = Configuration.get('ClearpassExpireAction', cast=int)[0]

@@ -95,9 +95,7 @@ class Login(View):
                 return redirect(reverse('error') + f'?error={quote(str(err))}')
 
         if user_type != 'student' or registered['count'] == 0:
-            exp_time = 0
-            if user.device_validity_period is not None:
-                exp_time = timezone.now() + user.device_validity_period
+            exp_time = user.type.get_clearpass_device_expire_time()
             return run_cppm_cmd(Clearpass.create_device, name=name, mac=mac_addr,
                                 notes=form.cleaned_data.get('device_name'), expire_time=exp_time)
 

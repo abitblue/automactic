@@ -55,8 +55,6 @@ class User(AbstractBaseUser):
                                                       'when troubleshooting. Use with caution.')
 
     # Values implicitly inherited from user type
-    _device_validity_period = models.DurationField(blank=True, null=True,
-                                                   help_text="Implicitly defined by profile type. Write to override.")
     _device_modified_warning_count = models.PositiveIntegerField(blank=True, null=True,
                                                                  help_text="Implicitly defined by profile type. Write to override.")
 
@@ -71,10 +69,6 @@ class User(AbstractBaseUser):
     @property
     def device_modified_warning_count(self):
         return self.type.device_modified_warning_count if self._device_modified_warning_count is None else self._device_modified_warning_count
-
-    @property
-    def device_validity_period(self):
-        return self.type.device_validity_period if self._device_validity_period is None else self._device_validity_period
 
     def save(self, *args, **kwargs):
         self.username = self.username.lower()

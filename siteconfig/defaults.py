@@ -14,7 +14,8 @@ defaults = [
     dict(
         key='ClearpassDeviceExpireDate',
         value='09/04/+4',
-        doc='The date at which the a device on Clearpass will expire, if it is the first device registered by the account.\n'
+        doc='DEPRECATED DO NOT USE.\n'
+            'The date at which the a device on Clearpass will expire, if it is the first device registered by the account.\n'
             'Format: mm/dd/yyyy\n'
             'However, each part of the date can be replaced by a +value or -value. Eg: "-1/05/+4" means "the 5th day 4 years minus 1 month from the first registration date."\n'
             'Default: 09/04/+4',
