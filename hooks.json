@@ -1,0 +1,17 @@
+[
+    {
+        "id": "push",
+        "execute-command": "/opt/automactic/deploy_update.sh",
+        "command-working-directory": "/opt/automactic/",
+        "trigger-rule": {
+            "match": {
+                "type": "value",
+                "value": "refs/heads/main",
+                "parameter": {
+                    "source": "payload",
+                    "name": "ref"
+                }
+            }
+        }
+    }
+]

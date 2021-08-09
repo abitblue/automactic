@@ -57,7 +57,7 @@ def attach_mac_to_session(view):
         if (mac_addr is not None) or (settings.DEBUG and mac_addr is None):
             MacAddr.serialize_to(request, mac_addr)
             # Hardcoded localhost testing
-            # MacAddr.serialize_to(request, 'aa-bb-cc-dd-ee-ff')
+            MacAddr.serialize_to(request, 'ac-bb-cc-dd-ee-ff')
         else:
             return redirect(reverse('error') + f'?error={quote("Unable to determine MAC address of this device.")}')
         return view(request, *args, **kwargs)
