@@ -52,7 +52,7 @@ def main():
     hostloggerip = os.environ.get('AMAC_PG_HOST')
     headers = {'user-agent': 'automactic-ping/0.0.1'}
     assert hostloggerip is not None, 'SSE_HOST not defined'
-    req = httpx.get(f'http://{hostloggerip}/ping', headers=headers, params={
+    req = httpx.get(f'http://{hostloggerip}/ping_deploy_see', headers=headers, params={
         'fromip': get_host_ip(),
         'fromhostname':  socket.gethostname()
     })
