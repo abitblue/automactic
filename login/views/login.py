@@ -50,7 +50,7 @@ class Login(View):
         resp = Clearpass.get_device(mac=mac_addr, ret_resp=True)
         if resp.status_code == 200:     # Device found:
             LoginHistory.log(user=form.cleaned_data.get('username'), logged_in=form.password_correct)
-            msg = "This device is already registered. Please connect to the WiFi network ncpsp, with the password 605D785001@rackID78R605"
+            msg = "This device is already registered. Please connect to the WiFi network ncpsp, with the password 605D785001@rackID78R605 (Turn off Randomize MAC Address For ncspsp as well)"
             return redirect(reverse('error') + f'?error={quote(msg)}')
 
         name = ""
