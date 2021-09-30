@@ -9,7 +9,10 @@ from siteconfig.defaults import defaults
 class ConfigurationManager(models.Manager):
     def init_defaults(self):
         for default in defaults:
-            self.update_or_create(key=default['key'], defaults={i: default[i] for i in default if i not in ['key', 'value']})
+            obj, created = self.update_or_create(key=default['key'], defaults={i: default[i] for i in default if i not in ['key', 'value']})
+            if created:
+                obj.value = default['value']
+                obj.save()
 
     def get_default(self, key):
         return self.model(**next(item for item in defaults if item['key'] == key))
