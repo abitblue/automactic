@@ -102,3 +102,10 @@ class Login(View):
         else:
             return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']),
                                 data={'notes': device_name, 'mac': mac_addr.format(mac_bare)})
+
+class Teachers(View):
+    template_name = 'teachers.html'
+
+    def get(self, request: HttpRequest, *args, **kwargs):
+        return render(request, self.template_name)
+
