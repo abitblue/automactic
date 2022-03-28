@@ -67,6 +67,7 @@ class Login(View):
         device_name = form.cleaned_data.get('device_name')
         registered = Clearpass.get_device(name=name, additional_filers={'sponsor_name': 'oauth2:automactic'})
 
+        global run_cppm_cmd
         def run_cppm_cmd(func, *func_args, **func_kwargs):
             try:
                 func(*func_args, **func_kwargs)
@@ -103,9 +104,45 @@ class Login(View):
             return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']),
                                 data={'notes': device_name, 'mac': mac_addr.format(mac_bare)})
 
+
 class Teachers(View):
     template_name = 'teachers.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'form': IndexAuthenticationForm()})
+
+    def post(self, request: HttpRequest, *args, **kwargs):
+        form = IndexAuthenticationForm(request, data=request.POST)
+        if not form.is_valid():
+            LoginHistory.log(user=form.cleaned_data.get('username'), logged_in=form.password_correct)
+            return render(request, self.template_name, {'form': form})
+
+        mac_addr = MacAddr.deserialize_from(request)
+
+        resp = Clearpass.get_device(mac=mac_addr, ret_resp=True)
+        if resp.status_code == 200:  # Device found:
+            LoginHistory.log(user=form.cleaned_data.get('username'), logged_in=form.password_correct)
+            msg = "This device is already registered. Please connect to the WiFi network ncpsp, with the password 605D785001@rackID78R605 (Turn off Randomize MAC Address For ncspsp!!!)"
+            return redirect(reverse('error') + f'?error={quote(msg)}')
+
+        name = ""
+        user = form.user_cache
+        user_type = str(user.type).lower()
+        if user_type != 'staff':
+            msg = "This is not the right account type. Please return."
+            return redirect(reverse('error') + f'?error={quote(msg)}')
+        else:
+            name = f'T:{user.username}'
+
+        device_name = form.cleaned_data.get('device_name')
+        registered = Clearpass.get_device(name=name, additional_filers={'sponsor_name': 'oauth2:automactic'})
+
+        if user_type != 'student' or registered['count'] == 0:
+            exp_time = user.type.get_clearpass_device_expire_time()
+            return run_cppm_cmd(Clearpass.create_device, name=name, mac=mac_addr,
+                                notes=form.cleaned_data.get('device_name'), expire_time=exp_time)
+
+        else:
+            return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']),
+                                data={'notes': device_name, 'mac': mac_addr.format(mac_bare)})
 

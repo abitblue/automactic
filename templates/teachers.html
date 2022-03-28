@@ -5,4 +5,25 @@
 {% block content %}
     {% load css_filter %}
 
+    <div class="innerWidth">
+        <form method="post" action="{% url 'login' %}">
+
+            {% csrf_token %}
+            <h1 class="uppercase">Teacher Sign In</h1>
+            <p class="bodyText"><b>FOR TEACHERS ONLY:</b></p>
+            <br>
+            {% if form.errors %}
+                <div class="formLeftAligned errorText">
+                    Errors:
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            {{ form.username|addcss:'formField' }}
+            {{ form.password|addcss:'formField' }}
+            {{ form.device_name|addcss:'formField' }}
+            <div class="formLeftAligned requiredText">* Required</div>
+
+            <button class="button" type="submit"><span class="buttonSpan">Go</span></button>
+        </form>
+    </div>
 {% endblock %}
