@@ -17,13 +17,10 @@ from login.forms import IndexAuthenticationForm
 from login.utils import restrict_to, attach_mac_to_session, MacAddr
 from siteconfig.models import LoginHistory, Configuration
 
-logger = logging.getLogger('views.login')
+logger = logging.getLogger('views.teachers')
 
-
-@method_decorator([restrict_to(IPNetwork(Configuration.get('LoginIPRestriction', raw=True))),
-                   attach_mac_to_session], name='dispatch')
-class Login(View):
-    template_name = 'login.html'
+class Teachers(View):
+    template_name = 'teachers.html'
 
     def get(self, request: HttpRequest, *args, **kwargs):
         return render(request, self.template_name, {'form': IndexAuthenticationForm()})
@@ -34,21 +31,10 @@ class Login(View):
             LoginHistory.log(user=form.cleaned_data.get('username'), logged_in=form.password_correct)
             return render(request, self.template_name, {'form': form})
 
-        # Clearpass:
-        # Check for devices with the name start with "S:{OSIS}:"/"T:{email}:"/"G:{123}:" and sponsor profile oauth2:automactic
-
-        # If not student or count == 0:
-        # create new device
-        # else: (is student and count > 0) replace old device with new one
-
-        # If error, show error to user
-        # Else, show success page
-
-        # Early exit if macaddr is already in Clearpass
         mac_addr = MacAddr.deserialize_from(request)
 
         resp = Clearpass.get_device(mac=mac_addr, ret_resp=True)
-        if resp.status_code == 200:     # Device found:
+        if resp.status_code == 200:  # Device found:
             LoginHistory.log(user=form.cleaned_data.get('username'), logged_in=form.password_correct)
             msg = "This device is already registered. Please connect to the WiFi network ncpsp, with the password 605D785001@rackID78R605 (Turn off Randomize MAC Address For ncspsp!!!)"
             return redirect(reverse('error') + f'?error={quote(msg)}')
@@ -56,12 +42,10 @@ class Login(View):
         name = ""
         user = form.user_cache
         user_type = str(user.type).lower()
-        if user_type == 'guest':
-            # UserCache will be guest account
-            name = f'G:{user.device_modified_count}'
-        elif user_type == 'student':
-            name = f'S:{user.username}'
-        elif user_type == 'staff':
+        if user_type != 'staff':
+            msg = "This is not the right account type. Please return."
+            return redirect(reverse('error') + f'?error={quote(msg)}')
+        else:
             name = f'T:{user.username}'
 
         device_name = form.cleaned_data.get('device_name')
@@ -102,4 +86,3 @@ class Login(View):
         else:
             return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']),
                                 data={'notes': device_name, 'mac': mac_addr.format(mac_bare)})
-
