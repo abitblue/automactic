@@ -10,7 +10,9 @@
 
             {% csrf_token %}
             <h1 class="uppercase">Teacher Sign In</h1>
-            <p class="bodyText"><b>FOR TEACHERS ONLY:</b></p>
+            <p class="bodyText"><b>INSTRUCTIONS:</b></p>
+            <p class="bodyText"> Please find the email sent to you with your generated code. Your <b>ID</b> is your <b style="color: red">schools.nyc.gov</b>  email.
+            Token is the generated code that you should have.</p>
             <br>
             {% if form.errors %}
                 <div class="formLeftAligned errorText">
