@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Login{% endblock %}
+
+{% block content %}
+    {% load css_filter %}
+
+    <div class="innerWidth">
+        <form method="post" action="{% url 'login' %}">
+
+            {% csrf_token %}
+            <h1 class="uppercase">Teacher Sign In</h1>
+            <p class="bodyText"><b>INSTRUCTIONS:</b></p>
+            <p class="bodyText"> Please find the email sent to you with your generated code. Your <b>ID</b> is your <b style="color: red">schools.nyc.gov</b>  email.
+            Token is the generated code that you should have.</p>
+            <br>
+            {% if form.errors %}
+                <div class="formLeftAligned errorText">
+                    Errors:
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            {{ form.username|addcss:'formField' }}
+            {{ form.password|addcss:'formField' }}
+            {{ form.device_name|addcss:'formField' }}
+            <div class="formLeftAligned requiredText">* Required</div>
+
+            <button class="button" type="submit"><span class="buttonSpan">Go</span></button>
+        </form>
+    </div>
+{% endblock %}
