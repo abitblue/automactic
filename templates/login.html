@@ -38,7 +38,7 @@
 
             <button class="button" type="submit"><span class="buttonSpan">Go</span></button>
         </form>
-         <a id="teacher"><b>Teachers Please Click here</b>
+         <a style="color: red" id="teacher"><b>Teachers Please Click here</b>
         </a>
     </div>
 
@@ -48,5 +48,6 @@
             e.preventDefault()
             var urlname = window.location.pathname.replace("login", "teachers")
             window.location.assign(urlname)
+        })
     </script>
 {% endblock %}
