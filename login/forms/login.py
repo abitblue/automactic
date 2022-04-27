@@ -30,7 +30,8 @@ class IndexAuthenticationForm(BaseAuthenticationForm):
         **BaseAuthenticationForm.error_messages,
         'invalid_login': "Incorrect username and/or password",
         'rate_limit': 'Too many attempts. Please try again later.',
-        'mac_missing': 'Unable to determine the MAC address of this device'
+        'mac_missing': 'Unable to determine the MAC address of this device',
+        'wrong_page': "Used the teacher page to login. Please use this page."
     }
 
     def rate_limit_check(self, user):

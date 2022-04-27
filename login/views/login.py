@@ -102,3 +102,4 @@ class Login(View):
         else:
             return run_cppm_cmd(Clearpass.update_device, device_id=int(registered['items'][0]['id']),
                                 data={'notes': device_name, 'mac': mac_addr.format(mac_bare)})
+
