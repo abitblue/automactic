@@ -6,6 +6,8 @@
     {% load css_filter %}
 
     <div class="innerWidth">
+    <button class="button" id="teacher"><b>TEACHERS CLICK HERE</b>
+        </button>
         <form method="post" action="{% url 'login' %}">
 
             {% csrf_token %}
@@ -38,8 +40,6 @@
 
             <button class="button" type="submit"><span class="buttonSpan">Go</span></button>
         </form>
-         <a style="color: red" id="teacher"><b>Teachers Please Click here</b>
-        </a>
     </div>
 
     <script>
