@@ -1,5 +1,5 @@
 # Collected static files in root
-/static/
+
 
 # Environment Variables
 *.env
