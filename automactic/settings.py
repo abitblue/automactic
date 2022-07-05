@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+import logging.config
+import logging.handlers
+from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +24,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lk8%_7@n+%c=e$r0s$=t1exfj*sosqn$1mo*wd(7k9g_+3uxs0'
+SECRET_KEY = key \
+             if (key := os.environ.get('AMAC_SECRET_KEY')) \
+             else 'django-insecure-lk8%_7@n+%c=e$r0s$=t1exfj*sosqn$1mo*wd(7k9g_+3uxs0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# If AMAC_SECRET_KEY is defined, then do not use debug mode.
+DEBUG = not bool(os.environ.get('AMAC_SECRET_KEY'))
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    print('\033[91m' + 'AMAC_SECRET_KEY IS NOT DEFINED. USING BUILTIN SECRET KEY. DEBUG MODE ENABLED.' + '\033[0m')
 
+_hosts_with_spaces = os.environ.get('AMAC_ALLOWED_HOSTS', "").split(',')
+ALLOWED_HOSTS = [] if not any(_hosts_with_spaces) else _hosts_with_spaces
 
 # Application definition
 
@@ -54,7 +64,7 @@ ROOT_URLCONF = 'automactic.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,29 +84,38 @@ WSGI_APPLICATION = 'automactic.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'dev': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    'prod': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('AMAC_PG_DBNAME'),
+        'USER': os.environ.get('AMAC_PG_USER'),
+        'PASSWORD': os.environ.get('AMAC_PG_PASS'),
+        'HOST': os.environ.get('AMAC_PG_HOST'),
+        'PORT:': os.environ.get('AMAC_PG_PORT'),
+    },
 }
+DATABASES['default'] = DATABASES['dev' if DEBUG else 'prod']
 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
 ]
 
 
@@ -116,8 +135,69 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "static"
+
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SAMESITE = None
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Logging
+
+# Disable Django's logging setup
+LOGGING_CONFIG = None
+
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)-15s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'standard_nodate': {
+            'format': '%(asctime)-8s | %(process)-6s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'formatter': 'standard',
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'formatter': 'standard_nodate',
+            'filename': 'logs/django.log',
+            'when': 'midnight',
+            'interval': 1,
+            'backupCount': 30,
+        },
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+            'formatter': 'standard_nodate',
+        }
+    },
+    'loggers': {
+        'django.utils.autoreload': {
+            'level': 'DEBUG',
+            'handlers': ['null'],
+            'propagate': False
+        },
+        '': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+    }
+})
