@@ -1,12 +1,14 @@
 [tool.poetry]
 name = "automactic"
-version = "0.1.0"
+version = "3.0.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Ryan Yang <ryang1453@gmail.com>", "Ivan Zheng <zivan7644@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 Django = "^4.0.6"
+netaddr = "^0.8.0"
+psycopg2 = "^2.9.3"
 
 [tool.poetry.dev-dependencies]
 
