@@ -1,1 +1,1 @@
-from .homepage import Index
+from .homepage import Index, Instructions
