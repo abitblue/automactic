@@ -1,0 +1,26 @@
+{% extends "login/base.html" %}
+
+{% block title %}Instructions{% endblock %}
+
+{% block content %}
+    <p class="bodyText">
+        We have detected that your device is using a randomized MAC address. <br> You <b>cannot</b> proceed
+        without disabling this. Please select your device type for instructions on disabling.
+    </p>
+    <span class="headerText">I am using...</span>
+    <br>
+
+    <a href="{% url 'instructions' %}?os=windows"><button class="button"><span class="buttonSpan">Windows</span></button></a>
+    <br>
+    <a href="{% url 'instructions' %}?os=mac"><button class="button"><span class="buttonSpan">Macintosh</span></button></a>
+    <br>
+    <a href="{% url 'instructions' %}?os=ios"><button class="button"><span class="buttonSpan">iOS / iPadOS</span></button></a>
+    <br>
+    <a href="{% url 'instructions' %}?os=android"><button class="button2 button"><span class="buttonSpan">Android</span></button></a>
+
+    <br>
+    <p class="bodyText bodyTextInsignificant gray smallText">
+        If your device type is not listed above, please ensure MAC Address randomization is disabled on your device.
+        Once that is done, please click <a href="{% url 'index' %}">here</a> to reload the page.
+    </p>
+{% endblock %}

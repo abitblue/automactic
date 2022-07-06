@@ -1,0 +1,25 @@
+{% extends "login/base.html" %}
+
+{% block title %}Instructions{% endblock %}
+
+{% block content %}
+    <header class="headerText">Disabling MAC Address Randomization on {{ device_os_verbose }}</header>
+    <br>
+
+    {% if device_os == 'mac' %}
+        {% include 'login/instructions/nodefault.html' %}
+
+    {% elif device_os == "windows" %}
+        {% include 'login/instructions/os_windows.html' %}
+
+    {% elif device_os == 'ios' %}
+        {% include 'login/instructions/os_ios.html' %}
+
+    {% elif device_os == 'android'%}
+        {% include 'login/instructions/os_android.html' %}
+
+    {% else %}
+        <span class="bodyText">Unknown device type: {{ device_os }}</span>
+        {% include 'login/instructions/fotter_buttons.html' %}
+    {% endif %}
+{% endblock %}
