@@ -28,8 +28,8 @@ class Error(View):
     err_map: dict[ErrorType, tuple[str, list[str]]] = {
         ErrorType.Unknown: (
             'Unknown Error',
-            ['We were unable to process your request',
-             'Please seek assistance in room C56']
+            ['We were unable to process your request.',
+             'Please seek assistance in room C56.']
         ),
         ErrorType.AlreadyRegistered: (
             'Your device is already registered',
@@ -46,15 +46,12 @@ class Error(View):
         ),
         ErrorType.ClearpassAPI: (
             'Internal server error',
-            [
-                'Seek assistance in room C-56, or send an email to <i>byod@sitechhs.com</i> with a screenshot of this page.']
+            ['Seek assistance in room C-56, or send an email to <i>byod@sitechhs.com</i> with a screenshot of this page.']
         ),
     }
 
     def get(self, request: HttpRequest):
-        request.session['error'] = ErrorType.AlreadyRegistered
-
-        err: ErrorType = request.session.get('error', ErrorType.Unknown)
+        err: ErrorType = request.session.pop('error', ErrorType.Unknown)
         verbose_message, fixes = self.err_map[err]
 
         return render(request, self.template_name, {
