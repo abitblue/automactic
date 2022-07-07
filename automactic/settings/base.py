@@ -111,12 +111,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Logging
 
-# Disable Django's logging setup
-LOGGING_CONFIG = None
-
-logging.config.dictConfig({
+LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'standard': {
             'format': '%(asctime)-15s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
@@ -127,21 +124,17 @@ logging.config.dictConfig({
             'datefmt': '%Y-%m-%d %H:%M:%S',
         }
     },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'formatter': 'standard',
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',
-        },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard_nodate',
-            'filename': 'logs/django.log',
-            'when': 'midnight',
-            'interval': 1,
-            'backupCount': 30,
         },
         'null': {
             'level': 'DEBUG',
@@ -150,15 +143,30 @@ logging.config.dictConfig({
         }
     },
     'loggers': {
+        # Django default logger
+        'django': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['console'],
+        },
+
+        # Show DB Queries in DEBUG mode
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'filters': ['require_debug_true'],
+            'handlers': ['console'],
+        },
+
+        # Do not show autoreload messages
         'django.utils.autoreload': {
             'level': 'DEBUG',
+            'propagate': False,
             'handlers': ['null'],
-            'propagate': False
         },
-        '': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
+    },
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['console'],
     }
-})
+}
