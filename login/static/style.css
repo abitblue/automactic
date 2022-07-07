@@ -1,116 +1,285 @@
-html {
+
+body, html, * {
     --color-techgold: #C4B55F;
     box-sizing: border-box;
-}
-
-body {
     font-family: sans-serif;
-    margin: 1%;
+    margin: 0;
+    padding: 0;
 }
 
-.centerDiv {
-    text-align: center;
-    margin: auto;
-    width: 85%;
-}
-
-img {
-    height: 1.5em;
-    vertical-align: middle;
+.outerContainer {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    flex-direction: column;
 }
 
 .header {
-    text-align: left;
+    display: flex;
+    width: 100%;
+    height: 10%;
     border-bottom: 1px solid #222222;
-    margin-bottom: 1.2em;
+
+
+}
+
+
+.img-header-cont {
+    display: flex;
+    width: 30%;
+    height: 100%;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.headerImg {
+    max-height: 100%;
+    width: auto;
+    margin: 0 1rem 0 1rem;
+}
+
+.headerTitle {
+
     font-size: 4.5vh;
-    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 70%;
+    height: 100%;
+    font-size: 4.5vh;
+    font-weight: bold;
+}
+
+.instructionTitle {
+    text-align: center;
+    height: 7%;
+    width: 100%;
+    font-size: 3rem;
+}
+
+.instructionBlurb {
+    text-align: center;
+    font-size: 1.8rem;
+    padding-top: 2rem;
+    width: 80%;
+    height: 13%;
+}
+
+.S-btn-cont {
+    display: flex;
+    height: 50%;
+}
+
+.errPage {
+    font-size: 3rem;
+    text-align: center;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.windows-link {
+    cursor: pointer;
+    height: 15%;
+    margin: 4rem;
+    text-decoration: none;
+    font-size: 3vh;
+    background-color: var(--color-techgold);
+    border-radius: 3.2rem;
+    color: black;
+    display: flex;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+
+.cntrl-btn {
+    cursor: pointer;
+    height: 5%;
+    margin: 4rem;
+    text-decoration: none;
+    font-size: 3vh;
+    background-color: var(--color-techgold);
+    border-radius: 3.2rem;
+    color: black;
+    display: flex;
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .headerText {
-    font-size: 4.5vh;
-    font-weight: bold;
-    margin: 1vh 1vh 2.25vh 1vh;
-    display: inline-block;
+
+    text-align: center;
+    font-size: 3rem;
 }
 
-@media only screen and (max-width: 480px) {
-    body {
-        margin: 3% 1% 1%;
-    }
-
-    .headerText {
-        font-size: 3.5vh;
-    }
+.instructions-img:hover {
+    transform: scale(3.5);
+    transition-duration: .4s;
 }
+
+.instructions-img:focus {
+    transform: scale(3.5);
+    transition-duration: .4s;
+
+}
+
+instructions-img {
+    cursor: pointer;
+}
+
 
 .bodyText {
-    font-size: 2.5vh;
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
+    margin: 1rem;
+    font-size: 3rem;
+    text-align: center;
 }
 
-.uppercase {
-    text-transform: uppercase;
+
+@media only screen and (max-width: 960px) {
+    .headerImg {
+        margin: 0 .3rem 0 .3rem;
+    }
+
+
 }
 
-.button2{
-    margin-bottom: 4vh !important;
+@media only screen and (max-width: 770px) {
+    * {
+        font-size: 90%
+    }
+
+
+    .headerTitle {
+        font-size: 2.8rem;
+    }
+
+    .headerImg {
+        width: auto;
+        height: 50%;
+    }
+
+
+    .instructionBlurb {
+        width: 100%;
+        font-size: 1.6rem;
+    }
+
+    .instructionTitle {
+        font-size: 2.5rem;
+    }
+
 }
 
-.bodyTextInsignificant {
+@media only screen and (max-width: 1365px) {
+    .instructionBlurb {
+        padding: 0;
+    }
+
+    .instructions-img:hover {
+        transform: scale(1.5);
+        transition-duration: .4s;
+    }
+
+    .instructions-img:focus {
+        transform: scale(1.5);
+        transition-duration: .4s;
+
+    }
+
+
+    .OS-btn-cont {
+        width: 80% !important;
+    }
+
+}
+
+@media only screen and (max-width: 414px) {
+    * {
+        font-size: 80%;
+    }
+
+    .outerContainer {
+
+        height: 120vh;
+    }
+
+
+    .instructionBlurb {
+        font-size: 1.5rem
+    }
+
+}
+
+
+.miniBlurb {
     color: gray;
-    font-size: 1.5vh !important;
+    font-size: .8rem;
+    text-align: center;
+    margin: .5rem 0 .5rem 0;
 }
 
 .footerStroke {
-    margin: 5vh auto auto;
-    width: 60vw;
-    border-radius: 1000px;
+    width: 60%;
+    border-radius: 2rem;
     height: 1vh;
     background-color: palegoldenrod;
 }
 
-.footerText{
+.footer {
+    height: 15%;
+    justify-content: space-evenly;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.footerText {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
     margin-bottom: 0.5vh;
     margin-top: 0.5vh;
     color: darkgrey;
     font-size: 1.5vh;
 }
 
-.lastFooter{
-    margin-bottom: 3vh;
-}
 
 .innerWidth {
-  max-width: 37.5rem;
-  margin: auto;
+    max-width: 37.5rem;
+    margin: auto;
 }
 
-.innerWidth2 {
-  margin: auto;
-  max-width: 50rem;
-}
 
 h1.login {
-  font-size: 2rem;
-  margin: 40px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  font-weight: 400;
+    font-size: 2rem;
+    margin: 40px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 400;
 }
 
 .formField {
-  background: none;
-  border: none;
-  outline: none;
-  border-bottom: 1px solid;
-  padding: 10px 6px;
-  font-size: 14px;
-  margin: 20px 0;
-  min-width: 80%;
-  max-width: 80%;
+    background: none;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid;
+    padding: 10px 6px;
+    font-size: 14px;
+    margin: 20px 0;
+    min-width: 80%;
+    max-width: 80%;
 }
 
 
@@ -174,49 +343,31 @@ select {
     width: 20vw;
     height: auto;
 }
-.button {
-  background-color: var(--color-techgold);
-  text-align: center;
-  border: none;
-  font-size: 3vh;
-  width: 35vh;
-  cursor: pointer;
-  outline: none;
-  text-decoration: none;
-  display: inline-block;
-  padding: 1vw 0;
-  border-radius: 1000vh;
-  margin: 1vh 1vw;
+
+
+.OS-link {
+    cursor: pointer;
+    height: 20%;
+    text-decoration: none;
+    font-size: 3vh;
+    background-color: var(--color-techgold);
+    border-radius: 3.2rem;
+    color: black;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
-.button .buttonSpan {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
+.OS-btn-cont {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    height: 80%;
+    width: 40%;
 }
 
-.button .buttonSpan:after {
-  content: "\00bb";
-  position: absolute;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  top: 0;
-  right: -20px;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
-}
-
-.button:hover .buttonSpan {
-  padding-right: 25px;
-}
-
-.button:hover .buttonSpan:after {
-  opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-  right: 0;
-}
 
 .wifipass {
     font-size: 2.75vh;

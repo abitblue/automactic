@@ -6,27 +6,35 @@
     <link rel="icon" href="{% static 'favicon.ico' %}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <title>{% block title %}{% endblock %} - Device Registration</title>
 </head>
 <body>
-<div class="centerDiv">
+<div class="outerContainer">
     {% block header %}
-        <div class="header">
-            <img src="{% static 'logo1.svg' %}" srcset="{% static 'logo1.svgz' %}" alt="SITHS Logo">
-            <img src="{% static 'logo2.svg' %}" srcset="{% static 'logo2.svgz' %}" alt="SITHS Technology Dept">
-            <span class="headerText">Device Registration</span>
-        </div>
+        <header class="header">
+            <div class="img-header-cont">
+                <img class="headerImg" src="{% static 'logo1.svg' %}" srcset="{% static 'logo1.svgz' %}"
+                     alt="SITHS Logo">
+                <img class="headerImg" src="{% static 'logo2.svg' %}" srcset="{% static 'logo2.svgz' %}"
+                     alt="SITHS Technology Dept">
+            </div>
+            <h1 class="headerTitle">Device Registration</h1>
+        </header>
     {% endblock %}
 
     {% block content %} {% endblock %}
 
     {% block footer %}
         <div class="footerStroke"></div>
-{#        <p class="footerText">Staten Island Technical High School, <a href="{% url 'debug' %}" style="text-decoration: none; color: inherit;">Technology Department</a></p>#}
-        <p class="footerText">Contact: Mr. Whalen, Room C56, or byod@sitechhs.com</p>
-        <p class="footerText">Team: Ryan Yang '20, Ivan Zheng '22, Harvey Jiang '23, Nick Melkadze '20, Anthony Chen</p>
-        <p class="footerText lastFooter">Special Thanks to Daniel Indictor '20, Michael Whalen, and Mark Erlenwein</p>
+        <footer class="footer">
+            {#        <p class="footerText">Staten Island Technical High School, <a href="{% url 'debug' %}" style="text-decoration: none; color: inherit;">Technology Department</a></p>#}
+            <h6 class="footerText">Contact: Mr. Whalen, Room C56, or byod@sitechhs.com</h6>
+            <h6 class="footerText">Team: Ryan Yang '20, Ivan Zheng '22, Harvey Jiang '23, Nick Melkadze '20, Anthony
+                Chen</h6>
+            <h6 class="footerText">Special Thanks to Daniel Indictor '20, Michael Whalen, and Mark
+                Erlenwein</h6>
+        </footer>
     {% endblock %}
 </div>
 

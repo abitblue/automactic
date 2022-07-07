@@ -1,10 +1,13 @@
 {% load static %}
 
 {% if not version_check %}
-    <h1>What version of Windows are you using?</h1>
+    <p class="bodyText">
+        What version of Windows are you using?</p>
     <p class="bodyText">You can check by running <i>"winver"</i> from the search box.</p>
-    <a href="{% url 'instructions' %}?os=windows&version_check=left"><button class="button"><span class="buttonSpan">Windows 8.1 or lower</span></button></a>
-    <a href="{% url 'instructions' %}?os=windows&version_check=right"><button class="button"><span class="buttonSpan">Windows 10 or higher</span></button></a>
+    <a class="windows-link" href="{% url 'instructions' %}?os=windows&version_check=left">Windows 8.1 or lower</a>
+    <a class="windows-link" href="{% url 'instructions' %}?os=windows&version_check=right">
+        Windows 10 or higher
+    </a>
 {% else %}
 
     {% if version_check == "left" %}
@@ -13,9 +16,11 @@
     {% else %} {# version_check == "right" #}
         <p class="bodyText">- <b>Step 1:</b> Navigate to the settings of your Windows 10 device.</p>
         <p class="bodyText">- <b>Step 2:</b> Click on Network & Internet</p>
-        <img class="instructions-img" src="{% static 'instructions/settings_windows.jpg' %}" alt="windows 10 network and internet settings">
+        <img class="instructions-img" src="{% static 'instructions/settings_windows.jpg' %}"
+             alt="windows 10 network and internet settings">
         <p class="bodyText">- <b>Step 3:</b> Locate "Use Random Hardware Address" and switch it off</p>
-        <img class="instructions-img" src="{% static 'instructions/random_mac_address.png' %}" alt="location of private address setting toggle">
+        <img class="instructions-img" src="{% static 'instructions/random_mac_address.png' %}"
+             alt="location of private address setting toggle">
     {% endif %}
 
     {% include 'login/instructions/fotter_buttons.html' %}

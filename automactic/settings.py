@@ -88,14 +88,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'prod': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('AMAC_PG_DBNAME'),
-        'USER': os.environ.get('AMAC_PG_USER'),
-        'PASSWORD': os.environ.get('AMAC_PG_PASS'),
-        'HOST': os.environ.get('AMAC_PG_HOST'),
-        'PORT:': os.environ.get('AMAC_PG_PORT'),
-    },
+    # 'prod': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.environ.get('AMAC_PG_DBNAME'),
+    #     'USER': os.environ.get('AMAC_PG_USER'),
+    #     'PASSWORD': os.environ.get('AMAC_PG_PASS'),
+    #     'HOST': os.environ.get('AMAC_PG_HOST'),
+    #     'PORT:': os.environ.get('AMAC_PG_PORT'),
+    # },
 }
 DATABASES['default'] = DATABASES['dev' if DEBUG else 'prod']
 
