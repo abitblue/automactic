@@ -5,11 +5,11 @@
 {% block content %}
     <div class="formLeftAligned">
 
-    <h1>Uh oh.</h1>
+    <h1>Uh oh. We were unable to add this device to the network.</h1>
     <h2> {{ error_message }} </h2>
 
     {% for line in error_fixes %}
-        <p>{{ line }}</p>
+        <p>{{ line |safe }}</p>
     {% endfor %}
 
     <br>

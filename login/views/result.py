@@ -13,46 +13,38 @@ class Success(View):
         return render(request, self.template_name)
 
 
-class ErrorType(Enum):
-    Unknown = auto()
-    AlreadyRegistered = auto()
-    UnknownMAC = auto()
-    WrongNetwork = auto()
-    ClearpassAPI = auto()
-
-
 class Error(View):
     template_name = 'login/error.html'
 
     # Map from Error to Verbose Name and Possible fixes
-    err_map: dict[ErrorType, tuple[str, list[str]]] = {
-        ErrorType.Unknown: (
+    err_map: dict[str, tuple[str, list[str]]] = {
+        'unknown': (
             'Unknown Error',
             ['We were unable to process your request.',
              'Please seek assistance in room C56.']
         ),
-        ErrorType.AlreadyRegistered: (
+        'alreadyRegistered': (
             'Your device is already registered',
             ['Ensure that MAC address randomization is turned off for the WiFi network, ncpsp.',
              'Connect to "ncpsp" with the password: 605D785001@rackID78R60']
         ),
-        ErrorType.UnknownMAC: (
+        'unknownMAC': (
             'We could not determine your MAC address',
             ['Please seek assistance in room C56.']
         ),
-        ErrorType.WrongNetwork: (
+        'wrongNetwork': (
             'You are connecting from the wrong network',
-            ['Please connect using the JoinForWifi network.']
+            ['Please connect using the JoinForWifi network and try again.']
         ),
-        ErrorType.ClearpassAPI: (
+        'clearpassAPI': (
             'Internal server error',
-            ['Seek assistance in room C-56, or send an email to <i>byod@sitechhs.com</i> with a screenshot of this page.']
+            ['Seek assistance in room C56 or send an email to <i>byod@sitechhs.com</i> with a screenshot of this page.']
         ),
     }
 
     def get(self, request: HttpRequest):
-        err: ErrorType = request.session.pop('error', ErrorType.Unknown)
-        verbose_message, fixes = self.err_map[err]
+        err: str = request.GET.get('reason', 'unknown')
+        verbose_message, fixes = self.err_map.get(err, self.err_map['unknown'])
 
         return render(request, self.template_name, {
             'error_message': verbose_message,
