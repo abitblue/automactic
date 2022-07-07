@@ -4,12 +4,14 @@
     <p class="bodyText">What version of Android are you using?</p>
     <p class="bodyText"> You can check by going to Settings > About Device > Android Version. <i>Note that your
         device may have a different layout</i></p>
-    <a class="windows-link" href="{% url 'instructions' %}?os=android&version_check=left">
-        Android 9 or lower
-    </a>
-    <a class="windows-link" href="{% url 'instructions' %}?os=android&version_check=right">
-        Android 10 or higher
-    </a>
+    <div class="type-os-cont">
+        <a class="type-os-link" href="{% url 'instructions' %}?os=android&version_check=left">
+            Android 9 or lower
+        </a>
+        <a class="type-os-link" href="{% url 'instructions' %}?os=android&version_check=right">
+            Android 10 or higher
+        </a>
+    </div>
 {% else %}
 
     {% if version_check == "left" %}
@@ -28,7 +30,6 @@
         <p class="bodyText"><b>Step 4:</b> Locate the Privacy setting and make sure you are using your Device MAC.</p>
         <img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'instructions/advanced_android.jpg' %}"
              alt="location of the privacy setting">
-        <br>
         <img class="instructions-img" src="{% static 'instructions/mac_address_android.jpg' %}"
              alt="selection of use device MAC">
         <p class="bodyText"><b>Step 5:</b> After registering your device, <b>MAKE SURE YOU USE DEVICE MAC FOR NCPSP

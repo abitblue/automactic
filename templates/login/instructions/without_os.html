@@ -3,13 +3,13 @@
 {% block title %}Instructions{% endblock %}
 
 {% block content %}
-
-    <p class="instructionBlurb">
-        We have detected that your device is using a randomized MAC address. You <b>cannot</b> proceed
-        without disabling this. Please select your device type for instructions on disabling.
-    </p>
-    <span class="instructionTitle">I am using...</span>
-
+    <div class="instructions-outer-div">
+        <p class="instructionBlurb">
+            We have detected that your device is using a randomized MAC address. You <b>cannot</b> proceed
+            without disabling this. Please select your device type for instructions on disabling.
+        </p>
+        <span class="instructionTitle">I am using...</span>
+    </div>
     <div class="OS-btn-cont">
         <button class="OS-link">
             <a href="{% url 'instructions' %}?os=windows" class="OS-link">

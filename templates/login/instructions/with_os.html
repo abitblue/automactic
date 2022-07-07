@@ -8,6 +8,7 @@
 
     {% if device_os == 'mac' %}
         {% include 'login/instructions/nodefault.html' %}
+        {% include 'login/instructions/fotter_buttons.html' %}
 
     {% elif device_os == "windows" %}
         {% include 'login/instructions/os_windows.html' %}
@@ -15,7 +16,7 @@
     {% elif device_os == 'ios' %}
         {% include 'login/instructions/os_ios.html' %}
 
-    {% elif device_os == 'android'%}
+    {% elif device_os == 'android' %}
         {% include 'login/instructions/os_android.html' %}
 
     {% else %}

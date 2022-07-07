@@ -1,13 +1,16 @@
 {% load static %}
 
 {% if not version_check %}
-    <p class="bodyText">
-        What version of Windows are you using?</p>
-    <p class="bodyText">You can check by running <i>"winver"</i> from the search box.</p>
-    <a class="windows-link" href="{% url 'instructions' %}?os=windows&version_check=left">Windows 8.1 or lower</a>
-    <a class="windows-link" href="{% url 'instructions' %}?os=windows&version_check=right">
-        Windows 10 or higher
-    </a>
+    <div class="outer-os-cont">
+        <p class="bodyText">
+            What version of Windows are you using?</p>
+    </div>
+    <div class="type-os-cont">
+        <a class="type-os-link" href="{% url 'instructions' %}?os=windows&version_check=left">Windows 8.1 or lower</a>
+        <a class="type-os-link" href="{% url 'instructions' %}?os=windows&version_check=right">
+            Windows 10 or higher
+        </a>
+    </div>
 {% else %}
 
     {% if version_check == "left" %}

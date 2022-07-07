@@ -3,12 +3,15 @@
 {% if not version_check %}
     <p class="bodyText">What version of iOS/iPadOS are you using?</p>
     <p class="bodyText">You can check by going to Settings > General > About > Version</p>
-    <a class="windows-link" href="{% url 'instructions' %}?os=ios&version_check=left">
-        iOS 13 or lower
-    </a>
-    <a class="windows-link" href="{% url 'instructions' %}?os=ios&version_check=right">
-        iOS 14 or higher
-    </a>
+    <div class="type-os-cont">
+        <a class="type-os-link" href="{% url 'instructions' %}?os=ios&version_check=left">
+            iOS 13 or lower
+        </a>
+        <a class="type-os-link" href="{% url 'instructions' %}?os=ios&version_check=right">
+            iOS 14 or higher
+        </a>
+    </div>
+
 {% else %}
 
     {% if version_check == "left" %}
