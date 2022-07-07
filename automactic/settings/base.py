@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import os
 from pathlib import Path
 
 import logging.config
@@ -17,29 +16,9 @@ import logging.handlers
 from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = key \
-             if (key := os.environ.get('AMAC_SECRET_KEY')) \
-             else 'django-insecure-lk8%_7@n+%c=e$r0s$=t1exfj*sosqn$1mo*wd(7k9g_+3uxs0'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# If AMAC_SECRET_KEY is defined, then do not use debug mode.
-DEBUG = not bool(os.environ.get('AMAC_SECRET_KEY'))
-
-if DEBUG:
-    print('\033[91m' + 'AMAC_SECRET_KEY IS NOT DEFINED. USING BUILTIN SECRET KEY. DEBUG MODE ENABLED.' + '\033[0m')
-
-_hosts_with_spaces = os.environ.get('AMAC_ALLOWED_HOSTS', "").split(',')
-ALLOWED_HOSTS = [] if not any(_hosts_with_spaces) else _hosts_with_spaces
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,27 +57,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'automactic.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'dev': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'prod': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('AMAC_PG_DBNAME'),
-        'USER': os.environ.get('AMAC_PG_USER'),
-        'PASSWORD': os.environ.get('AMAC_PG_PASS'),
-        'HOST': os.environ.get('AMAC_PG_HOST'),
-        'PORT:': os.environ.get('AMAC_PG_PORT'),
-    },
-}
-DATABASES['default'] = DATABASES['dev' if DEBUG else 'prod']
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
