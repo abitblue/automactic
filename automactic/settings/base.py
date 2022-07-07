@@ -101,6 +101,8 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = None
 SESSION_COOKIE_SAMESITE = None
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

@@ -1,0 +1,51 @@
+{% extends "login/base.html" %}
+
+{% block title %}Success{% endblock %}
+
+{% block content %}
+
+    <h1 class="headerText">Success!</h1>
+    <br>
+    <p class="bodyText errorText"><i><b>IMPORTANT:</b> Please read the following</i></p>
+    <span class="bodyText"><b>Your device has been successfully registered. Here's what to do next:</b></span>
+    <p class="bodyText">1) <b>Disconnect</b> from JoinForWifi</p>
+    <p class="bodyText">2) Copy the following password and connect to <b>ncpsp</b></p>
+    <div class="innerWidth">
+        <p class="bodyText errorText"><b>iOS/iPadOS/Android Users:</b> ENSURE RANDOM/PRIVATE MAC ADDRESS ARE DISABLED ON NCPSP</p>
+        <input type="text" class="formField wifipass" value="605D785001@rackID78R605" readonly>
+        <button id="copyButton" class="button">Copy</button>
+    </div>
+
+    <script>
+        // Both queryCommandSupported and execCommand have been deprecated.
+        // Should they break, we have a fallback: Remove the copy button.
+        // TODO: Find a suitable replacement?
+        // NOTE: the Clipboard API is HTTPS only, and is currently still a working draft. (as of 2022/07/07)
+
+        let can_copy = true;
+        try {
+            document.queryCommandSupported('copy');
+            can_copy = true;
+        } catch (e) {
+            if (e instanceof TypeError) {
+                document.querySelector("#copyButton").remove();
+            }
+        }
+
+        if (can_copy) {
+            document.querySelector("#copyButton").addEventListener("click", function () {
+                const copyText = document.querySelector("input.wifipass");
+                copyText.setSelectionRange(0, copyText.value.length);
+                copyText.select();
+
+                try {
+                    throw new TypeError('test2');
+                    document.execCommand("copy");
+                    this.innerHTML = "Copied!";
+                } catch (e) {
+                    if (e instanceof TypeError) this.innerHTML = "Copy Manually";
+                }
+            });
+        }
+    </script>
+{% endblock %}
