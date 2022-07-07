@@ -26,6 +26,9 @@ class MacAddr:
 
 def attach_mac_to_session(view):
     def wrapper(request: HttpRequest, *args, **kwargs):
+
+        # TODO: Changing this probably
+        """Finds the dnsmasq lease file and matches the client IP to the responding MAC Address."""
         lease_file = Path('./var/lib/misc/dnsmasq.leases')
         mac_addr = None
         if lease_file.is_file():
@@ -42,6 +45,7 @@ def attach_mac_to_session(view):
         elif mac_addr is None and settings.DEBUG:
             MacAddr.serialize_to(request, 'ac-bb-cc-dd-ee-ff')
         else:
+            # TODO: Return an actual response (AKA: Redirect)
             return HttpResponse("UH OH???")
         return view(request, *args, **kwargs)
     return wrapper
