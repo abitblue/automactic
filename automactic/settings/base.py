@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import os
 from pathlib import Path
 
 import logging.config
@@ -17,29 +16,9 @@ import logging.handlers
 from django.utils.log import DEFAULT_LOGGING
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = key \
-             if (key := os.environ.get('AMAC_SECRET_KEY')) \
-             else 'django-insecure-lk8%_7@n+%c=e$r0s$=t1exfj*sosqn$1mo*wd(7k9g_+3uxs0'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# If AMAC_SECRET_KEY is defined, then do not use debug mode.
-DEBUG = not bool(os.environ.get('AMAC_SECRET_KEY'))
-
-if DEBUG:
-    print('\033[91m' + 'AMAC_SECRET_KEY IS NOT DEFINED. USING BUILTIN SECRET KEY. DEBUG MODE ENABLED.' + '\033[0m')
-
-_hosts_with_spaces = os.environ.get('AMAC_ALLOWED_HOSTS', "").split(',')
-ALLOWED_HOSTS = [] if not any(_hosts_with_spaces) else _hosts_with_spaces
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,27 +57,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'automactic.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'dev': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'prod': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('AMAC_PG_DBNAME'),
-        'USER': os.environ.get('AMAC_PG_USER'),
-        'PASSWORD': os.environ.get('AMAC_PG_PASS'),
-        'HOST': os.environ.get('AMAC_PG_HOST'),
-        'PORT:': os.environ.get('AMAC_PG_PORT'),
-    },
-}
-DATABASES['default'] = DATABASES['dev' if DEBUG else 'prod']
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -143,6 +101,8 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = None
 SESSION_COOKIE_SAMESITE = None
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -151,12 +111,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Logging
 
-# Disable Django's logging setup
-LOGGING_CONFIG = None
-
-logging.config.dictConfig({
+LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'standard': {
             'format': '%(asctime)-15s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
@@ -167,21 +124,17 @@ logging.config.dictConfig({
             'datefmt': '%Y-%m-%d %H:%M:%S',
         }
     },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'formatter': 'standard',
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',
-        },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'standard_nodate',
-            'filename': 'logs/django.log',
-            'when': 'midnight',
-            'interval': 1,
-            'backupCount': 30,
         },
         'null': {
             'level': 'DEBUG',
@@ -190,15 +143,30 @@ logging.config.dictConfig({
         }
     },
     'loggers': {
+        # Django default logger
+        'django': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'handlers': ['console'],
+        },
+
+        # Show DB Queries in DEBUG mode
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'propagate': False,
+            'filters': ['require_debug_true'],
+            'handlers': ['console'],
+        },
+
+        # Do not show autoreload messages
         'django.utils.autoreload': {
             'level': 'DEBUG',
+            'propagate': False,
             'handlers': ['null'],
-            'propagate': False
         },
-        '': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
+    },
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['console'],
     }
-})
+}

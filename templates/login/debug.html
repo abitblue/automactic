@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug</title>
+
+    <style>
+        td {
+            padding: .4em 15px .4em 15px;
+            border-bottom: 1px solid #cdd0d4;
+            border-top: 1px solid #cdd0d4;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<table>
+    {% for k, v in data.items %}
+        <tr>
+            <td>{{ k }}</td>
+            <td>{{ v }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
