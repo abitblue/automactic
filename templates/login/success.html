@@ -25,7 +25,8 @@
         // NOTE: the Clipboard API is HTTPS only, and is currently still a working draft. (as of 2022/07/07)
 
         let canCopy = true;
-        const errMsg = document.querySelector(".errMsg")
+        const errMsg = document.querySelector(".errMsg");
+        ``
         try {
             document.queryCommandSupported('copy');
         } catch (e) {
@@ -33,7 +34,7 @@
 
                 document.querySelector("#copyButton").remove();
             }
-            console.error("queryCommandSupported is fully deprecated")
+            console.error("queryCommandSupported is fully deprecated");
             errMsg.innerHTML = "Copy it yourself";
 
         }
