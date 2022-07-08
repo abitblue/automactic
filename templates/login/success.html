@@ -25,23 +25,24 @@
         // NOTE: the Clipboard API is HTTPS only, and is currently still a working draft. (as of 2022/07/07)
 
         let canCopy = true;
+        const copyBtn = document.querySelector("#copyButton");
         const errMsg = document.querySelector(".errMsg");
         ``
         try {
             document.queryCommandSupported('copy');
         } catch (e) {
             if (e instanceof ReferenceError) {
-
-                document.querySelector("#copyButton").remove();
+                copyBtn.remove();
             }
             console.error("queryCommandSupported is fully deprecated");
-            errMsg.innerHTML = "Copy it yourself";
+            errMsg.innerHTML = "Copy Manually";
+            canCopy = false
 
         }
 
 
         if (canCopy) {
-            document.querySelector("#copyButton").addEventListener("click", function () {
+            copyBtn.addEventListener("click", function () {
                 try {
                     const copyText = document.querySelector("#wifipass");
                     copyText.setSelectionRange(0, copyText.value.length);
@@ -50,7 +51,8 @@
                     this.innerHTML = "Copied!";
                 } catch (e) {
                     if (e instanceof ReferenceError) {
-                        errMsg.innerHTML = "Copy it yourself";
+                        this.innerHTML = "Copy Manually";
+                        console.error("queryCommandSupported is fully deprecated")
                     }
                 }
             });
