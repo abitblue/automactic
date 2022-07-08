@@ -209,6 +209,10 @@ select {
     transition: 0.5s;
 }
 
+.errMsg {
+    font-size: 1.2rem;
+}
+
 .button:hover .buttonSpan {
     padding-right: 25px;
 }

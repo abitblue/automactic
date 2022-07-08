@@ -14,6 +14,7 @@
         <p class="bodyText errorText"><b>iOS/iPadOS/Android Users:</b> ENSURE RANDOM/PRIVATE MAC ADDRESS ARE DISABLED ON
             NCPSP</p>
         <input type="text" id="wifipass" class="formField" value="605D785001@rackID78R605" readonly>
+        <div class="errMsg"></div>
         <button id="copyButton" class="button">Copy</button>
     </div>
 
@@ -24,37 +25,32 @@
         // NOTE: the Clipboard API is HTTPS only, and is currently still a working draft. (as of 2022/07/07)
 
         let canCopy = true;
-
-        const notFullyDeprecated = document.queryCommandSupported('assasa');
-
+        const errMsg = document.querySelector(".errMsg")
         try {
-            if (notFullyDeprecated === false) {
-                canCopy = false
+            document.queryCommandSupported('copy');
+        } catch (e) {
+            if (e instanceof ReferenceError) {
+
                 document.querySelector("#copyButton").remove();
-                throw "queryCommandSupported is fully deprecated"
             }
-        } catch
-            (e) {
-            console.log(e)
+            console.error("queryCommandSupported is fully deprecated")
+            errMsg.innerHTML = "Copy it yourself";
 
         }
 
+
         if (canCopy) {
             document.querySelector("#copyButton").addEventListener("click", function () {
-
                 try {
-                    if (notFullyDeprecated === false) {
-                        this.innerHTML = "Copy Manually";
-                        throw "copy function does not work properly"
-                    }
                     const copyText = document.querySelector("#wifipass");
                     copyText.setSelectionRange(0, copyText.value.length);
                     copyText.select();
                     document.execCommand("copy");
                     this.innerHTML = "Copied!";
-
                 } catch (e) {
-                    console.log(e)
+                    if (e instanceof ReferenceError) {
+                        errMsg.innerHTML = "Copy it yourself";
+                    }
                 }
             });
         }
