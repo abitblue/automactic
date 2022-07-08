@@ -51,7 +51,7 @@ def attach_mac_to_session(view):
 
         # Hardcoded localhost testing
         elif mac_addr is None and settings.DEBUG:
-            MacAddr.serialize_to(request, 'ac-bb-cc-dd-ee-ff')
+            MacAddr.serialize_to(request, 'aa-bb-cc-dd-ee-ff')
         else:
             # TODO: Return an actual response (AKA: Redirect)
             return HttpResponse("UH OH???")
