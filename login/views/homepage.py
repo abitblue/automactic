@@ -1,10 +1,13 @@
+from typing import Optional
+
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
-from django.utils.decorator import method_decorator
+from django.utils.decorators import method_decorator
 
-from login.utils import attach_mac_to_session
+from login.utils import attach_mac_to_session, MacAddr
+from netaddr import EUI
 
 class Index(View):
     """Dispatches user to the login page or the instructions-to-disable-MAC-randomization page"""
@@ -14,7 +17,7 @@ class Index(View):
         macaddr: Optional[EUI] = MacAddr.deserialize_from(request)
 
         if macaddr is None or not MacAddr.locally_administered(macaddr):
-            return HttpResponse('REDIRECT TO LOGIN')
+            return HttpResponse('REDIRECT TO UNKNOWN MAC ERROR PAGE')
         else:
             return HttpResponse('REDIRECT TO INSTRUCTIONS')
 

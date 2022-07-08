@@ -1,6 +1,5 @@
 from pathlib import Path
-from typing import Optional
-from urllib.parse import quote
+from typing import Optional, Union
 
 from django.http import HttpRequest, HttpResponse
 from django.conf import settings
@@ -16,6 +15,15 @@ class MacAddr:
             return EUI(request.session['macaddr'])
         else:
             return None
+
+    @classmethod
+    def serialize_to(cls, request: HttpRequest, mac: Union[EUI, str, int, None]) -> None:
+        if isinstance(mac, EUI):
+            request.session['macaddr'] = mac.value
+        elif isinstance(mac, str):
+            request.session['macaddr'] = EUI(mac).value
+        else:  # None / int
+            request.session['macaddr'] = mac
 
     @classmethod
     def locally_administered(cls, mac: EUI) -> bool:
