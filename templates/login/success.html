@@ -12,7 +12,7 @@
     <p class="bodyText">2) Copy the following password and connect to <b>ncpsp</b></p>
     <div class="innerWidth">
         <p class="bodyText errorText"><b>iOS/iPadOS/Android Users:</b> ENSURE RANDOM/PRIVATE MAC ADDRESS ARE DISABLED ON NCPSP</p>
-        <input type="text" class="formField wifipass" value="605D785001@rackID78R605" readonly>
+        <input id="wifipass" type="text" class="formField wifipass" value="605D785001@rackID78R605" readonly>
         <button id="copyButton" class="button">Copy</button>
     </div>
 
@@ -34,7 +34,7 @@
 
         if (can_copy) {
             document.querySelector("#copyButton").addEventListener("click", function () {
-                const copyText = document.querySelector("input.wifipass");
+                const copyText = document.querySelector("#wifipass");
                 copyText.setSelectionRange(0, copyText.value.length);
                 copyText.select();
 
