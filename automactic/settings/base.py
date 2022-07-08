@@ -20,12 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin.apps.SimpleAdminConfig',
+    'admin.apps.CustomAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'login.apps.LoginConfig',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +62,7 @@ WSGI_APPLICATION = 'automactic.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
+AUTH_USER_MODEL = 'login.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     # {
