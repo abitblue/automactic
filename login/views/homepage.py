@@ -16,10 +16,13 @@ class Index(View):
     def get(self, request: HttpRequest):
         macaddr: Optional[EUI] = MacAddr.deserialize_from(request)
 
-        if macaddr is None or not MacAddr.locally_administered(macaddr):
-            return HttpResponse('REDIRECT TO UNKNOWN MAC ERROR PAGE')
+        if macaddr is None:
+            msg = 'unknownMAC'
+            return redirect(reverse('error') + f'?reason={msg}')
+        elif not MacAddr.locally_administered(macaddr):
+            return redirect(reverse('login'))
         else:
-            return HttpResponse('REDIRECT TO INSTRUCTIONS')
+            return redirect(reverse('instructions'))
 
 
 class Instructions(View):
