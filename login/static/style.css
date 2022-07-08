@@ -55,7 +55,7 @@ img {
     text-transform: uppercase;
 }
 
-.button2{
+.button2 {
     margin-bottom: 4vh !important;
 }
 
@@ -72,45 +72,45 @@ img {
     background-color: palegoldenrod;
 }
 
-.footerText{
+.footerText {
     margin-bottom: 0.5vh;
     margin-top: 0.5vh;
     color: darkgrey;
     font-size: 1.5vh;
 }
 
-.lastFooter{
+.lastFooter {
     margin-bottom: 3vh;
 }
 
 .innerWidth {
-  max-width: 37.5rem;
-  margin: auto;
+    max-width: 37.5rem;
+    margin: auto;
 }
 
 .innerWidth2 {
-  margin: auto;
-  max-width: 50rem;
+    margin: auto;
+    max-width: 50rem;
 }
 
 h1.login {
-  font-size: 2rem;
-  margin: 40px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  font-weight: 400;
+    font-size: 2rem;
+    margin: 40px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 400;
 }
 
 .formField {
-  background: none;
-  border: none;
-  outline: none;
-  border-bottom: 1px solid;
-  padding: 10px 6px;
-  font-size: 14px;
-  margin: 20px 0;
-  min-width: 80%;
-  max-width: 80%;
+    background: none;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid;
+    padding: 10px 6px;
+    font-size: 14px;
+    margin: 20px 0;
+    min-width: 80%;
+    max-width: 80%;
 }
 
 
@@ -174,51 +174,52 @@ select {
     width: 20vw;
     height: auto;
 }
+
 .button {
-  background-color: var(--color-techgold);
-  text-align: center;
-  border: none;
-  font-size: 3vh;
-  width: 35vh;
-  cursor: pointer;
-  outline: none;
-  text-decoration: none;
-  display: inline-block;
-  padding: 1vw 0;
-  border-radius: 1000vh;
-  margin: 1vh 1vw;
+    background-color: var(--color-techgold);
+    text-align: center;
+    border: none;
+    font-size: 3vh;
+    width: 35vh;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+    padding: 1vw 0;
+    border-radius: 1000vh;
+    margin: 1vh 1vw;
 }
 
 .button .buttonSpan {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
 }
 
 .button .buttonSpan:after {
-  content: "\00bb";
-  position: absolute;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  top: 0;
-  right: -20px;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
+    content: "\00bb";
+    position: absolute;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    top: 0;
+    right: -20px;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
 }
 
 .button:hover .buttonSpan {
-  padding-right: 25px;
+    padding-right: 25px;
 }
 
 .button:hover .buttonSpan:after {
-  opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
-  right: 0;
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    right: 0;
 }
 
-.wifipass {
+#wifipass {
     font-size: 2.75vh;
     text-align: center;
 }

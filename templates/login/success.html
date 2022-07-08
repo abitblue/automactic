@@ -11,8 +11,9 @@
     <p class="bodyText">1) <b>Disconnect</b> from JoinForWifi</p>
     <p class="bodyText">2) Copy the following password and connect to <b>ncpsp</b></p>
     <div class="innerWidth">
-        <p class="bodyText errorText"><b>iOS/iPadOS/Android Users:</b> ENSURE RANDOM/PRIVATE MAC ADDRESS ARE DISABLED ON NCPSP</p>
-        <input type="text" class="formField wifipass" value="605D785001@rackID78R605" readonly>
+        <p class="bodyText errorText"><b>iOS/iPadOS/Android Users:</b> ENSURE RANDOM/PRIVATE MAC ADDRESS ARE DISABLED ON
+            NCPSP</p>
+        <input type="text" id="wifipass" class="formField" value="605D785001@rackID78R605" readonly>
         <button id="copyButton" class="button">Copy</button>
     </div>
 
@@ -22,28 +23,38 @@
         // TODO: Find a suitable replacement?
         // NOTE: the Clipboard API is HTTPS only, and is currently still a working draft. (as of 2022/07/07)
 
-        let can_copy = true;
+        let canCopy = true;
+
+        const notFullyDeprecated = document.queryCommandSupported('assasa');
+
         try {
-            document.queryCommandSupported('copy');
-            can_copy = true;
-        } catch (e) {
-            if (e instanceof TypeError) {
+            if (notFullyDeprecated === false) {
+                canCopy = false
                 document.querySelector("#copyButton").remove();
+                throw "queryCommandSupported is fully deprecated"
             }
+        } catch
+            (e) {
+            console.log(e)
+
         }
 
-        if (can_copy) {
+        if (canCopy) {
             document.querySelector("#copyButton").addEventListener("click", function () {
-                const copyText = document.querySelector("input.wifipass");
-                copyText.setSelectionRange(0, copyText.value.length);
-                copyText.select();
 
                 try {
-                    throw new TypeError('test2');
+                    if (notFullyDeprecated === false) {
+                        this.innerHTML = "Copy Manually";
+                        throw "copy function does not work properly"
+                    }
+                    const copyText = document.querySelector("#wifipass");
+                    copyText.setSelectionRange(0, copyText.value.length);
+                    copyText.select();
                     document.execCommand("copy");
                     this.innerHTML = "Copied!";
+
                 } catch (e) {
-                    if (e instanceof TypeError) this.innerHTML = "Copy Manually";
+                    console.log(e)
                 }
             });
         }
