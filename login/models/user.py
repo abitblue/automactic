@@ -35,7 +35,7 @@ class User(AbstractBaseUser):
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(
-        max_length=150,
+        max_length=50,
         unique=True,
         help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.',
         validators=[username_validator],
