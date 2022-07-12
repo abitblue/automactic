@@ -46,8 +46,8 @@ Permission:
         - updateInterval: Integer
     - loginIPRestriction: netaddr.IPNetwork
 
-userType.student.warningThreshold.10 = true
-userType.student.warningThreshold.10 = true
+userType.student.warningThreshold = 10 (String)
+userType.student.warningThreshold = 10
 
 userType.student.clearpassDeviceExpiry."09/01/+4" = true
 
