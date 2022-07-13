@@ -10,6 +10,7 @@ Django = "~4.0"
 netaddr = "~0.8"        # Used for Mac Address Parsing
 django-ipware = "~4.0"  # Used to more reliably obtain IP address behind a proxy
 psycopg2 = "~2.9"       # Used for Prod DB
+django-debug-toolbar = "~3.5"
 
 [tool.poetry.dev-dependencies]
 
