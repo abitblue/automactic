@@ -37,18 +37,18 @@ class Datatype(models.IntegerChoices):
 
 
 class PermissionsManager(models.Manager):
-    def get_raw_node(self, node_prefix: str):
+    def get_raw_nodes(self, node_prefix: str):
         return self.filter(permission__istartswith=node_prefix)
 
     def get_user_node(self, user: User, node_suffix: str, *, default=None):
         if not node_suffix:
             raise NameError("Cannot query with an empty node")
 
-        if filtered := self.get_raw_node(f'user/{user.username}/{node_suffix}'):
+        if filtered := self.get_raw_nodes(f'user/{user.username}/{node_suffix}'):
             return filtered.first().value
 
         group = user.type.name
-        if filtered := self.get_raw_node(f'userType/{group}/{node_suffix}'):
+        if filtered := self.get_raw_nodes(f'userType/{group}/{node_suffix}'):
             return filtered.first().value
 
         return default
@@ -63,6 +63,9 @@ class Permissions(models.Model):
 
     class Meta:
         verbose_name = 'Permission'
+
+    def __str__(self):
+        return f'{self.permission} = {self.raw_value}'
 
     @property
     def value(self):

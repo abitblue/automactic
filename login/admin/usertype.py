@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import linebreaks
+from django.utils.safestring import mark_safe
 
 from login.models import UserType
 
@@ -6,6 +8,12 @@ from login.models import UserType
 @admin.register(UserType)
 class UserTypeAdmin(admin.ModelAdmin):
     # TODO: Add display for permissions
-    list_display = ('name',)
+    list_display = ('name', 'permissions')
     search_fields = ('name',)
     ordering = ('id',)
+
+    @admin.display(description='Permissions')
+    def permissions(self, obj: UserType):
+        return mark_safe(linebreaks(
+            '\n'.join(f'{item!s}' for item in obj.get_permissions().iterator())
+        ))

@@ -67,6 +67,9 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.username
 
+    def get_permission(self, node: str, *, default=None):
+        return Permissions.objects.get_user_node(self, node, default=default)
+
     # Django Default Admin Site Compatibility:
     class Meta:
         verbose_name = 'User'
