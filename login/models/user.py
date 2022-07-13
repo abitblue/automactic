@@ -3,6 +3,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 from .usertype import UserType
+from .permissions import Permissions
 
 
 class UserManager(BaseUserManager):
@@ -79,15 +80,10 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         """Returns true if the user is allowed to access the admin portal"""
-        # TODO: Read permission DB
-        return True
+        return Permissions.objects.get_user_node(self, 'adminSiteAccess', default=False)
 
     def has_perm(self, perm, obj=None):
-        if self.is_staff:
-            return True
-        return False
+        return self.is_staff
 
     def has_module_perms(self, app_label):
-        if self.is_staff:
-            return True
-        return False
+        return self.is_staff
