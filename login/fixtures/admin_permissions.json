@@ -1,0 +1,20 @@
+[
+  {
+    "model": "login.permissions",
+    "pk": 1,
+    "fields": {
+      "permission": "userType/Superuser/bypassRateLimit",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 2,
+    "fields": {
+      "permission": "userType/Superuser/adminSiteAccess",
+      "raw_value": "true",
+      "type": 1
+    }
+  }
+]

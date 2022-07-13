@@ -20,8 +20,8 @@ class LoginConfig(AppConfig):
             from .models import User
             if User.objects.count() == 0:
 
-                assert os.environ['AMAC_ROOT_USERNAME'], "Environment does not contain superuser username"
-                assert os.environ['AMAC_ROOT_PASSWORD'], "Environment does not contain superuser password"
+                assert os.environ['AMAC_ROOT_USER'], "Environment does not contain superuser username"
+                assert os.environ['AMAC_ROOT_PASS'], "Environment does not contain superuser password"
                 logger.info('No users yet. Creating superuser account.')
-                root_username, root_password = os.environ['AMAC_ROOT_USERNAME'], os.environ['AMAC_ROOT_PASSWORD']
+                root_username, root_password = os.environ['AMAC_ROOT_USER'], os.environ['AMAC_ROOT_PASS']
                 User.objects.create_superuser(root_username, root_password)
