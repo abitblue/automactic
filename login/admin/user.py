@@ -2,14 +2,27 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # from login.forms import UserChangeForm, UserCreationForm
-from login.models import User
+from login.models import User, UserSession
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
 
 @admin.action(description='Reset MAC modifications')
-def reset_modified(self: User, request: HttpRequest, queryset: QuerySet):
+def reset_modified(model_admin, request: HttpRequest, queryset: QuerySet):
     queryset.update(mac_modifications=0)
+
+
+@admin.action(description='Remove sessions')
+def remove_sessions(model_admin, request: HttpRequest, queryset: QuerySet):
+    for user in queryset:
+        user_sessions = UserSession.objects.filter(user=user)
+
+        # Remove the actual sessions
+        for session_obj in user_sessions:
+            session_obj.session.delete()
+
+        # Remove the sessions from the linked DB
+        user_sessions.delete()
 
 
 @admin.register(User)
@@ -19,7 +32,7 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('username',)
     list_filter = ('type__name', 'is_active')
     ordering = ('username',)
-    actions = [reset_modified]
+    actions = [reset_modified, remove_sessions]
 
     @admin.display(description='Type')
     def get_type(self, obj: User):
@@ -37,7 +50,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password')
+            'fields': ('username', 'password', 'type', 'get_permissions')
         }),
     )
     add_fieldsets = (
@@ -46,3 +59,26 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password1', 'password2', 'type'),
         }),
     )
+    readonly_fields = ('get_permissions',)
+
+    @admin.display(description='Permissions')
+    def get_permissions(self, obj: User):
+        return 'Test!'
+
+    # Cannot change superusers from admin site unless also a superuser
+    def has_change_permission(self, request: HttpRequest, obj: User = None):
+        # In general, people with access to the admin site have access
+        if obj is None:
+            return True
+
+        # Superusers always have access
+        if request.user.type.name == 'Superuser':
+            return True
+        elif obj.type.name == 'Superuser':
+            return False
+
+        return True
+
+    def has_delete_permission(self, request: HttpRequest, obj: User = None):
+        # If you can change, you can delete
+        return self.has_change_permission(request, obj)

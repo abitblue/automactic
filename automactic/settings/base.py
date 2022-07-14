@@ -11,10 +11,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 from pathlib import Path
 
-import logging.config
-import logging.handlers
-from django.utils.log import DEFAULT_LOGGING
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -175,3 +171,6 @@ LOGGING = {
         'handlers': ['console'],
     }
 }
+
+# Requ
+MACADDRESS_DEFAULT_DIALECT = 'netaddr.mac_unix'

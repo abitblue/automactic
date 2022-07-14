@@ -7,7 +7,6 @@ from login.models import UserType
 
 @admin.register(UserType)
 class UserTypeAdmin(admin.ModelAdmin):
-    # TODO: Add display for permissions
     list_display = ('name', 'permissions')
     search_fields = ('name',)
     ordering = ('id',)

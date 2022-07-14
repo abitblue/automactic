@@ -1,9 +1,16 @@
+from functools import cached_property
+
+from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 from .usertype import UserType
 from .permissions import Permissions
+
+
+def get_sentinel_user():
+    return get_user_model().objects.get(username='deleted')
 
 
 class UserManager(BaseUserManager):
@@ -22,9 +29,9 @@ class UserManager(BaseUserManager):
         return self.create_user(username, admin_type, password)
 
     def try_create_superuser(self, username: str, password=None):
-        if user := self.filter(username=username).first():
-            return user, False
-        return self.create_superuser(username, password)
+        if user := self.filter(username=username):
+            return user.first(), False
+        return self.create_superuser(username, password), True
 
 
 class User(AbstractBaseUser):
@@ -33,6 +40,7 @@ class User(AbstractBaseUser):
     Usernames are always stored and accessed as lower-case values.
     Username, password, and usertype are required.
     """
+    # TODO: Refer to scratch.txt. Still missing fields.
     username_validator = UnicodeUsernameValidator()
 
     username = models.CharField(
@@ -80,7 +88,7 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return self.username
 
-    @property
+    @cached_property
     def is_staff(self):
         """Returns true if the user is allowed to access the admin portal"""
         return Permissions.objects.get_user_node(self, 'adminSiteAccess', default=False)
