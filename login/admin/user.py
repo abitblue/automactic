@@ -2,7 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # from login.forms import UserChangeForm, UserCreationForm
-from login.models import User, UserSession
+from django.urls import reverse
+from django.utils.html import linebreaks
+from django.utils.safestring import mark_safe
+
+from login.models import User, UserSession, LoginHistory
 from django.db.models import QuerySet
 from django.http import HttpRequest
 
@@ -30,6 +34,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('is_active', 'username', 'get_type', 'get_modifications', 'last_login')
     list_display_links = ('username',)
     search_fields = ('username',)
+    search_help_text = "Searches filter by username"
     list_filter = ('type__name', 'is_active')
     ordering = ('username',)
     actions = [reset_modified, remove_sessions]
@@ -45,12 +50,48 @@ class UserAdmin(BaseUserAdmin):
         limit = obj.get_permission("warningThreshold", default=None)
         return f'{obj.mac_modifications} / {limit if limit else "-"}'
 
+    @admin.display(description='Permissions')
+    def get_permissions(self, obj: User):
+        return mark_safe(linebreaks(
+            '\n'.join(f'{item!s}' for item in obj.permissions().iterator())
+        ))
+
+    @admin.display(description='Login History')
+    def get_login_history(self, obj: User):
+        history = LoginHistory.objects.filter(user=obj)
+        return mark_safe('\n'.join(
+            '<pre style="margin: 0em 0em;"><a href="{}">{}</a></pre>'.format(
+                reverse("admin:login_loginhistory_change", args=(history_obj.pk,)),
+                history_obj.concise_str
+            )
+            for history_obj in history.iterator()
+        ))
+
+    @admin.display(description='Sessions')
+    def get_sessions(self, obj: User):
+        session_keys = UserSession.objects.filter(user=obj).values_list('session_key', flat=True)
+        return mark_safe(linebreaks('\n'.join(
+            '<a href="{}">{}</a>'.format(
+                reverse("admin:sessions_session_change", args=(key,)),
+                key
+            )
+            for key in session_keys.iterator()
+        )))
+
     # Django Default Admin Site Compatibility:
     filter_horizontal = ()
     fieldsets = (
         (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'password', 'type', 'get_permissions')
+            'classes': ('',),
+            'fields': ('username', 'password', 'type')
+        }),
+        ('Permissions', {
+            'classes': ('',),
+            'fields': ('get_permissions',),
+        }),
+        ('Account History', {
+            'classes': ('',),
+            'fields': ('get_login_history', 'get_sessions'),
         }),
     )
     add_fieldsets = (
@@ -59,11 +100,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password1', 'password2', 'type'),
         }),
     )
-    readonly_fields = ('get_permissions',)
-
-    @admin.display(description='Permissions')
-    def get_permissions(self, obj: User):
-        return 'Test!'
+    readonly_fields = ('get_permissions', 'get_login_history', 'get_sessions')
 
     # Cannot change superusers from admin site unless also a superuser
     def has_change_permission(self, request: HttpRequest, obj: User = None):

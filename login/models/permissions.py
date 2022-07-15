@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from pprint import pprint
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -19,6 +18,7 @@ class Datatype(models.IntegerChoices):
     BOOLEAN = 1
     INTEGER = 2
     STRING = 3
+
     # TODO: Timedelta
     # IPNetwork
 
@@ -53,28 +53,30 @@ class PermissionsManager(models.Manager):
         group_prefix = f'userType/{user.type}/'
         user_prefix = f'user/{user.username}/'
 
-        all_related_perms = self.filter(Q(permission__startswith=group_prefix) | Q(permission__startswith=user_prefix))\
-            .annotate(
-                suffix=Case(
+        # Grab all related permissions that start with `group_prefix` or `user_prefix`
+        # Annotate them with the key suffix
+        all_related_perms = (
+            self.filter(Q(permission__startswith=group_prefix) | Q(permission__startswith=user_prefix))
+                .annotate(suffix=Case(
                     When(permission__startswith=group_prefix, then=Substr('permission', len(group_prefix) + 1)),
                     When(permission__startswith=user_prefix, then=Substr('permission', len(user_prefix) + 1)),
-                )
-            )
+                ))
+        )
 
-        pprint(str(all_related_perms.query))
-
+        # Of those related permissions, find duplicate suffixes
         unique_perm_nodes = (all_related_perms
                              .values('suffix')
                              .annotate(dcount=Count('suffix'))
                              .filter(dcount__gt=1)
                              .values_list('suffix', flat=True))
 
-        exclusion_list = []
-        for node in unique_perm_nodes:
-            exclusion_list.extend(
-                all_related_perms.filter(suffix=node, permission__startswith='userType').values_list('id', flat=True)
-            )
-
+        # For each of the duplicates, prioritize the one that has the direct user, and exclude the ones for userType
+        exclusion_list = [
+            pk
+            for node in unique_perm_nodes
+            for pk in
+            all_related_perms.filter(suffix=node, permission__startswith='userType').values_list('id', flat=True)
+        ]
         return all_related_perms.exclude(id__in=exclusion_list)
 
     def get_user_node(self, user: User, node_suffix: str, *, default=None):
@@ -112,7 +114,6 @@ class Permissions(models.Model):
         super().clean()
         try:
             test_value = Datatype.to_python(self.type)(self.raw_value)
-            print(self.raw_value, test_value)
         except Exception as e:
             raise ValidationError(f'Could not interpret, "{self.raw_value}", as type, {Datatype(self.type).name}')
 

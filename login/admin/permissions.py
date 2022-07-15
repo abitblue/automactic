@@ -8,6 +8,7 @@ from login.models import Permissions
 class PermissionsAdmin(admin.ModelAdmin):
     list_display = ('permission', 'raw_value', 'value', 'type')
     search_fields = ('permission', )
+    search_help_text = "Searches filter by permission node"
     ordering = ('permission',)
     list_filter = ('type',)
 
@@ -21,9 +22,5 @@ class PermissionsAdmin(admin.ModelAdmin):
         return True
 
     def has_delete_permission(self, request: HttpRequest, obj: Permissions = None):
-        if obj is None:
-            return True
-
-        if obj.permission.startswith('userType/Superuser'):
-            return False
-        return True
+        # If you can change, you can delete
+        return self.has_change_permission(request, obj)

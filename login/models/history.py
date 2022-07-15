@@ -16,6 +16,12 @@ class LoginHistory(models.Model):
         verbose_name = 'Login History'
         verbose_name_plural = 'Login History'
 
+    @property
+    def concise_str(self):
+        success = 'T' if self.logged_in else 'F'
+        updated = f'T: {self.mac_address}' if self.mac_updated else 'F'
+        return f'{self.time.isoformat(sep=" ", timespec="seconds")} : {success} {updated}'
+
     def __str__(self):
         return f'Login by {self.user} on {self.time.strftime("%b %d, %Y")} at {self.time.strftime("%I:%M:%S %p")}'
 

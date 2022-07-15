@@ -9,6 +9,7 @@ from login.models import UserType
 class UserTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'permissions')
     search_fields = ('name',)
+    search_help_text = "Searches filter by name"
     ordering = ('id',)
 
     @admin.display(description='Permissions')

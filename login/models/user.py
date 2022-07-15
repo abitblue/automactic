@@ -75,6 +75,9 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.username
 
+    def permissions(self):
+        return Permissions.objects.get_user(self)
+
     def get_permission(self, node: str, *, default=None):
         return Permissions.objects.get_user_node(self, node, default=default)
 
