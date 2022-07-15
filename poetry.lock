@@ -88,16 +88,7 @@ description = "Provider of IANA time zone data"
 category = "main"
 optional = false
 python-versions = ">=2"
-[[package]]
-name = "asgiref"
-version = "3.5.2"
-description = "ASGI specs, helper code, and adapters"
-category = "main"
-optional = false
-python-versions = ">=3.7"
 
-[package.extras]
-tests = ["pytest", "pytest-asyncio", "mypy (>=0.800)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.10"
