@@ -8,6 +8,7 @@ class LoginHistory(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user), related_name='logins')
     mac_address = MACAddressField(null=True, integer=False)
+    ip = models.GenericIPAddressField()
     host = models.TextField()
     logged_in = models.BooleanField(default=False)
     mac_updated = models.BooleanField(default=False)
