@@ -5,11 +5,13 @@ description = ""
 authors = ["Ryan Yang <ryang1453@gmail.com>", "Ivan Zheng <zivan7644@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "~3.9"
+python = "~3.10"
 Django = "~4.0"
-netaddr = "~0.8"        # Used for Mac Address Parsing
-django-ipware = "~4.0"  # Used to more reliably obtain IP address behind a proxy
-psycopg2 = "~2.9"       # Used for Prod DB
+django-debug-toolbar = "~3.5"   # Debug Info on Site
+django-ipware = "~4.0"          # Used to more reliably obtain IP address behind a proxy
+django-macaddress = "~1.8"      # Mac Address Fields
+netaddr = "~0.8"                # Used for Mac Address Parsing
+psycopg2 = "~2.9"               # Used for Prod DB
 
 [tool.poetry.dev-dependencies]
 
