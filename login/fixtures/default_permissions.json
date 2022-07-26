@@ -4,22 +4,148 @@
     "pk": 1,
     "fields": {
       "permission": "global/loginIPRestriction",
-      "raw_value": "true",
-      "type": 1
+      "raw_value": "TODO",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 2,
+    "fields": {
+      "permission": "global/clearpassExpireAction",
+      "raw_value": "TODO",
+      "type": 2
     }
   },
   {
     "model": "login.permissions",
     "pk": 3,
     "fields": {
-      "permission": "global/guestPassword/length",
+      "permission": "userType/student/bypassRateLimit",
+      "raw_value": "false",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 4,
+    "fields": {
+      "permission": "userType/student/expireTime",
+      "raw_value": "TODO FILL",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 5,
+    "fields": {
+      "permission": "userType/student/disableTime",
+      "raw_value": "TODO FILL",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 6,
+    "fields": {
+      "permission": "userType/student/rateLimit/passwordPerHourLimit",
+      "raw_value": "TODO FILL",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 7,
+    "fields": {
+      "permission": "userType/student/rateLimit/modificationsUntilNotNewUser",
+      "raw_value": "TODO FILL",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 8,
+    "fields": {
+      "permission": "userType/student/rateLimit/modificationsPerHourUntilNotNewUser",
+      "raw_value": "TODO FILL",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 9,
+    "fields": {
+      "permission": "userType/student/rateLimit/uniqueMACAddressInterval",
+      "raw_value": "TODO FILL",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 10,
+    "fields": {
+      "permission": "userType/staff/bypassRateLimit",
       "raw_value": "true",
       "type": 1
     }
   },
   {
     "model": "login.permissions",
-    "pk": 1,
+    "pk": 11,
+    "fields": {
+      "permission": "userType/staff/rateLimit/passwordPerHourLimit",
+      "raw_value": "5",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 12,
+    "fields": {
+      "permission": "userType/staff/expireTime",
+      "raw_value": "TODO FILL",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 13,
+    "fields": {
+      "permission": "userType/staff/disableTime",
+      "raw_value": "null",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 14,
+    "fields": {
+      "permission": "userType/staff/warningThreshold",
+      "raw_value": "15",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 15,
+    "fields": {
+      "permission": "userType/guest/bypassRateLimit",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 16,
+    "fields": {
+      "permission": "userType/guest/expireTime",
+      "raw_value": "TODO",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 17,
     "fields": {
       "permission": "userType/Superuser/bypassRateLimit",
       "raw_value": "true",
@@ -28,11 +154,47 @@
   },
   {
     "model": "login.permissions",
-    "pk": 2,
+    "pk": 18,
+    "fields": {
+      "permission": "userType/Superuser/disableTime",
+      "raw_value": "null",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 19,
     "fields": {
       "permission": "userType/Superuser/adminSiteAccess",
       "raw_value": "true",
       "type": 1
     }
   },
+  {
+    "model": "login.permissions",
+    "pk": 20,
+    "fields": {
+      "permission": "user/guest/kioskOnly",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 21,
+    "fields": {
+      "permission": "user/guest/disableTime",
+      "raw_value": "null",
+      "type": 3
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 22,
+    "fields": {
+      "permission": "user/guest/expireTime",
+      "raw_value": "TODO",
+      "type": 3
+    }
+  }
 ]
