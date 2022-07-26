@@ -40,7 +40,7 @@ def attach_mac_to_session(view):
 
         # Localhost Testing: Use semi-random MAC
         if macaddr is None and settings.DEBUG:
-            request.session['mac_address'] = MACAddress(f'ffffff-{random.randrange(16**6):06x}')
+            request.session['mac_address'] = MACAddress(f'00ffff-{random.randrange(16**6):06x}')
 
         return view(request, *args, **kwargs)
     return wrapper
