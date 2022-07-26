@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views import View
 from django.utils.decorators import method_decorator
 
-from login.forms.userLogin import UserLoginForm
+# from login.forms.userLogin import UserLoginForm
 from login.models import LoginHistory
 from login.utils import attach_mac_to_session, MACAddress
 
@@ -14,7 +14,7 @@ from login.utils import attach_mac_to_session, MACAddress
 @method_decorator(attach_mac_to_session, name='dispatch')
 class Index(View):
     """Dispatches user to the instructions page, or shows the login page"""
-    template_name = 'login/index.html'
+    template_name = 'login/selection.html'
 
     def dispatch(self, request, *args, **kwargs):
         addr: Optional[MACAddress] = request.session.get('mac_address')
@@ -25,24 +25,10 @@ class Index(View):
         if addr.is_locally_administered:
             return redirect(reverse('instructions'))
 
-        return super().dispatch(request, mac_address=addr, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request: HttpRequest, mac_address: MACAddress):
-        return render(request, self.template_name, {'form': UserLoginForm()})
-
-    def post(self, request: HttpRequest, mac_address: MACAddress):
-        # Check Clearpass for their MAC first.
-        # TODO: Check if MAC already exists. Unsure if this goes into UserLoginForm.
-        mac_updated = False
-
-        form = UserLoginForm(request, data=request.POST)
-        if not form.is_valid():
-            username = form.cleaned_data.get('username')
-            LoginHistory.log(request,
-                             user=username,
-                             logged_in=form.password_correct,
-                             mac_updated=mac_updated,
-                             mac_address=mac_address)
+    def get(self, request: HttpRequest):
+        return render(request, self.template_name)
 
 
 class Instructions(View):
