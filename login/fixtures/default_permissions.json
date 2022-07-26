@@ -3,6 +3,24 @@
     "model": "login.permissions",
     "pk": 1,
     "fields": {
+      "permission": "global/loginIPRestriction",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 3,
+    "fields": {
+      "permission": "global/guestPassword/length",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 1,
+    "fields": {
       "permission": "userType/Superuser/bypassRateLimit",
       "raw_value": "true",
       "type": 1
@@ -16,5 +34,5 @@
       "raw_value": "true",
       "type": 1
     }
-  }
+  },
 ]
