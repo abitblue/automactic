@@ -1,0 +1,5 @@
+# Disable onboard wifi/bt in config.txt
+
+dtoverlay=disable-wifi
+dtoverlay=disable-bt
+

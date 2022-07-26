@@ -1,0 +1,13 @@
+# https://www.freedesktop.org/software/systemd/man/systemd.netdev
+[NetDev]
+Name=vx-eth0.${VX_VNI}
+Kind=vxlan
+
+[VXLAN]
+VNI=${VX_VNI}
+Local=dhcp4
+Group=${VX_GROUP}
+DestinationPort=4789
+TTL=5
+MacLearning=true
+MaximumFDBEntries=65535
