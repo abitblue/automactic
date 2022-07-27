@@ -5,15 +5,25 @@ html {
 
 body {
     font-family: sans-serif;
-    margin: 1%;
+    margin: auto;
+    text-align: center;
+    width: 85%;
 }
 
-.centerDiv {
+.centerContainer {
     text-align: center;
     margin: auto;
     width: 85%;
 }
 
+.columnedParentDiv {
+    display: block;
+}
+
+.columnedChildDiv {
+    display: inline-block;
+    width: 30vw;
+}
 img {
     height: 1.5em;
     vertical-align: middle;
@@ -22,7 +32,7 @@ img {
 .header {
     text-align: left;
     border-bottom: 1px solid #222222;
-    margin-bottom: 1.2em;
+    margin: 1% 1% 1.2em;
     font-size: 4.5vh;
     vertical-align: middle;
 }
@@ -51,20 +61,7 @@ img {
     /*align-items: center;*/
 }
 
-.uppercase {
-    text-transform: uppercase;
-}
-
-.button2 {
-    margin-bottom: 4vh !important;
-}
-
-.bodyTextInsignificant {
-    color: gray;
-    font-size: 1.5vh !important;
-}
-
-.footerStroke {
+.footerDivider {
     margin: 5vh auto auto;
     width: 80%;
     border-radius: 1000px;
@@ -77,20 +74,6 @@ img {
     margin-top: 0.5vh;
     color: darkgrey;
     font-size: 1.5vh;
-}
-
-.lastFooter {
-    margin-bottom: 3vh;
-}
-
-.innerWidth {
-    max-width: 37.5rem;
-    margin: auto;
-}
-
-.innerWidth2 {
-    margin: auto;
-    max-width: 50rem;
 }
 
 h1.login {
@@ -122,26 +105,7 @@ h1.login {
 
 .errorText {
     color: red;
-}
-
-.requiredText {
-    font-style: italic;
-    margin-bottom: 2.5rem;
-    text-align: right;
-}
-
-
-select {
-    background-color: transparent;
-    border-color: black;
-    border-radius: 1rem;
-    padding: 0 0 0 10px;
-    margin-left: 10px;
-    font-family: inherit;
-    font-size: inherit;
-    cursor: inherit;
-    line-height: inherit;
-    width: min-content;
+    font-size: 2.5vh;
 }
 
 .form-sentence {
