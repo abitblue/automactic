@@ -196,4 +196,12 @@ h1.login {
     .instructions-img {
         width: 50vw;
     }
+    .columnedChildDiv, .columnedParentDiv {
+        display: revert;
+        width: revert;
+    }
+    .mobileChanges {
+        position: relative;
+        left: 9%;
+    }
 }
