@@ -3,4 +3,4 @@ Name=eth0
 
 [Network]
 DHCP=yes
-VXLAN=vx-eth0.${VX_VNI}
+VXLAN=eth0.vx${VX_VNI}
