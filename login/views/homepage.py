@@ -31,6 +31,13 @@ class Index(View):
         return render(request, self.template_name)
 
 
+class Kiosk(View):
+    template_name = 'login/selection.html'
+
+    def get(self, request: HttpRequest):
+        return render(request, self.template_name)
+
+
 class Instructions(View):
     """If the user is using randomized MAC addresses, these instructions will direct them to disable it"""
     template_name = 'instructions/with_os.html'
