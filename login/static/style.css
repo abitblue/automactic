@@ -44,16 +44,6 @@ img {
     display: inline-block;
 }
 
-@media only screen and (max-width: 480px) {
-    body {
-        margin: 3% 1% 1%;
-    }
-
-    .headerText {
-        font-size: 3.5vh;
-    }
-}
-
 .bodyText {
     font-size: 2.5vh;
     /*display: flex;*/
@@ -66,6 +56,14 @@ img {
     width: 80%;
     border-radius: 1000px;
     height: 1vh;
+    background-color: palegoldenrod;
+}
+
+.divider {
+    margin: 5vh auto auto;
+    width: 80%;
+    border-radius: 1000px;
+    height: 0.8vh;
     background-color: palegoldenrod;
 }
 
@@ -192,9 +190,13 @@ h1.login {
     text-align: center;
 }
 
-@media screen and (max-width: 1300px) {
-    .instructions-img {
-        width: 50vw;
+@media only screen and (max-width: 480px) {
+    body {
+        margin: 3% 1% 1%;
+    }
+
+    .headerText {
+        font-size: 3.5vh;
     }
     .columnedChildDiv, .columnedParentDiv {
         display: revert;
@@ -203,5 +205,11 @@ h1.login {
     .mobileChanges {
         position: relative;
         left: 9%;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .instructions-img {
+        width: 50vw;
     }
 }
