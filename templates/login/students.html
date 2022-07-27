@@ -2,21 +2,21 @@
 
 {% block content %}
     <h1>Student Login</h1>
-    <container style="display: block">
-        <div style="display: inline-block">
-            <div style="display: inline-block">
-                <p class="bodyText">In the ID Field, put in your Student OSIS Number.</p>
-                <p class="bodyText">In the Token Field, put in your DOB in the format (MMDDYYYY)</p>
-                <p class="bodyText">Upon successful login, DO NOT close the browser until reading the instructions.</p>
-                <p class="bodyText">As a student, any device you've registered previously <b>WILL</b> have their
+    <container class="columnedParentDiv">
+        <div class="columnedChildDiv">
+            <div class="bodyText">
+                <p>In the ID Field, put in your Student OSIS Number.</p>
+                <p>In the Token Field, put in your DOB in the format (MMDDYYYY)</p>
+                <p>Upon successful login, DO NOT close the browser until reading the instructions.</p>
+                <p>As a student, any device you've registered previously <b>WILL</b> have their
                                 access removed upon approval of the device you are using now.</p>
-                <p class="bodyText">Once you have registered this device, you won't be able to change it for a
+                <p>Once you have registered this device, you won't be able to change it for a
                                 certain period of time.</p>
-                <p class="bodyText">Be sure to follow the on-screen instructions CLOSELY!</p>
-                <p class="bodyText">Once you're ready, continue below:</p>
+                <p>Be sure to follow the on-screen instructions CLOSELY!</p>
+                <p>Once you're ready, click the button.</p>
             </div>
         </div>
-        <div style="display: inline-block">
+        <div class="columnedChildDiv">
 
             {% include "login/loginform.html" %}
         </div>
