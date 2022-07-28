@@ -6,7 +6,8 @@ urlpatterns = [
     path('debug/', views.Debug.as_view(), name='debug'),
 
     path('kiosk/', include([
-        path('', views.Index.as_view(), name='kiosk_index'),
+        path('', views.Index.as_view(), kwargs={'kiosk': True}, name='kiosk_index'),
+        path('login/<slug:usertype>', views.Login.as_view(), kwargs={'kiosk': True}, name='kiosk_login'),
     ])),
 
     path('login/<slug:usertype>', views.Login.as_view(), name='login'),
