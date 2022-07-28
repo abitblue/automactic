@@ -5,11 +5,11 @@
 {% block content %}
 <br>
     <h1>I Am A...</h1>
-    <p class="bodyText">Please click the button below associated</p>
-<a href="{% url 'students' %}"><button class="button"><span class="buttonSpan">Student</span></button></a>
+    <p class="bodyText">Please choose your affiliation</p>
+<a href="{% url 'students' %}" class="button"><span class="buttonSpan">Student</span></a>
     <br>
-<a href="{% url 'teachers' %}"><button class="button"><span class="buttonSpan">Teacher</span></button></a>
+<a href="{% url 'teachers' %}" class="button"><span class="buttonSpan">Teacher</span></a>
  <br>
-<a href="{% url 'students' %}"><button class="button"><span class="buttonSpan">Guest</span></button></a>
+<a href="{% url 'students' %}" class="button"><span class="buttonSpan">Guest</span></a>
 
 {%  endblock %}
