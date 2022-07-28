@@ -18,6 +18,7 @@ class Index(View):
 
     def dispatch(self, request, *args, **kwargs):
         kiosk = kwargs.get('kiosk', False)
+
         if not kiosk:
             addr: Optional[MACAddress] = request.session.get('mac_address')
 
@@ -27,7 +28,7 @@ class Index(View):
             if addr.is_locally_administered:
                 return redirect(reverse('instructions'))
 
-        return super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request, kiosk, *args, **kwargs)
 
     def get(self, request: HttpRequest, kiosk: bool):
         login_page = 'login' if not kiosk else 'kiosk_login'
