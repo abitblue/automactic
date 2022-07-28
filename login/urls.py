@@ -1,14 +1,17 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
 urlpatterns = [
+    path('debug/', views.Debug.as_view(), name='debug'),
+
+    path('kiosk/', include([
+        path('', views.Index.as_view(), name='kiosk_index'),
+    ])),
+
+    path('login/<slug:usertype>', views.Login.as_view(), name='login'),
     path('instructions/', views.Instructions.as_view(), name='instructions'),
-    path('students/', views.Students.as_view(), name='students'),
-    path('teachers/', views.Teachers.as_view(), name='teachers'),
     path('success/', views.Success.as_view(), name='success'),
     path('error/', views.Error.as_view(), name='error'),
-    path('debug/', views.Debug.as_view(), name='debug'),
-    path('kiosk/', views.Kiosk.as_view(), name='kiosk'),
     path('', views.Index.as_view(), name='index'),
 ]
