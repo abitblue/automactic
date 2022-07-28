@@ -17,25 +17,21 @@ class Index(View):
     template_name = 'login/selection.html'
 
     def dispatch(self, request, *args, **kwargs):
-        addr: Optional[MACAddress] = request.session.get('mac_address')
+        kiosk = kwargs.get('kiosk', False)
+        if not kiosk:
+            addr: Optional[MACAddress] = request.session.get('mac_address')
 
-        if addr is None:
-            return redirect(f'{reverse("error")}?reason=unknownMAC')
+            if addr is None:
+                return redirect(f'{reverse("error")}?reason=unknownMAC')
 
-        if addr.is_locally_administered:
-            return redirect(reverse('instructions'))
+            if addr.is_locally_administered:
+                return redirect(reverse('instructions'))
 
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request: HttpRequest):
-        return render(request, self.template_name)
-
-
-class Kiosk(View):
-    template_name = 'login/selection.html'
-
-    def get(self, request: HttpRequest):
-        return render(request, self.template_name)
+    def get(self, request: HttpRequest, kiosk: bool):
+        login_page = 'login' if not kiosk else 'kiosk_login'
+        return render(request, self.template_name, {'login_page': login_page})
 
 
 class Instructions(View):
