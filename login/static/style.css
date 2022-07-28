@@ -4,7 +4,7 @@ html {
 }
 
 body {
-    font-family: sans-serif;
+    font-family: "JetBrains Mono", sans-serif;
     margin: auto;
     text-align: center;
     width: 85%;
@@ -46,9 +46,6 @@ img {
 
 .bodyText {
     font-size: 2.5vh;
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
 }
 
 .footerDivider {
@@ -205,6 +202,19 @@ h1.login {
     .mobileChanges {
         position: relative;
         left: 9%;
+    }
+}
+
+@media screen and (max-width: 1000px) and (min-width: 480px) {
+    .instructions-img {
+        width: 50vw;
+    }
+    .columnedChildDiv, .columnedParentDiv {
+        display: revert;
+        width: revert;
+    }
+    .divider {
+        width: 60vw;
     }
 }
 
