@@ -3,8 +3,8 @@
 {% if not version_check %}
     <h1>What version of Android are you using?</h1>
     <p class="bodyText">You can check by going to Settings > About Device > Android Version. <br> <i>Note that your device may have a different layout</i></p>
-    <a href="{% url 'instructions' %}?os=android&version_check=left"><button class="button"><span class="buttonSpan">Android 9 or lower</span></button></a>
-    <a href="{% url 'instructions' %}?os=android&version_check=right"><button class="button"><span class="buttonSpan">Android 10 or higher</span></button></a>
+    <a href="{% url 'instructions' %}?os=android&version_check=left" class="button"><span class="buttonSpan">Android 9 or lower</span></a>
+    <a href="{% url 'instructions' %}?os=android&version_check=right" class="button"><span class="buttonSpan">Android 10 or higher</span></a>
 {% else %}
 
     {% if version_check == "left" %}

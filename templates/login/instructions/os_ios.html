@@ -3,8 +3,8 @@
 {% if not version_check %}
     <h1>What version of iOS/iPadOS are you using?</h1>
     <p class="bodyText">You can check by going to Settings > General > About > Version</p>
-    <a href="{% url 'instructions' %}?os=ios&version_check=left"><button class="button"><span class="buttonSpan">iOS 13 or lower</span></button></a>
-    <a href="{% url 'instructions' %}?os=ios&version_check=right"><button class="button"><span class="buttonSpan">iOS 14 or higher</span></button></a>
+    <a href="{% url 'instructions' %}?os=ios&version_check=left" class="button"><span class="buttonSpan">iOS 13 or lower</span></a>
+    <a href="{% url 'instructions' %}?os=ios&version_check=right" class="button"><span class="buttonSpan">iOS 14 or higher</span></a>
 {% else %}
 
     {% if version_check == "left" %}
