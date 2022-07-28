@@ -6,10 +6,10 @@
 <br>
     <h1>I Am A...</h1>
     <p class="bodyText">Please choose your affiliation</p>
-<a href="{% url 'students' %}" class="button"><span class="buttonSpan">Student</span></a>
+<a href="{% url 'login' usertype="students" %}" class="button"><span class="buttonSpan">Student</span></a>
     <br>
-<a href="{% url 'teachers' %}" class="button"><span class="buttonSpan">Teacher</span></a>
+<a href="{% url 'login' usertype="teachers" %}" class="button"><span class="buttonSpan">Teacher</span></a>
  <br>
-<a href="{% url 'students' %}" class="button"><span class="buttonSpan">Guest</span></a>
+<a href="{% url 'login' usertype="students" %}" class="button"><span class="buttonSpan">Guest</span></a>
 
 {%  endblock %}
