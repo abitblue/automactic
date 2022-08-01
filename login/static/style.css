@@ -10,6 +10,10 @@ body {
     width: 85%;
 }
 
+h1 {
+    font-size: 2.75vh;
+}
+
 .centerContainer {
     text-align: center;
     margin: auto;
@@ -23,7 +27,9 @@ body {
 .columnedChildDiv {
     display: inline-block;
     width: 30vw;
+    vertical-align: top;
 }
+
 img {
     height: 1.5em;
     vertical-align: middle;
@@ -38,7 +44,7 @@ img {
 }
 
 .headerText {
-    font-size: 4.5vh;
+    font-size: 3.5vh;
     font-weight: bold;
     margin: 1vh 1vh 2.25vh 1vh;
     display: inline-block;
@@ -56,15 +62,6 @@ img {
     background-color: palegoldenrod;
 }
 
-.divider {
-    margin: 5vh auto auto;
-    width: 80%;
-    border-radius: 1000px;
-    height: 0.8vh;
-    background-color: palegoldenrod;
-    opacity: 0;
-}
-
 .footerText {
     margin-bottom: 0.5vh;
     margin-top: 0.5vh;
@@ -72,22 +69,22 @@ img {
     font-size: 1.5vh;
 }
 
-h1.login {
-    font-size: 2rem;
-    margin: 40px;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    font-weight: 400;
-}
+/*h1.login {*/
+/*    font-size: 2rem;*/
+/*    margin: 40px;*/
+/*    text-transform: uppercase;*/
+/*    letter-spacing: 4px;*/
+/*    font-weight: 400;*/
+/*}*/
 
 .formField {
     background: none;
     border: none;
     outline: none;
     border-bottom: 1px solid;
-    padding: 10px 6px;
-    font-size: 14px;
-    margin: 20px 0;
+    padding: 2% 1%;
+    font-size: 1.8vh;
+    margin: 2.5vh;
     min-width: 80%;
     max-width: 80%;
 }
@@ -139,7 +136,7 @@ h1.login {
     background-color: var(--color-techgold);
     text-align: center;
     border: none;
-    font-size: 3vh;
+    font-size: 2.5vh;
     width: 35vh;
     cursor: pointer;
     outline: none;
@@ -181,7 +178,7 @@ h1.login {
     opacity: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     top: 0;
-    right: -20px;
+    right: -2vh;
     -webkit-transition: 0.5s;
     transition: 0.5s;
 }
@@ -191,7 +188,7 @@ h1.login {
 }
 
 .button:hover .buttonSpan {
-    padding-right: 25px;
+    padding-right: 2.5vh;
 }
 
 .button:hover .buttonSpan:after {
@@ -206,10 +203,6 @@ h1.login {
 }
 
 @media only screen and (max-width: 480px) {
-    body {
-        margin: 3% 1% 1%;
-    }
-
     .headerText {
         font-size: 3.5vh;
     }
@@ -217,38 +210,24 @@ h1.login {
         display: revert;
         width: revert;
     }
-    .mobileChanges {
-        position: relative;
-        left: 9%;
-    }
 }
 
-@media screen and (max-width: 1000px) and (min-width: 480px) {
+@media screen and (max-width: 1100px) and (min-width: 480px) {
     .instructions-img {
         width: 50vw;
     }
     .bodyText {
-        max-width: 50vw;
+        max-width: 75vw;
         margin: auto;
     }
     .columnedChildDiv, .columnedParentDiv {
         display: revert;
         width: revert;
     }
-
-    .divider {
-        width: 60vw;
-        opacity: initial;
-    }
 }
 
 @media screen and (max-width: 1300px) {
     .instructions-img {
         width: 50vw;
-    }
-
-    .divider {
-        width: 60vw;
-        /*opacity: initial;*/
     }
 }
