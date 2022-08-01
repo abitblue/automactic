@@ -17,3 +17,13 @@ class UserTypeAdmin(admin.ModelAdmin):
         return mark_safe(linebreaks(
             '\n'.join(f'{item!s}' for item in obj.get_permissions().iterator())
         ))
+
+    # Cannot modify table from admin site
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
