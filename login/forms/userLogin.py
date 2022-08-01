@@ -3,7 +3,7 @@ import re
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
 
-from login.models import User
+from login.models import User, UserType
 
 
 class UserLoginForm(BaseAuthenticationForm):
@@ -11,17 +11,26 @@ class UserLoginForm(BaseAuthenticationForm):
     device_name = forms.CharField(label='', required=False,
                                   widget=forms.TextInput(attrs={
                                       'maxlength': 40,
-                                      'placeholder': 'Device Name (Not Required)'
+                                      'placeholder': 'Device Name'
                                   }))
 
-    def __init__(self, request=None, *args, **kwargs):
+    def __init__(self, user_type: str, request=None, *args, **kwargs):
+        widget_placeholders = {
+            'student': ('OSIS *', 'DOB (MMDDYYYY) * '),
+            'teacher': ('Email (jdoe1@schools.nyc.gov) *', 'Password *'),
+            'guest': ('Username *', 'Token *'),
+        }
+
         super().__init__(request, *args, **kwargs)
         self.fields['username'].label = ''
         self.fields['password'].label = ''
-        self.fields['username'].widget.attrs['placeholder'] = 'ID *'
-        self.fields['password'].widget.attrs['placeholder'] = 'Token *'
+        self.fields['username'].widget.attrs['placeholder'] = widget_placeholders[user_type][0]
+        self.fields['password'].widget.attrs['placeholder'] = widget_placeholders[user_type][1]
         self.password_correct = False
         self.mac_changed = False
+
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'formField'
 
     whitespace_regex = re.compile(r'\s+')
     error_messages = {
