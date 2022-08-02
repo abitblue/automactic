@@ -16,8 +16,18 @@ class ResponseData:
             self.notes = response['notes']
             self.start_time = response['start_time']
             self.expire_time = response['expire_time']
-            self.sponsor_name = response['sponsor_name']
             self.device_name = response['visitor_name']
         except:
             pass
         self.status_code = status
+
+    def __eq__(self, other):
+        return (
+            self.mac == other.mac and
+            self.notes == other.notes and
+            self.start_time == other.start_time and
+            self.expire_time == other.expire_time and 
+            self.sponsor_name == other.sponsor_name and
+            self.device_name == other.device_name
+        )
+     
