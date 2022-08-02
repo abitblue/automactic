@@ -1,0 +1,6 @@
+[Match]
+OriginalName=wlan0
+
+[Link]
+Description=WiFi Dongle
+Name=ap0

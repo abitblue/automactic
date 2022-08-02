@@ -1,0 +1,6 @@
+[Match]
+Name=ap0
+
+[Network]
+DHCP=no
+Bridge=br0
