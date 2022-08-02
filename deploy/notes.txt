@@ -1,5 +1,15 @@
-# Disable onboard wifi/bt in config.txt
+# Setup Image File
+- Install firstboot service file, script, and configs
+- Disable onboard wifi/bt in config.txt
+        dtoverlay=disable-wifi
+        dtoverlay=disable-bt
 
-dtoverlay=disable-wifi
-dtoverlay=disable-bt
+# When using RPi Imager:
+Open settings and set username to `core`
+After writing image, modify config.env and ensure LF line endings. Sample:
 
+HOSTNAME=testpi
+USER_PASSWD=password
+VX_VNI=1
+VX_GROUP=239.1.1.1
+SSID=wifidev
