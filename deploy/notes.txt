@@ -6,9 +6,11 @@
 
 # When using RPi Imager:
 Open settings and set username to `core`
+Copy over firstboot files.
 After writing image, modify config.env and ensure LF line endings. Sample:
 
 HOSTNAME=testpi
+TIMEZONE=America/New_York
 USER_PASSWD=password
 VX_VNI=1
 VX_GROUP=239.1.1.1
