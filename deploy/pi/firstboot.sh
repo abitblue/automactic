@@ -86,7 +86,7 @@ cat << EOF >> /etc/dhcpcd.conf
 ################################
 noarp
 interface ap0
-    nobook wpa_supplicant
+    nohook wpa_supplicant
 EOF
 
 # Install hostapd configurations
@@ -96,7 +96,7 @@ envsubst < /boot/firstboot/hostapd.conf > /etc/hostapd/ap0.conf
 
 # Enable systemd network services
 systemctl daemon-reload
-systecmtl enable hostapd@ap0
+systemctl enable hostapd@ap0
 systemctl disable wpa_supplicant
 systemctl enable systemd-networkd
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
