@@ -15,9 +15,11 @@ if TYPE_CHECKING:
 
 
 class Datatype(models.IntegerChoices):
+    NULL = 0
     BOOLEAN = 1
     INTEGER = 2
     STRING = 3
+
 
     # TODO: Timedelta
     # IPNetwork
@@ -26,6 +28,7 @@ class Datatype(models.IntegerChoices):
     def to_python(datatype: int):
         # From DB (str)
         _map = {
+            0: lambda x: None,
             1: lambda x: bool(json.loads(x.lower())),
             2: lambda x: int(json.loads(x)),
             3: lambda x: x
@@ -36,6 +39,7 @@ class Datatype(models.IntegerChoices):
     def to_db(datatype: int):
         # From Python (Any)
         _map = {
+            0: lambda x: json.dumps(x),
             1: lambda x: json.dumps(x),
             2: lambda x: json.dumps(x),
             3: lambda x: x
