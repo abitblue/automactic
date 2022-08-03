@@ -5,12 +5,15 @@ set -x
 
 # Req Vars:
 # HOSTNAME
+# TIMEZONE
 # USER_PASSWD
 # VX_VNI
 # VX_GROUP
 # SSID
-# APT_UPGRADE_SKIP
+# WIFI_CHANNEL
 
+# Optional:
+# APT_UPGRADE_SKIP: If defined, will skip apt upgrade
 
 # Pull in env vars
 # shellcheck disable=SC2046
@@ -19,6 +22,8 @@ export $(grep -v '^#' /boot/firstboot/config.env | xargs -d '\n')
 
 # Hostname
 hostnamectl set-hostname "${HOSTNAME}"
+sed -i "s/raspberrypi/${HOSTNAME}/g" /etc/hosts
+
 # shellcheck disable=SC2002
 CURRENT_HOSTNAME=$(cat /etc/hostname | tr -d " \t\n\r")
 sed -i "s/127.0.1.1.*${CURRENT_HOSTNAME}/127.0.1.1\t${HOSTNAME}/g" /etc/hosts
@@ -43,6 +48,11 @@ dpkg-reconfigure -f noninteractive keyboard-configuration
 dpkg-reconfigure -f noninteractive tzdata
 timedatectl set-timezone "${TIMEZONE}"
 timedatectl set-ntp true
+
+# update apt cache and install software, ingore "Release file... is not valid yet." error
+apt update -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false
+if [ -z ${APT_UPGRADE_SKIP+y} ]; then apt upgrade -y; else echo "APT_SKIP DEFINED, SKIPPING UPGRADES"; fi
+apt install -y hostapd vim tmux dos2unix nftables tcpdump
 
 # Enable ssh, disable root login
 systemctl enable ssh
@@ -71,23 +81,27 @@ for i in /boot/firstboot/*.{link,netdev,network}; do
     envsubst < "$i" > "/etc/systemd/network/$(basename "$i")"
 done
 
+# Disable wpa_supplicant for ap0 via dhcpcd
+cat << EOF >> /etc/dhcpcd.conf
+################################
+noarp
+interface ap0
+    nobook wpa_supplicant
+EOF
+
 # Install hostapd configurations
 cp /boot/firstboot/hostapd@.service /etc/systemd/system
-envsubst < /boot/firstboot/hostapd-ap0.conf > /etc/hostapd/hostapd-ap0.conf
+mkdir -p /etc/hostapd
+envsubst < /boot/firstboot/hostapd.conf > /etc/hostapd/ap0.conf
 
 # Enable systemd network services
 systemctl daemon-reload
+systecmtl enable hostapd@ap0
 systemctl disable wpa_supplicant
 systemctl enable systemd-networkd
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 systemctl enable systemd-resolved
-sytemdctl enable systemd-timesyncd
-systemctl enable hostapd@ap0
-
-# update apt cache and install software, ingore "Release file... is not valid yet." error
-apt update -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false
-if [ -z ${APT_UPGRADE_SKIP+x} ]; then apt upgrade -y; else echo "APT_SKIP DEFINED, SKIPPING UPGRADES"; fi
-apt install -y hostapd vim tmux dos2unix nftables
+systemctl enable systemd-timesyncd
 
 # Setup nftables
 # TODO: setup nftables
@@ -102,6 +116,6 @@ systemctl enable sched-reboot.timer
 journalctl -u firstboot.service > /boot/firstboot.log
 
 # Enable overlayfs
-# TODO: Enable overlayfs
+raspi-config nonint enable_overlayfs
 
 systemd-run --no-block sh -c "sleep 15 && systemctl reboot"
