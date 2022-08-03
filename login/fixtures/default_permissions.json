@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "permission": "global/loginIPRestriction",
-      "raw_value": "TODO",
+      "raw_value": "172.16.0.0/16",
       "type": 3
     }
   },
@@ -13,7 +13,7 @@
     "pk": 2,
     "fields": {
       "permission": "global/clearpassExpireAction",
-      "raw_value": "TODO",
+      "raw_value": "4",
       "type": 2
     }
   },
@@ -31,7 +31,7 @@
     "pk": 4,
     "fields": {
       "permission": "userType/student/expireTime",
-      "raw_value": "TODO FILL",
+      "raw_value": "09/01/+4",
       "type": 3
     }
   },
@@ -40,7 +40,7 @@
     "pk": 5,
     "fields": {
       "permission": "userType/student/disableTime",
-      "raw_value": "TODO FILL",
+      "raw_value": "09/01/+4",
       "type": 3
     }
   },
@@ -49,7 +49,7 @@
     "pk": 6,
     "fields": {
       "permission": "userType/student/rateLimit/passwordPerHourLimit",
-      "raw_value": "TODO FILL",
+      "raw_value": "5",
       "type": 2
     }
   },
@@ -58,7 +58,7 @@
     "pk": 7,
     "fields": {
       "permission": "userType/student/rateLimit/modificationsUntilNotNewUser",
-      "raw_value": "TODO FILL",
+      "raw_value": "3",
       "type": 2
     }
   },
@@ -67,7 +67,7 @@
     "pk": 8,
     "fields": {
       "permission": "userType/student/rateLimit/modificationsPerHourUntilNotNewUser",
-      "raw_value": "TODO FILL",
+      "raw_value": "5",
       "type": 2
     }
   },
@@ -76,7 +76,7 @@
     "pk": 9,
     "fields": {
       "permission": "userType/student/rateLimit/uniqueMACAddressInterval",
-      "raw_value": "TODO FILL",
+      "raw_value": "18",
       "type": 2
     }
   },
@@ -103,8 +103,8 @@
     "pk": 12,
     "fields": {
       "permission": "userType/staff/expireTime",
-      "raw_value": "TODO FILL",
-      "type": 3
+      "raw_value": "",
+      "type": 0
     }
   },
   {
@@ -139,7 +139,7 @@
     "pk": 16,
     "fields": {
       "permission": "userType/guest/expireTime",
-      "raw_value": "TODO",
+      "raw_value": "+0/+1/+0",
       "type": 3
     }
   },
@@ -193,7 +193,7 @@
     "pk": 22,
     "fields": {
       "permission": "user/guest/expireTime",
-      "raw_value": "TODO",
+      "raw_value": "+0/+1/+0",
       "type": 3
     }
   }
