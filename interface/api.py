@@ -83,22 +83,28 @@ class Token:
     @check_token
     def delete_device(self, mac: str):
         res = requests.delete(f"{self.base_url}/device/mac/{mac}",
-                              headers=self._get_header(), 
+                            #   params={'change_of_authorization': True},
+                              headers=self._get_header(),
                               verify=False)
         return ResponseData(res.status_code, res)
 
     @check_token
-    def get_device(self, mac: Optional[str] = None, device_id: Optional[int] = None) -> dict:
+    def get_device(self, mac: Optional[str] = None, name: Optional[str] = None, sort: str = "-id", limit: int = 100) -> dict:
         if mac is not None:
             res = requests.get(f"{self.base_url}/device/mac/{mac}",
-                headers=self._get_header(), 
+                headers=self._get_header(),
                 verify=False
             )
             return ResponseData(res.status_code, res)
 
-        elif device_id is not None:
-            res = requests.get(f"{self.base_url}/device/{device_id}",
-                headers=self._get_header(), 
+        elif name is not None:
+            res = requests.get(f"{self.base_url}/device",
+                params={
+                    'filter': json.dumps({'visitor_name': name}),
+                    'sort': sort,
+                    'limit': limit
+                },
+                headers=self._get_header(),
                 verify=False
             )
             return ResponseData(res.status_code, res)
@@ -108,7 +114,6 @@ class Token:
     @check_token
     def update_device(self, mac: Optional[str] = None, name: Optional[str] = None, device_id: Optional[int] = None, expire_time: Optional[str] = None, notes: Optional[str] = None, enabled: bool = True, role_id: Optional[int] = 2) -> dict:
         fields = {
-            'mac': mac,
             'enabled': enabled,
             'role_id': role_id
         }
@@ -116,34 +121,46 @@ class Token:
             fields['expire_time'] = expire_time
         if notes: 
             fields['notes'] = notes
-
+        if mac: 
+            fields['mac'] = mac
         if mac is not None:
             res = requests.patch(f"{self.base_url}/device/mac/{mac}",
+                # params={'change_of_authorization': True},
                 data=json.dumps(fields),
-                headers=self._get_header(), 
+                headers=self._get_header(),
                 verify=False
             )
             return ResponseData(res.status_code, res)
         elif name is not None:
-            res = requests.patch(f"{self.base_url}device/{device_id}",
-                                 data=json.dumps(fields),
-                                 headers=self._get_header(), 
-                                 verify=False
-                                 )
-            return ResponseData(res.status_code, res)
+            device = self.get_device(name=name)
+            if len(device.id) != 1:
+                logging.error('Multiple devices with same name returned or the name does not exist')
+            else:
+                clearpass_device_id = int(device.id[0])
+                res = requests.patch(f"{self.base_url}/device/{clearpass_device_id}",
+                    # params={'change_of_authorization': 1},
+                    data=json.dumps(fields),
+                    headers=self._get_header(),
+                    verify=False
+                )
+                return ResponseData(res.status_code, res)
         elif device_id is not None:
-            res = requests.patch(f"{self.base_url}device/{device_id}",
-                                 data=json.dumps(fields),
-                                 headers=self._get_header(), 
-                                 verify=False
-                                 )
+            res = requests.patch(f"{self.base_url}/device/{device_id}",
+                # params={'change_of_authorization': 1},
+                    data=json.dumps(fields),
+                    headers=self._get_header(),
+                    verify=False
+                    )
             return ResponseData(res.status_code, res)
         else:
             raise TypeError('data cannot be empty')
 
-    def _get_expire_date(self, time: Union[timedelta, datetime]) -> str:
+
+    def _get_expire_date(self, time: Union[timedelta, datetime, None]) -> str:
         result = None
-        if (type(time) == timedelta):
+        if (not time):
+            pass
+        elif (type(time) == timedelta):
             result = datetime.timestamp(datetime.now() + time)
         elif (type(time) == datetime):
             result = datetime.timestamp(time)
