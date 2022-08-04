@@ -111,6 +111,7 @@ systemctl daemon-reload
 cp /boot/firstboot/sched-reboot.service /etc/systemd/system
 cp /boot/firstboot/sched-reboot.timer /etc/systemd/system
 systemctl enable sched-reboot.timer
+systemctl disable sched-reboot.service
 
 # Log and finalize
 journalctl -u firstboot.service > /boot/firstboot.log
