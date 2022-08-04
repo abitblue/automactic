@@ -1,0 +1,6 @@
+[Match]
+Name=eno1.vx${VX_VNI}
+
+[Network]
+DHCP=no
+Address=172.${IP_PREFIX}.0.1/16
