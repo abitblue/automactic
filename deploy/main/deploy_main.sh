@@ -1,7 +1,3 @@
-## dnsmasq clobbers the local resolver, disable it from listening on loopback iface
-
-
-
 # config.env
 # VX_VNI
 # VX_GROUP
@@ -31,11 +27,7 @@
 # $ pg_ctlcluster 13 main start
 
 # pgadmin setup
-sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
-sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
-sudo apt install pgadmin4-web
-# Listen 8080 apache: /etc/apache2/ports.conf
-sudo /usr/pgadmin4/bin/setup-web.sh
+./pgadmin4.sh
 
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -49,7 +41,8 @@ for i in "${SCRIPT_DIR}"/*.{link,netdev,network}; do
 done
 systemctl enable systemd-networkd
 
-# dnsmasq setup
+
+# dnsmasq setup, dnsmasq clobbers the local resolver, disable it from listening on loopback iface
 echo "DNSMASQ_EXCEPT=lo" >> /etc/default/dnsmasq
 envsubst < "${SCRIPT_DIR}/dnsmasq.conf" >> /etc/dnsmasq.conf
 systemctl enable dnsmasq
@@ -57,3 +50,4 @@ systemctl enable dnsmasq
 # TODO: nftables
 
 # TODO: nginx + web stack
+sudo cp pgadmin4.service /etc/system

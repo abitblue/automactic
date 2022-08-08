@@ -1,0 +1,27 @@
+[Unit]
+Description = PgAdmin4 Gunicorn Service
+After = network.target network-online.target
+Wants = network-online.target
+
+[Service]
+User=pgadmin4
+StateDirectory=pgadmin
+RuntimeDirectory=pgadmin4
+LogsDirectory=pgadmin
+ExecStart=gunicorn \
+        --pythonpath /usr/pgadmin4/venv/lib/python/site-packages \
+        --bind unix:/tmp/pgadmin4.sock \
+        --workers=1 \
+        --threads=16 \
+        --chdir /usr/pgadmin4/web \
+        pgAdmin4:app
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -INT $MAINPID
+Restart=always
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+KillSignal=SIGQUIT
+
+[Install]
+WantedBy = multi-user.target
