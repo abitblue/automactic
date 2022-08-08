@@ -1,5 +1,6 @@
 from datetime import date, datetime, timedelta
-from wrapper import ResponseData
+from interface.wrapper import ResponseData
+from django.utils import timezone
 from typing import Optional, Union
 import requests
 import logging
@@ -72,8 +73,8 @@ class Token:
                                 'enabled': enabled,
                                 'visitor_name': username,
                                 'role_id': 2,
-                                'do_expire': 4,
-                                'start_time': self._get_expire_date(datetime.now() - timedelta(minutes=-20)) # ClearPass system clock 20 minutes faster
+                                'do_expire': 4, # when the device expires delete the device
+                                'start_time': self._get_expire_date(timezone.now() - timedelta(minutes=20)) # ClearPass system clock 20 minutes faster
                             }),
                             headers=self._get_header(), 
                             verify=False
@@ -132,11 +133,11 @@ class Token:
             )
             return ResponseData(res.status_code, res)
         elif name is not None:
-            device = self.get_device(name=name)
-            if len(device.id) != 1:
+            device_response = self.get_device(name=name)
+            if len(device_response.device) != 1:
                 logging.error('Multiple devices with same name returned or the name does not exist')
             else:
-                clearpass_device_id = int(device.id[0])
+                clearpass_device_id = int(device_response.device[0]['id'])
                 res = requests.patch(f"{self.base_url}/device/{clearpass_device_id}",
                     # params={'change_of_authorization': 1},
                     data=json.dumps(fields),
@@ -161,7 +162,7 @@ class Token:
         if (not time):
             pass
         elif (type(time) == timedelta):
-            result = datetime.timestamp(datetime.now() + time)
+            result = datetime.timestamp(timezone.now() + time)
         elif (type(time) == datetime):
             result = datetime.timestamp(time)
         else:

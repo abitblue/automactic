@@ -1,5 +1,7 @@
 from typing import Optional
 
+from interface import api
+
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -35,7 +37,15 @@ class Login(View):
 
     def post(self, request: HttpRequest, usertype: str, *arg, **kwargs):
         form = UserLoginForm(request=request, user_type=usertype, data=request.POST)
-        mac_addr: MACAddress = request.session['mac_address']
+        data = form.data
+        api_access = api.Token()
+        response = api_access.add_device(
+            mac=form.data['mac_address'],
+            username=f"T:{data['username']}",
+            device_name=data['device_name'],
+        )
+        print(response)
+        # mac_addr: MACAddress = request.session['mac_address']
 
         # Rate limit first. Log once possible. try/except/finally?
 

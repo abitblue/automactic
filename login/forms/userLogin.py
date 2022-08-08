@@ -11,21 +11,25 @@ class UserLoginForm(BaseAuthenticationForm):
     device_name = forms.CharField(label='', required=False,
                                   widget=forms.TextInput(attrs={
                                       'maxlength': 40,
-                                      'placeholder': 'Device Name'
+                                      'placeholder': 'Device Name',
+                                  }))
+
+    mac_address = forms.CharField(label='', required=True,
+                                  widget=forms.TextInput(attrs={
+                                      'maxlength': 17,
+                                      'placeholder': 'Mac Address',
                                   }))
 
     def __init__(self, user_type: str, request=None, *args, **kwargs):
         widget_placeholders = {
             'student': ('OSIS *', 'DOB (MMDDYYYY) * '),
-            'teacher': ('Email (jdoe1@schools.nyc.gov) *', 'Password *'),
+            'teacher': ('Email (jdoe1@schools.nyc.gov) *', 'Mac Address *'),
             'guest': ('Username *', 'Token *'),
         }
 
         super().__init__(request, *args, **kwargs)
         self.fields['username'].label = ''
-        self.fields['password'].label = ''
         self.fields['username'].widget.attrs['placeholder'] = widget_placeholders[user_type][0]
-        self.fields['password'].widget.attrs['placeholder'] = widget_placeholders[user_type][1]
         self.password_correct = False
         self.mac_changed = False
 
@@ -57,3 +61,5 @@ class UserLoginForm(BaseAuthenticationForm):
         self.password_correct = True
         super().confirm_login_allowed(user)
         self.rate_limit_check(user)
+
+    

@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'login' usertype=usertype %}">
+<form method="post" action="{% url 'login' usertype=usertype %}" id="form">
     {% csrf_token %}
     {% if form.errors %}
         <div class="formLeftAligned errorText">
@@ -7,17 +7,22 @@
         </div>
     {% endif %}
     {{ form.username }}
-    {{ form.password }}
+    {{ form.mac_address }}
     {{ form.device_name }}
     <div class="formLeftAligned" style="font-style: italic; margin-bottom: 1vh; text-align: right; max-width: 80%; font-size: 1.5vh;">* Required</div>
     <button class="button" type="submit" id="submit"><span class="buttonSpan">Continue</span></button>
 </form>
 
 <script>
-    document.querySelector("#submit").addEventListener('click', function (evt) {
-        if (this.parentElement.valid) {
-          this.disabled = true;
-        }
-        console.log("test!");
-    });
+    // document.querySelector("#submit").addEventListener('click', function (evt) {
+    //     evt.preventDefault()
+    //     const formData = new FormData(document.getElementById('form'));
+    //     const formProps = Object.fromEntries(formData);
+    //     console.log(formData)
+    //     console.log(formProps)
+    //     // if (this.parentElement.valid) {
+    //     //   this.disabled = true;
+    //     // }
+    //     console.log("test!");
+    // });
 </script>
