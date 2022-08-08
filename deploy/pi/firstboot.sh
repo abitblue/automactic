@@ -107,11 +107,7 @@ systemctl enable systemd-timesyncd
 # TODO: setup nftables
 
 # Setup automated reboot every day
-systemctl daemon-reload
-cp /boot/firstboot/sched-reboot.service /etc/systemd/system
-cp /boot/firstboot/sched-reboot.timer /etc/systemd/system
-systemctl enable sched-reboot.timer
-systemctl disable sched-reboot.service
+crontab -l | { cat; echo "0 4   *   *   *    /sbin/shutdown -r +5"; } | crontab -
 
 # Log and finalize
 journalctl -u firstboot.service > /boot/firstboot.log
