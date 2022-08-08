@@ -51,5 +51,5 @@ class Login(View):
 
         # Attempt to change on Clearpass, show error to user if error. Else show success page.
 
-
+        
         return HttpResponse('test!')
