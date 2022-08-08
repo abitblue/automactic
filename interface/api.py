@@ -64,7 +64,7 @@ class Token:
 
     @check_token
     def add_device(self, mac: str, username: str, device_name: Optional[str] = None, enabled: bool = True,
-                   time: Union[timedelta, datetime] = None) -> dict:
+                   time: Union[timedelta, datetime] = None, role_id: int = 2, do_expire: int = 4) -> dict:
 
         res = requests.post(f"{self.base_url}/device",
                             data=json.dumps({
@@ -73,8 +73,8 @@ class Token:
                                 'notes': device_name,
                                 'enabled': enabled,
                                 'visitor_name': username,
-                                'role_id': 2,
-                                'do_expire': 4,  # when the device expires delete the device
+                                'role_id': role_id,
+                                'do_expire': do_expire,  # when the device expires delete the device
                                 'start_time': self._get_expire_date(timezone.now() - timedelta(minutes=-20))
                                 # ClearPass system clock 20 minutes faster
                             }),

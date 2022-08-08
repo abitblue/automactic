@@ -1,18 +1,15 @@
 from dataclasses import dataclass, field, fields
+from typing import Union
+
 
 @dataclass
 class ResponseData:
-    id: list[int] = None
-    mac: list[str] = None
-    notes: list[str] = None
-    start_time: list[int] = None
-    expire_time: list[int] = None
-    sponsor_name: list[str] = None
-    device_name: list[str] = None
+    device: list[dict[str, Union[str, int]]] = None
     status_code: int = None
+
     def __init__(self, status, res):
         self.status_code = status
-        self._init_fields()
+        self._initiate_field()
         try:
             response = res.json()
         except:
@@ -22,35 +19,26 @@ class ResponseData:
 
         if '_embedded' in response:
             for data in response['_embedded']['items']:
-                self._add_field(data)
+                self._add_device(self._create_device(data))
         else:
-            self._add_field(response)
+            self._add_device(self._create_device(response))
 
     def __eq__(self, other):
-        return (
-            self.mac == other.mac and
-            self.notes == other.notes and
-            self.start_time == other.start_time and
-            self.expire_time == other.expire_time and 
-            self.sponsor_name == other.sponsor_name and
-            self.device_name == other.device_name and
-            self.id == other.id
-        )
+        return self.device == other.device
 
-    def _add_field(self, data):
-        self.mac.append(data['mac'])
-        self.notes.append(data['notes'])
-        self.start_time.append(data['start_time'])
-        self.expire_time.append(data['expire_time'])
-        self.sponsor_name.append(data['sponsor_name'])
-        self.device_name.append(data['visitor_name'])
-        self.id.append(int(data['id']))
+    def _initiate_field(self):
+        self.device = []
 
-    def _init_fields(self):
-        self.mac = []
-        self.notes = []
-        self.start_time = []
-        self.expire_time = []
-        self.sponsor_name = []
-        self.device_name = []
-        self.id = []
+    def _create_device(self, data):
+        return {
+            'id': int(data['id']),
+            'mac': data['mac'],
+            'notes': data['notes'],
+            'start_time': data['start_time'],
+            'expire_name': data['expire_time'],
+            'sponosor_name': data['sponsor_name'],
+            'device_name': data['visitor_name']
+        }
+
+    def _add_device(self, d):
+        self.device.append(d)
