@@ -9,6 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationFo
 
 from login.models import User, LoginHistory
 
+# TODO: Update Last Login!!!
 
 class UserLoginForm(BaseAuthenticationForm):
     device_name = forms.CharField(label='', required=False,
@@ -68,9 +69,8 @@ class UserLoginForm(BaseAuthenticationForm):
         unique_mac_lim = LoginHistory.objects.filter(user=User, mac_address=self.request.session.get('macaddr'),
                                                      time__gt=timezone.now() - timedelta(perms.get("rateLimit/uniqueMACAddressInterval"))).exists()
 
-        if not_new_user:
-            if password_per_hr_lim or modification_lim or unique_mac_lim:
-                raise ValidationError(
+        if password_per_hr_lim or (not_new_user and (modification_lim or unique_mac_lim)):
+            raise ValidationError(
                     self.error_messages['rate_limit'],
                     code='rate_limit'
                 )
