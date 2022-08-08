@@ -1,13 +1,16 @@
 import re
+from datetime import timedelta
+
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
 
-from login.models import User, UserType
+from login.models import User, LoginHistory
 
 
 class UserLoginForm(BaseAuthenticationForm):
-
     device_name = forms.CharField(label='', required=False,
                                   widget=forms.TextInput(attrs={
                                       'maxlength': 40,
@@ -44,6 +47,33 @@ class UserLoginForm(BaseAuthenticationForm):
         if user.get_permission('bypassRateLimit', default=False):
             return
 
+        perms = {
+            perms.suffix: perms.value
+            for perms in User.objects.get(username=user).permissions().filter(suffix__startswith="rateLimit")
+        }
+
+        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > perms.get(
+            'rateLimit/modificationsUntilNotNewUser')
+
+        password_per_hr_lim = LoginHistory.objects.filter(user=user, logged_in=False,
+                                                          time__gt=timezone.now() - timedelta(
+                                                              hours=1)).count() > perms.get(
+            'rateLimit/passwordPerHourLimit')
+
+        modification_lim = LoginHistory.objects.filter(user=user, logged_in=True, mac_updated=True,
+                                                       time__gt=(timezone.now() - timedelta(
+                                                           hours=1)).count() > perms.get(
+                                                           'rateLimit/passwordPerHourLimit'))
+
+        unique_mac_lim = LoginHistory.objects.filter(user=User, mac_address=self.request.session.get('macaddr'),
+                                                     time__gt=timezone.now() - timedelta(perms.get("rateLimit/uniqueMACAddressInterval"))).exists()
+
+        if not_new_user:
+            if password_per_hr_lim or modification_lim or unique_mac_lim:
+                raise ValidationError(
+                    self.error_messages['rate_limit'],
+                    code='rate_limit'
+                )
         # Rate limits attempts to prevent abuse by rapidly changing devices, and account brute-forcing
         # Default Rate Limit Rules (modified in settings)
         # Always rate limit username if 5 incorrect passwords were inputted in an hour.
