@@ -1,0 +1,28 @@
+{% load static %}
+
+{% if not version_check %}
+    <h1>What version of iOS/iPadOS are you using?</h1>
+    <p class="bodyText">You can check by going to Settings > General > About > Version</p>
+    <a href="{% url 'instructions' %}?os=ios&version_check=left" class="button"><span class="buttonSpan">iOS 13 or lower</span></a>
+    <a href="{% url 'instructions' %}?os=ios&version_check=right" class="button"><span class="buttonSpan">iOS 14 or higher</span></a>
+{% else %}
+
+    {% if version_check == "left" %}
+        {% include 'login/instructions/nodefault.html' %}
+
+    {% else %} {# version_check == "right" #}
+       <p class="bodyText"><b>Step 1:</b> Navigate to the settings app of your iOS device.</p>
+        <img class="instructions-img" src="{% static 'instructions/home_settings_ios.jpg' %}" alt="iphone home screen with red box around settings">
+        <p class="bodyText"><b>Step 2:</b> Click on Wi-Fi</p>
+        <img class="instructions-img" src="{% static 'instructions/wifi_settings_ios.jpg' %}" alt="wifi settings within the settings app">
+        <p class="bodyText"><b>Step 3:</b> Tap the Information button next to JoinForWifi</p>
+        <img class="instructions-img" src="{% static 'instructions/wifi_info_ios.jpg' %}" alt="blue information icon next to network">
+        <p class="bodyText"><b>Step 4:</b> Locate "Private Address" and switch it off</p>
+        <img class="instructions-img" src="{% static 'instructions/ios_mac_address.jpg' %}" alt="an enabled private address setting that should be disabled">
+        <br>
+        <p class="bodyText"><b>Step 5:</b>After Registering Your Device, <b>TURN OFF PRIVATE MAC ADDRESS FOR NCPSP TOO!!!</b></p>
+        <img class="instructions-img" src="{% static 'instructions/ncpsp_shutoff_ios.jpg' %}" alt="disable for ncpsp as well">
+    {% endif %}
+
+    {% include 'login/instructions/fotter_buttons.html' %}
+{% endif %}

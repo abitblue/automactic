@@ -1,0 +1,61 @@
+User:
+- username: TextField
+- password: PasswordField
+- usertype: UserType
+- device_modified_count: Integer
+- last_login: DateTimeField
+- last_login_ip: IPField
+- added_by: User
+- notes: TextField
+
+UserType:
+- name: TextField
+
+LoginHistory:
+- time: DateTimeField
+- user: ForeignKey
+- mac_address: MacAddressField
+- host: TextField
+- logged_in: Boolean
+- mac_updated: Boolean
+
+Permission:
+- Permission: TextField
+- Value: TextField
+- Enabled: BooleanField
+
+
+- userType.<type>
+    - bypassRateLimit: Boolean
+    - clearpassDeviceExpiry: some timedelta
+    - warningThreshold: Integer
+    - adminSiteAccess: Boolean
+
+    - rateLimit
+        - passwordPerHour: Integer
+        - changesUntilOldUser: Integer
+        - changesPerHourUntilOldUser: Integer
+        - uniqueMacAddressInterval: Integer
+
+- user.<username>
+    - inherited FromUserType
+
+- global
+    - guestPassword
+        - length: Integer
+        - updateInterval: Integer
+    - loginIPRestriction: netaddr.IPNetwork
+
+userType.student.warningThreshold = 10 (String)
+userType.student.warningThreshold = 10
+
+userType.student.clearpassDeviceExpiry."09/01/+4" = true
+
+user."mwhalen3@schools.nyc.gov"
+
+userType.student.rateLimit.passwordPerHour.3 = true
+
+userType.student.bypassRateLimit = false
+userType.teachers.bypassRateLimit = true
+
+user."mwhalen3@schools.nyc.gov".ratelimit.changesPerHourUntilOldUser.10 = true

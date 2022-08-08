@@ -1,0 +1,233 @@
+html {
+    --color-techgold: #C4B55F;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    margin: auto;
+    text-align: center;
+    width: 85%;
+}
+
+h1 {
+    font-size: 2.75vh;
+}
+
+.centerContainer {
+    text-align: center;
+    margin: auto;
+    width: 85%;
+}
+
+.columnedParentDiv {
+    display: block;
+}
+
+.columnedChildDiv {
+    display: inline-block;
+    width: 30vw;
+    vertical-align: top;
+}
+
+img {
+    height: 1.5em;
+    vertical-align: middle;
+}
+
+.header {
+    text-align: left;
+    border-bottom: 1px solid #222222;
+    margin: 1% 1% 1.2em;
+    font-size: 4.5vh;
+    vertical-align: middle;
+}
+
+.headerText {
+    font-size: 3.5vh;
+    font-weight: bold;
+    margin: 1vh 1vh 2.25vh 1vh;
+    display: inline-block;
+}
+
+.bodyText {
+    font-size: 2.5vh;
+}
+
+.footerDivider {
+    margin: 5vh auto auto;
+    width: 80%;
+    border-radius: 1000px;
+    height: 1vh;
+    background-color: palegoldenrod;
+}
+
+.footerText {
+    margin-bottom: 0.5vh;
+    margin-top: 0.5vh;
+    color: darkgrey;
+    font-size: 1.5vh;
+}
+
+/*h1.login {*/
+/*    font-size: 2rem;*/
+/*    margin: 40px;*/
+/*    text-transform: uppercase;*/
+/*    letter-spacing: 4px;*/
+/*    font-weight: 400;*/
+/*}*/
+
+.formField {
+    background: none;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid;
+    padding: 2% 1%;
+    font-size: 1.8vh;
+    margin: 2.5vh;
+    min-width: 80%;
+    max-width: 80%;
+}
+
+
+.formLeftAligned {
+    max-width: 80%;
+    margin: auto;
+    text-align: left;
+}
+
+.errorText {
+    color: red;
+    font-size: 2.5vh;
+}
+
+.form-sentence {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.form-sentence-start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.para-head {
+    font-size: 1.6rem;
+    font-weight: 400;
+    text-decoration: underline;
+}
+
+.para-body {
+    font-size: 0.8rem;
+    font-weight: 200;
+}
+
+.instructions-img {
+    width: 20vw;
+    height: auto;
+}
+
+.button {
+    background-color: var(--color-techgold);
+    text-align: center;
+    border: none;
+    font-size: 2.5vh;
+    width: 35vh;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+    padding: 1vw 0;
+    border-radius: 1000vh;
+    margin: 1vh 1vw;
+    color: inherit;
+}
+
+.smallButton {
+    background-color: var(--color-techgold);
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.5vw 0;
+    margin: 1vh 1vw;
+    color: inherit;
+    font-size: 2vh;
+    width: 17vh;
+    border-radius: 1000vh;
+}
+
+.button .buttonSpan {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+}
+
+.button .buttonSpan:after {
+    content: "\00bb";
+    position: absolute;
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    top: 0;
+    right: -2vh;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+}
+
+.errMsg {
+    font-size: 1.2rem;
+}
+
+.button:hover .buttonSpan {
+    padding-right: 2.5vh;
+}
+
+.button:hover .buttonSpan:after {
+    opacity: 1;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    right: 0;
+}
+
+#wifipass {
+    font-size: 2.75vh;
+    text-align: center;
+}
+
+@media only screen and (max-width: 480px) {
+    .headerText {
+        font-size: 3.5vh;
+    }
+    .columnedChildDiv, .columnedParentDiv {
+        display: revert;
+        width: revert;
+    }
+}
+
+@media screen and (max-width: 1100px) and (min-width: 480px) {
+    .instructions-img {
+        width: 50vw;
+    }
+    .bodyText {
+        max-width: 75vw;
+        margin: auto;
+    }
+    .columnedChildDiv, .columnedParentDiv {
+        display: revert;
+        width: revert;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .instructions-img {
+        width: 50vw;
+    }
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <title>{% block title %}{% endblock %} - Device Registration</title>
+</head>
+<body>
+<div class="mobileChanges">
+    {% block header %}
+        <div class="header">
+            <img src="{% static 'logo1.svg' %}" srcset="{% static 'logo1.svgz' %}" alt="SITHS Logo">
+            <img src="{% static 'logo2.svg' %}" srcset="{% static 'logo2.svgz' %}" alt="SITHS Technology Dept">
+            <span class="headerText">Device Registration</span>
+        </div>
+    {% endblock %}
+
+    {% block content %} {% endblock %}
+
+    {% block footer %}
+        <div class="footerDivider"></div>
+        <p class="footerText">Staten Island Technical High School, <a href="{% url 'debug' %}" style="text-decoration: none; color: inherit;">Technology Department</a></p>
+        <p class="footerText">Contact: Mr. Whalen, Room C56, or byod@sitechhs.com</p>
+        <p class="footerText">Team: Ryan Yang '20, Ivan Zheng '22, Harvey Jiang '23, You Wei '24, Nick Melkadze '20, Anthony Chen</p>
+        <p class="footerText">Special Thanks to Daniel Indictor '20, Michael Whalen, and Mark Erlenwein</p>
+        <br>
+        <br>
+    {% endblock %}
+</div>
+
+</body>
+</html>
