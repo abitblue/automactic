@@ -1,10 +1,12 @@
 from dataclasses import dataclass, field, fields
 from typing import Union
 
+
 @dataclass
 class ResponseData:
     device: list[dict[str, Union[str, int]]] = None
     status_code: int = None
+
     def __init__(self, status, res):
         self.status_code = status
         self._initiate_field()
@@ -29,7 +31,7 @@ class ResponseData:
         self.device = []
 
     def _create_device(self, data):
-        return { 
+        return {
             'id': int(data['id']),
             'mac': data['mac'],
             'notes': data['notes'],
