@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from interface import api
@@ -38,13 +39,27 @@ class Login(View):
     def post(self, request: HttpRequest, usertype: str, *arg, **kwargs):
         form = UserLoginForm(request=request, user_type=usertype, data=request.POST)
         data = form.data
-        api_access = api.Token()
-        response = api_access.add_device(
-            mac=form.data['mac_address'],
-            username=f"T:{data['username']}",
-            device_name=data['device_name'],
-        )
-        print(response)
+        try:
+            api_access = api.Token()
+            response = api_access.add_device(
+                mac=form.data['mac_address'],
+                username=f"TK:{data['username']}",
+                device_name=data['device_name'],
+            )
+        except Exception as err:
+            logging.error(err)
+            return redirect(reverse('error') + f'?reason=clearpassAPI')
+
+        if (response.err_msg == ''):
+            return redirect(reverse('success'))
+        elif ( response.err_msg == 'Invalid MAC address'):
+            return redirect(reverse('error') + f'?reason=incorrectMAC&err_msg={response.err_msg}')
+        elif ( response.err_msg == 'This username is already in use'):
+            return redirect(reverse('error') + f'?reason=alreadyRegistered')
+        else:
+            return redirect(reverse('error') + f'?reason=unknown')
+
+
         # mac_addr: MACAddress = request.session['mac_address']
 
         # Rate limit first. Log once possible. try/except/finally?
@@ -62,4 +77,3 @@ class Login(View):
         # Attempt to change on Clearpass, show error to user if error. Else show success page.
 
         
-        return HttpResponse('test!')

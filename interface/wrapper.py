@@ -5,6 +5,7 @@ from typing import Union
 class ResponseData:
     device: list[dict[str, Union[str, int]]] = None
     status_code: int = None
+    err_msg: str = ''
     def __init__(self, status, res):
         self.status_code = status
         self._initiate_field()
@@ -13,7 +14,7 @@ class ResponseData:
         except:
             return
         if '4' in str(self.status_code)[0]:
-            print(response)
+            self.err_msg = response['detail']
             return
 
         if '_embedded' in response:
@@ -28,16 +29,20 @@ class ResponseData:
     def _initiate_field(self):
         self.device = []
 
-    def _create_device(self, data):
-        return { 
-            'id': int(data['id']),
-            'mac': data['mac'],
-            'notes': data['notes'],
-            'start_time': data['start_time'],
-            'expire_name': data['expire_time'],
-            'sponosor_name': data['sponsor_name'],
-            'device_name': data['visitor_name']
-        }
+    def _create_device(self, data, err_msg=''):
+        r_value = {}
+        try:
+            r_value['id'] = int(data['id']),
+            r_value['mac'] = data['mac'],
+            r_value['notes'] = data['notes'],
+            r_value['start_time'] = data['start_time'],
+            r_value['expire_name'] = data['expire_time'],
+            r_value['sponosor_name'] = data['sponsor_name'],
+            r_value['device_name'] = data['visitor_name'],
+        except:
+            pass
+
+        return r_value
 
     def _add_device(self, d):
         self.device.append(d)

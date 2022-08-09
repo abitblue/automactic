@@ -30,6 +30,10 @@ class Error(View):
             'We could not determine your MAC address',
             ['Please seek assistance in room C56.']
         ),
+        'incorrectMAC': (
+            'The MAC address you entered is not valid.',
+            ['Please check the instructions and enter the correct MAC address.']
+        ),
         'wrongNetwork': (
             'You are connecting from the wrong network',
             ['Please connect using the JoinForWifi network and try again.']
@@ -42,6 +46,7 @@ class Error(View):
 
     def get(self, request: HttpRequest):
         err: str = request.GET.get('reason', 'unknown')
+        err_msg: str = request.GET.get('err_msg', '')
         verbose_message, fixes = self.err_map.get(err, self.err_map['unknown'])
 
         template = self.template_name if err != 'alreadyRegistered' else self.already_registered_template_name

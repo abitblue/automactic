@@ -30,6 +30,7 @@ class Index(View):
 
         return super().dispatch(request, kiosk, *args, **kwargs)
 
+
     def get(self, request: HttpRequest, kiosk: bool):
         login_page = 'login' if not kiosk else 'kiosk_login'
         return render(request, self.template_name, {'login_page': login_page})
