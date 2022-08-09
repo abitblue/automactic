@@ -1,0 +1,11 @@
+[NetDev]
+Name=eth0.vx${VX_VNI}
+Kind=vxlan
+
+[VXLAN]
+DestinationPort=4789
+VNI=${VX_VNI}
+Group=${VX_GROUP}
+TTL=5
+MacLearning=true
+MaximumFDBEntries=65535

@@ -1,0 +1,6 @@
+[Match]
+Name=eth0
+
+[Network]
+DHCP=yes
+VXLAN=eth0.vx${VX_VNI}

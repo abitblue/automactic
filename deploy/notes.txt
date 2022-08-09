@@ -1,0 +1,11 @@
+# Setup Image File
+- Install firstboot service file, script, and configs
+- Disable onboard wifi/bt in config.txt
+        dtoverlay=disable-wifi
+        dtoverlay=disable-bt
+
+# When using RPi Imager:
+Open settings and set username to `core`
+After writing image, copy the folder "firstboot/" to "/boot"
+Modify /boot/firstboot/config.env and ensure LF line endings
+Ensure /boot/config.txt has correct overlays to disable wifi and bt

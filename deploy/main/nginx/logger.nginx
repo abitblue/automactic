@@ -1,0 +1,28 @@
+map $status $loggable {
+        ~^[23]  1;
+        default 0;
+}
+
+log_format automacticlogformat '[$time_iso8601] $remote_addr : "$request" - "$http_user_agent"';
+
+server {
+        log_not_found off;
+        access_log /var/log/nginx/logger_access.log automacticlogformat if=$loggable;
+
+        listen 8080;
+        server_name _;
+
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        if ($http_user_agent !~* (automactic)) {
+                return 403;
+        }
+
+        location = /favicon.ico { access_log off; }
+
+        location / {
+                add_header Content-Type text/plain;
+                return 200 'OK!\n';
+        }
+}

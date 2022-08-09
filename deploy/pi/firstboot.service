@@ -1,0 +1,17 @@
+[Unit]
+Description=FirstBoot
+After=network.target apt-daily.service apt-daily-upgrade.service
+Before=rc-local.service
+ConditionFileNotEmpty=/boot/firstboot.sh
+ConditionFileIsExecutable=/boot/firstboot.sh
+ConditionPathIsReadWrite=/boot
+
+[Service]
+StandardOutput=kmsg+console
+ExecStart=/boot/firstboot.sh
+ExecStartPost=/bin/mv /boot/firstboot.sh /boot/firstboot.sh.${INVOCATION_ID}
+Type=oneshot
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target

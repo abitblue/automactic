@@ -1,0 +1,9 @@
+[Match]
+Name=ap0
+
+[Link]
+RequiredForOnline=no
+
+[Network]
+DHCP=no
+Bridge=br0

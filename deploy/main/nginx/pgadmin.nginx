@@ -1,0 +1,12 @@
+server {
+    log_not_found off;
+    access_log /var/log/nginx/pgadmin_access.log;
+
+    listen 8888;
+    server_name _;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/tmp/pgadmin4.sock;
+    }
+}
