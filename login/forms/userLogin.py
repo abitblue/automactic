@@ -11,6 +11,7 @@ from login.models import User, LoginHistory
 
 # TODO: Update Last Login!!!
 
+
 class UserLoginForm(BaseAuthenticationForm):
     device_name = forms.CharField(label='', required=False,
                                   widget=forms.TextInput(attrs={
@@ -63,10 +64,10 @@ class UserLoginForm(BaseAuthenticationForm):
 
         modification_lim = LoginHistory.objects.filter(user=user, logged_in=True, mac_updated=True,
                                                        time__gt=(timezone.now() - timedelta(
-                                                           hours=1)).count() > perms.get(
-                                                           'rateLimit/passwordPerHourLimit'))
+                                                           hours=1))).count() > perms.get(
+                                                           'rateLimit/passwordPerHourLimit')
 
-        unique_mac_lim = LoginHistory.objects.filter(user=User, mac_address=self.request.session.get('macaddr'),
+        unique_mac_lim = LoginHistory.objects.filter(user=user, mac_address=self.request.session.get('macaddr'),
                                                      time__gt=timezone.now() - timedelta(perms.get("rateLimit/uniqueMACAddressInterval"))).exists()
 
         if password_per_hr_lim or (not_new_user and (modification_lim or unique_mac_lim)):

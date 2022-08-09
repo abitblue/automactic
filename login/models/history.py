@@ -52,7 +52,7 @@ class LoginHistory(models.Model):
             # TODO: Fill in host
             client_ip, is_routable = get_client_ip(request)
             cls.objects.create(user=user,
-                               mac_address=mac_address,
+                               mac_address=str(mac_address),
                                ip=client_ip,
                                host='',
                                logged_in=logged_in,

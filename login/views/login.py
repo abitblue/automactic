@@ -6,10 +6,17 @@ from django.views import View
 from django.http import HttpRequest, HttpResponse
 
 from login.forms import UserLoginForm
+from login.models import LoginHistory
 from login.utils import MACAddress
 
 
 class Login(View):
+    help_template = {
+        'student': f"login/batch/students.html",
+        'teacher': f"login/batch/teachers.html",
+        'guest': f"login/batch/guest.html"
+    }
+
     def dispatch(self, request, *args, **kwargs):
         addr: Optional[MACAddress] = request.session.get('mac_address')
 
@@ -21,15 +28,10 @@ class Login(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, usertype: str, *args, **kwargs):
-        help_template = {
-            'student': f"login/batch/students.html",
-            'teacher': f"login/batch/teachers.html",
-            'guest': f"login/batch/guest.html"
-        }
 
         return render(request, f'login/login.html', {
             'usertype': usertype,
-            'help_template': help_template[usertype],
+            'help_template': self.help_template[usertype],
             'form': UserLoginForm(user_type=usertype),
         })
 
@@ -38,7 +40,12 @@ class Login(View):
         mac_addr: MACAddress = request.session['mac_address']
 
         # Rate limit first. Log once possible. try/except/finally?
+        if not form.is_valid():
+            LoginHistory.log(request=request, user=form.cleaned_data.get('username'), logged_in=form.password_correct, mac_address=mac_addr)
+            print(mac_addr)
+            return render(request, 'login/login.html', {'usertype': usertype, 'help_template': self.help_template[usertype], 'form': form})
 
+        return HttpResponse('submitted')
         # Check if username exists on Clearpass
         # Check if MAC Address already exists on Clearpass
 
@@ -52,4 +59,4 @@ class Login(View):
         # Attempt to change on Clearpass, show error to user if error. Else show success page.
 
 
-        return HttpResponse('test!')
+
