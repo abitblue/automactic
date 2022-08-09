@@ -5,7 +5,7 @@ from typing import Optional, Union
 from django.http import HttpRequest, HttpResponse
 from django.conf import settings
 from ipware import get_client_ip
-from netaddr import EUI
+from netaddr import EUI, mac_unix_expanded
 
 
 class MACAddress(EUI):

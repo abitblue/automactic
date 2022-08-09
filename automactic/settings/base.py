@@ -182,4 +182,4 @@ LOGGING = {
 }
 
 # Requ
-MACADDRESS_DEFAULT_DIALECT = 'netaddr.mac_unix'
+MACADDRESS_DEFAULT_DIALECT = 'netaddr.mac_unix_expanded'

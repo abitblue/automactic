@@ -160,5 +160,23 @@
       "raw_value": "+0/+1/+0",
       "type": 3
     }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 19,
+    "fields": {
+      "permission": "userType/student/deviceLimit",
+      "raw_value": "1",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": 20,
+    "fields": {
+      "permission": "userType/staff/warningLimit",
+      "raw_value": "15",
+      "type": 2
+    }
   }
 ]

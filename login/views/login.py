@@ -1,13 +1,19 @@
 from typing import Optional
 
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from django.http import HttpRequest, HttpResponse
+from netaddr import EUI
 
 from login.forms import UserLoginForm
-from login.models import LoginHistory
+from login.models import LoginHistory, User
 from login.utils import MACAddress
+import interface.api as api
+
+
+access = api.Token()
 
 
 class Login(View):
@@ -39,16 +45,47 @@ class Login(View):
         form = UserLoginForm(request=request, user_type=usertype, data=request.POST)
         mac_addr: MACAddress = request.session['mac_address']
 
-        # Rate limit first. Log once possible. try/except/finally?
         if not form.is_valid():
             LoginHistory.log(request=request, user=form.cleaned_data.get('username'), logged_in=form.password_correct, mac_address=mac_addr)
             print(mac_addr)
             return render(request, 'login/login.html', {'usertype': usertype, 'help_template': self.help_template[usertype], 'form': form})
 
-        return HttpResponse('submitted')
-        # Check if username exists on Clearpass
-        # Check if MAC Address already exists on Clearpass
+        resp = access.get_device(mac=mac_addr)
+        print(resp)
 
+        if resp is not None:
+            LoginHistory.log(request=request, user=form.cleaned_data.get('username'), logged_in=form.password_correct)
+            return redirect(reverse('error') + '?reason=alreadyRegistered')
+
+        name = ""
+        user = form.user_cache
+        usertype = str(usertype).lower()
+        device_name = form.cleaned_data.get('device_name')
+
+        if usertype == 'guest':
+            name = f'G:{user.device_modified_count}'
+        elif usertype == 'student':
+            name = f'S:{user.username}'
+        elif usertype == 'staff':
+            name = f'T:{user.username}'
+
+        resp_user = access.get_device(name=name)
+        if resp_user is not None:
+            if len(resp_user.device) >= User.objects.get(username=user).get_permission('deviceLimit'):
+                resp_user.device.sort(key=lambda x: x['start_time'])
+                access.update_device(device_id=resp_user.device[0]['id'], updated_fields={
+                    'mac': str(mac_addr),
+                    'device_name': device_name,
+                })
+                # TODO: log
+                return HttpResponse("yes2")
+
+        expire_time = User.objects.get(username=user).get_permission('expireTime', default=None)
+        access.add_device(mac=mac_addr, username=name, device_name=device_name, time=expire_time)
+        LoginHistory.log(request=request, user=form.cleaned_data.get('username'), logged_in=form.password_correct,
+                         mac_address=mac_addr)
+
+        return HttpResponse("yes")
         # If username does not exist, add device.
 
         # If username exists, count number of device they have. Compare against permissions.
