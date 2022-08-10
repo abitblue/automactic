@@ -1,0 +1,52 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div id="content-main">
+    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+    <form id="bulkUserUpload" enctype="multipart/form-data">
+        {% csrf_token %}
+        <b>Bulk Importing/Replacing</b>
+        <br>
+        <b>{{ bulkImportForm.import_type.label_tag }}</b>
+        {% for radio in bulkImportForm.import_type %}
+            {{ radio }}
+        {% endfor %}
+        <br>
+        <b>{{ bulkImportForm.file.label_tag }}</b>
+        {{ bulkImportForm.file }}
+        <button type="submit">Submit</button>
+        <br>
+        <span id="bulkUserUploadError"></span>
+    </form>
+</div>
+<script>
+window.addEventListener('load', (event) => {
+    const bulkUserUploadFormElem = document.querySelector("#bulkUserUpload");
+    const bulkUserUploadErrorElem = document.querySelector("#bulkUserUploadError");
+
+    bulkUserUploadFormElem.addEventListener('submit', (event) => {
+        event.preventDefault();
+        console.log('test');
+        bulkUserUploadErrorElem.innerHTML = `Working...`;
+        fetch("{% url 'internal-bulkuserupload' %}", {
+            method: "POST",
+            body:  new FormData(bulkUserUploadFormElem),
+        }).then(response => {
+            if (!response.ok) { throw Error(response.statusText); }
+            return response;
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            if (data.status === "ok") {
+                bulkUserUploadErrorElem.innerHTML = `<b>Success!</b> Read ${data.count} accounts`;
+            } else {
+                bulkUserUploadErrorElem.innerHTML = `<b>Error:</b> ${data.errors}`;
+            }
+        }).catch((error) => {
+            bulkUserUploadErrorElem.innerHTML = `${error}`;
+        });
+    });
+});
+</script>
+{% endblock %}

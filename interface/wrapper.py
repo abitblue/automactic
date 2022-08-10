@@ -14,8 +14,8 @@ class ResponseData:
             response = res.json()
         except:
             return
-        if '4' in str(self.status_code)[0]:
-            print(response)
+
+        if str(self.status_code)[0] == '4':
             return
 
         if '_embedded' in response:

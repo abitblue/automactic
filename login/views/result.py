@@ -16,17 +16,15 @@ class Success(View):
 class Error(View):
     template_name = 'login/error.html'
 
+    # Because the 'alreadyRegistered' reason is so prevalent, we move it to its own page to mirror the success page
+    already_registered_template_name = 'login/error_already_registered.html'
+
     # Map from Error to Verbose Name and Possible fixes
     err_map: dict[str, tuple[str, list[str]]] = {
         'unknown': (
             'Unknown Error',
             ['We were unable to process your request.',
              'Please seek assistance in room C56.']
-        ),
-        'alreadyRegistered': (
-            'Your device is already registered',
-            ['Ensure that MAC address randomization is turned off for the WiFi network, ncpsp.',
-             'Connect to "ncpsp" with the password: 605D785001@rackID78R60']
         ),
         'unknownMAC': (
             'We could not determine your MAC address',
@@ -40,13 +38,20 @@ class Error(View):
             'Internal server error',
             ['Seek assistance in room C56 or send an email to <i>byod@sitechhs.com</i> with a screenshot of this page.']
         ),
+        'restricted': (
+            'Restricted Account',
+            ['This account cannot add devices to the network.']
+        ),
+        # alreadyRegistered: has its own page.
     }
 
     def get(self, request: HttpRequest):
         err: str = request.GET.get('reason', 'unknown')
         verbose_message, fixes = self.err_map.get(err, self.err_map['unknown'])
 
-        return render(request, self.template_name, {
+        template = self.template_name if err != 'alreadyRegistered' else self.already_registered_template_name
+
+        return render(request, template, {
             'error_message': verbose_message,
             'error_fixes': fixes
         })

@@ -10,7 +10,7 @@
     <title>{% block title %}{% endblock %} - Device Registration</title>
 </head>
 <body>
-<div class="centerDiv">
+<div class="mobileChanges">
     {% block header %}
         <div class="header">
             <img src="{% static 'logo1.svg' %}" srcset="{% static 'logo1.svgz' %}" alt="SITHS Logo">
@@ -22,11 +22,13 @@
     {% block content %} {% endblock %}
 
     {% block footer %}
-        <div class="footerStroke"></div>
+        <div class="footerDivider"></div>
         <p class="footerText">Staten Island Technical High School, <a href="{% url 'debug' %}" style="text-decoration: none; color: inherit;">Technology Department</a></p>
         <p class="footerText">Contact: Mr. Whalen, Room C56, or byod@sitechhs.com</p>
-        <p class="footerText">Team: Ryan Yang '20, Ivan Zheng '22, Harvey Jiang '23, Nick Melkadze '20, Anthony Chen</p>
-        <p class="footerText lastFooter">Special Thanks to Daniel Indictor '20, Michael Whalen, and Mark Erlenwein</p>
+        <p class="footerText">Team: Ryan Yang '20, Ivan Zheng '22, Harvey Jiang '23, Youwei Zhen '24, Nick Melkadze '20, Anthony Chen</p>
+        <p class="footerText">Special Thanks to Daniel Indictor '20, Michael Whalen, and Mark Erlenwein</p>
+        <br>
+        <br>
     {% endblock %}
 </div>
 
