@@ -10,16 +10,16 @@
     <span class="headerText">I am using...</span>
     <br>
 
-    <a href="{% url 'instructions' %}?os=windows"><button class="button"><span class="buttonSpan">Windows</span></button></a>
+    <a href="{% url 'instructions' %}?os=windows" class="button"><span class="buttonSpan">Windows</span></a>
     <br>
-    <a href="{% url 'instructions' %}?os=mac"><button class="button"><span class="buttonSpan">Macintosh</span></button></a>
+    <a href="{% url 'instructions' %}?os=mac" class="button"><span class="buttonSpan">Macintosh</span></a>
     <br>
-    <a href="{% url 'instructions' %}?os=ios"><button class="button"><span class="buttonSpan">iOS / iPadOS</span></button></a>
+    <a href="{% url 'instructions' %}?os=ios" class="button"><span class="buttonSpan">iOS / iPadOS</span></a>
     <br>
-    <a href="{% url 'instructions' %}?os=android"><button class="button2 button"><span class="buttonSpan">Android</span></button></a>
-
+    <a href="{% url 'instructions' %}?os=android" class="button"><span class="buttonSpan">Android</span></a>
     <br>
-    <p class="bodyText bodyTextInsignificant gray smallText">
+    <br>
+    <p class="footerText">
         If your device type is not listed above, please ensure MAC Address randomization is disabled on your device.
         Once that is done, please click <a href="{% url 'index' %}">here</a> to reload the page.
     </p>

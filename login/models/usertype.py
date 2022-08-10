@@ -13,4 +13,4 @@ class UserType(models.Model):
         return f'{self.name}'
 
     def get_permissions(self):
-        return Permissions.objects.get_raw_nodes(f'userType/{self.name}/')
+        return Permissions.objects.get_bulk(usertype=self, query_global=False)

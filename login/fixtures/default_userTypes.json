@@ -1,0 +1,30 @@
+[
+  {
+    "model": "login.usertype",
+    "pk": 1,
+    "fields": {
+      "name": "Superuser"
+    }
+  },
+  {
+    "model": "login.usertype",
+    "pk": 2,
+    "fields": {
+      "name": "Student"
+    }
+  },
+  {
+    "model": "login.usertype",
+    "pk": 3,
+    "fields": {
+      "name": "Teacher"
+    }
+  },
+  {
+    "model": "login.usertype",
+    "pk": 4,
+    "fields": {
+      "name": "Guest"
+    }
+  }
+]

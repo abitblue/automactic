@@ -1,28 +1,18 @@
-from typing import Optional
-
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.http import HttpRequest
+from django.shortcuts import render
 from django.views import View
 from django.utils.decorators import method_decorator
 
-from login.utils import attach_mac_to_session, MacAddr
-from netaddr import EUI
+from login.utils import restricted_network, attach_mac_to_session
 
+
+@method_decorator([restricted_network, attach_mac_to_session], name='dispatch')
 class Index(View):
-    """Dispatches user to the login page or the instructions-to-disable-MAC-randomization page"""
+    """Dispatches user to the instructions page, or shows the login page"""
+    template_name = 'login/selection.html'
 
-    @method_decorator(attach_mac_to_session)
     def get(self, request: HttpRequest):
-        macaddr: Optional[EUI] = MacAddr.deserialize_from(request)
-
-        if macaddr is None:
-            msg = 'unknownMAC'
-            return redirect(reverse('error') + f'?reason={msg}')
-        elif not MacAddr.locally_administered(macaddr):
-            return redirect(reverse('login'))
-        else:
-            return redirect(reverse('instructions'))
+        return render(request, self.template_name)
 
 
 class Instructions(View):

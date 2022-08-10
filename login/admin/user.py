@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # from login.forms import UserChangeForm, UserCreationForm
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.html import linebreaks
 from django.utils.safestring import mark_safe
 
@@ -15,6 +16,13 @@ from django.http import HttpRequest
 def reset_modified(model_admin, request: HttpRequest, queryset: QuerySet):
     queryset.update(mac_modifications=0)
 
+@admin.action(description='Set inactive')
+def set_inactive(model_admin, request: HttpRequest, queryset: QuerySet):
+    queryset.update(is_active=False)
+
+@admin.action(description='Set active')
+def set_active(model_admin, request: HttpRequest, queryset: QuerySet):
+    queryset.update(is_active=True, start_time=timezone.now())
 
 @admin.action(description='Remove sessions')
 def remove_sessions(model_admin, request: HttpRequest, queryset: QuerySet):
@@ -31,13 +39,13 @@ def remove_sessions(model_admin, request: HttpRequest, queryset: QuerySet):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('is_active', 'username', 'get_type', 'get_modifications', 'last_login')
+    list_display = ('is_active', 'username', 'get_type', 'get_modifications', 'last_login', 'start_time')
     list_display_links = ('username',)
     search_fields = ('username',)
     search_help_text = "Searches filter by username"
     list_filter = ('type__name', 'is_active')
     ordering = ('username',)
-    actions = [reset_modified, remove_sessions]
+    actions = [reset_modified, set_inactive, set_active, remove_sessions]
 
     @admin.display(description='Type')
     def get_type(self, obj: User):
@@ -109,9 +117,9 @@ class UserAdmin(BaseUserAdmin):
             return True
 
         # Superusers always have access
-        if request.user.type.name == 'Superuser':
+        if request.user.type.name.lower() == 'superuser':
             return True
-        elif obj.type.name == 'Superuser':
+        elif obj.type.name.lower() == 'superuser':
             return False
 
         return True

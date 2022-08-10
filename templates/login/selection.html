@@ -1,0 +1,14 @@
+{% extends "login/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>I Am A...</h1>
+<p class="bodyText">Please choose your affiliation</p>
+<a href="{% url 'login' usertype="student" %}" class="button"><span class="buttonSpan">Student</span></a>
+    <br>
+<a href="{% url 'login' usertype="teacher" %}" class="button"><span class="buttonSpan">Teacher</span></a>
+ <br>
+<a href="{% url 'login' usertype="guest" %}" class="button"><span class="buttonSpan">Guest</span></a>
+
+{%  endblock %}

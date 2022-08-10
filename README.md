@@ -1,4 +1,4 @@
-# automactic
+# Automactic
 A custom-built internal solution for adding MAC Addresses to Aruba Clearpass. An architecture overview can be found here.
 
 [comment]: <> (TODO: Link the architecture overview)
