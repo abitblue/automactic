@@ -8,7 +8,7 @@ from django.db import models
 from typing import TYPE_CHECKING
 from netaddr import IPNetwork
 
-from django.db.models import Q, Case, When, Count, QuerySet
+from django.db.models import Q, Case, When, Count, Min
 from django.db.models.functions import Substr
 
 from ..utils import WhenType
@@ -60,38 +60,51 @@ class PermissionsManager(models.Manager):
     def get_raw_nodes(self, node_prefix: str):
         return self.filter(permission__istartswith=node_prefix)
 
-    def get_user(self, user: User):
+    def get_user(self, user: User, check_global=True):
         # Substr is 1-indexed
         group_prefix = f'userType/{user.type}/'
         user_prefix = f'user/{user.username}/'
+        global_prefix = 'global/' if check_global else '\0'
 
         # Grab all related permissions that start with `group_prefix` or `user_prefix`
         # Annotate them with the key suffix
         all_related_perms = (
-            self.filter(Q(permission__startswith=group_prefix) | Q(permission__startswith=user_prefix))
-                .annotate(suffix=Case(
-                    When(permission__startswith=group_prefix, then=Substr('permission', len(group_prefix) + 1)),
-                    When(permission__startswith=user_prefix, then=Substr('permission', len(user_prefix) + 1)),
-                ))
+            self.filter(
+                Q(permission__startswith=group_prefix)
+                | Q(permission__startswith=user_prefix)
+                | Q(permission__startswith=global_prefix))
+            .annotate(suffix=Case(
+                When(permission__startswith=user_prefix, then=Substr('permission', len(user_prefix) + 1)),
+                When(permission__startswith=group_prefix, then=Substr('permission', len(group_prefix) + 1)),
+                When(permission__startswith=global_prefix, then=Substr('permission', len(global_prefix) + 1)),
+            ), priority=Case(
+                When(permission__startswith=user_prefix, then=1),
+                When(permission__startswith=group_prefix, then=2),
+                When(permission__startswith=global_prefix, then=3),
+            ))
         )
 
-        # Of those related permissions, find duplicate suffixes
+        # Of those related permissions, find duplicate suffixes, and lowest available priority
         unique_perm_nodes = (all_related_perms
                              .values('suffix')
                              .annotate(dcount=Count('suffix'))
                              .filter(dcount__gt=1)
                              .values_list('suffix', flat=True))
 
-        # For each of the duplicates, prioritize the one that has the direct user, and exclude the ones for userType
+        # For each of the duplicates, perform priority: user -> userType -> Global
+        lowest_priority = lambda s: all_related_perms.filter(suffix=s).aggregate(Min('priority'))['priority__min']
         exclusion_list = [
             pk
             for node in unique_perm_nodes
             for pk in
-            all_related_perms.filter(suffix=node, permission__startswith='userType').values_list('id', flat=True)
+            all_related_perms.filter(
+                Q(suffix=node) & ~Q(priority=lowest_priority(node))
+            ).values_list('id', flat=True)
         ]
+
         return all_related_perms.exclude(id__in=exclusion_list)
 
-    def get_user_node(self, user: User, node_suffix: str, *, default=None):
+    def get_user_node(self, user: User, node_suffix: str):
         if not node_suffix:
             raise NameError("Cannot query with an empty node")
 
@@ -102,7 +115,10 @@ class PermissionsManager(models.Manager):
         if filtered := self.get_raw_nodes(f'userType/{group}/{node_suffix}'):
             return filtered.first().value
 
-        return default
+        if filtered := self.get_raw_nodes(f'global/{node_suffix}'):
+            return filtered.first().value
+
+        return None
 
 
 class Permissions(models.Model):

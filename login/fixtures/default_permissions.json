@@ -1,16 +1,16 @@
 [
   {
     "model": "login.permissions",
-    "pk": 1,
+    "pk": "1",
     "fields": {
       "permission": "global/loginIPRestriction",
-      "raw_value": "172.16.0.0/16",
-      "type": 3
+      "raw_value": "172.19.0.0/16",
+      "type": 6
     }
   },
   {
     "model": "login.permissions",
-    "pk": 2,
+    "pk": "2",
     "fields": {
       "permission": "global/clearpassExpireAction",
       "raw_value": "4",
@@ -19,151 +19,97 @@
   },
   {
     "model": "login.permissions",
-    "pk": 3,
+    "pk": "3",
     "fields": {
-      "permission": "userType/student/bypassRateLimit",
+      "permission": "global/adminSiteAccess",
       "raw_value": "false",
       "type": 1
     }
   },
   {
     "model": "login.permissions",
-    "pk": 4,
+    "pk": "4",
     "fields": {
-      "permission": "userType/student/expireTime",
-      "raw_value": "09/01/+4",
-      "type": 3
+      "permission": "global/bypassRateLimit",
+      "raw_value": "false",
+      "type": 1
     }
   },
   {
     "model": "login.permissions",
-    "pk": 5,
+    "pk": "5",
     "fields": {
-      "permission": "userType/student/disableTime",
-      "raw_value": "09/01/+4",
-      "type": 3
+      "permission": "global/deviceLimit",
+      "raw_value": "none",
+      "type": 0
     }
   },
   {
     "model": "login.permissions",
-    "pk": 6,
+    "pk": "6",
     "fields": {
-      "permission": "userType/student/rateLimit/passwordPerHourLimit",
+      "permission": "global/expireTime",
+      "raw_value": "none",
+      "type": 0
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "7",
+    "fields": {
+      "permission": "global/disableTime",
+      "raw_value": "none",
+      "type": 0
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "8",
+    "fields": {
+      "permission": "global/warningThreshold",
+      "raw_value": "none",
+      "type": 0
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "9",
+    "fields": {
+      "permission": "global/kioskOnly",
+      "raw_value": "false",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "10",
+    "fields": {
+      "permission": "global/rateLimit/passwordsPerHour",
       "raw_value": "5",
       "type": 2
     }
   },
   {
     "model": "login.permissions",
-    "pk": 7,
+    "pk": "11",
     "fields": {
-      "permission": "userType/student/rateLimit/modificationsUntilNotNewUser",
+      "permission": "global/rateLimit/changesUntilOldUser",
       "raw_value": "3",
       "type": 2
     }
   },
   {
     "model": "login.permissions",
-    "pk": 8,
+    "pk": "12",
     "fields": {
-      "permission": "userType/student/rateLimit/modificationsPerHourUntilNotNewUser",
-      "raw_value": "5",
-      "type": 2
+      "permission": "global/rateLimit/uniqueMacHoursInterval",
+      "raw_value": "0.0",
+      "type": 4
     }
   },
   {
     "model": "login.permissions",
-    "pk": 9,
-    "fields": {
-      "permission": "userType/student/rateLimit/uniqueMACAddressInterval",
-      "raw_value": "18",
-      "type": 2
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 10,
-    "fields": {
-      "permission": "userType/staff/bypassRateLimit",
-      "raw_value": "true",
-      "type": 1
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 11,
-    "fields": {
-      "permission": "userType/staff/rateLimit/passwordPerHourLimit",
-      "raw_value": "5",
-      "type": 2
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 12,
-    "fields": {
-      "permission": "userType/staff/warningThreshold",
-      "raw_value": "15",
-      "type": 2
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 13,
-    "fields": {
-      "permission": "userType/guest/bypassRateLimit",
-      "raw_value": "true",
-      "type": 1
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 14,
-    "fields": {
-      "permission": "userType/guest/expireTime",
-      "raw_value": "+0/+1/+0",
-      "type": 3
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 15,
-    "fields": {
-      "permission": "userType/Superuser/bypassRateLimit",
-      "raw_value": "true",
-      "type": 1
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 16,
-    "fields": {
-      "permission": "userType/Superuser/adminSiteAccess",
-      "raw_value": "true",
-      "type": 1
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 17,
-    "fields": {
-      "permission": "user/guest/kioskOnly",
-      "raw_value": "true",
-      "type": 1
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 18,
-    "fields": {
-      "permission": "user/guest/expireTime",
-      "raw_value": "+0/+1/+0",
-      "type": 3
-    }
-  },
-  {
-    "model": "login.permissions",
-    "pk": 19,
+    "pk": "13",
     "fields": {
       "permission": "userType/student/deviceLimit",
       "raw_value": "1",
@@ -172,11 +118,101 @@
   },
   {
     "model": "login.permissions",
-    "pk": 20,
+    "pk": "14",
     "fields": {
-      "permission": "userType/staff/warningLimit",
+      "permission": "userType/student/expireTime",
+      "raw_value": "09/01/+4",
+      "type": 5
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "15",
+    "fields": {
+      "permission": "userType/student/disableTime",
+      "raw_value": "09/01/+4",
+      "type": 5
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "16",
+    "fields": {
+      "permission": "userType/student/rateLimit/uniqueMacHoursInterval",
+      "raw_value": "18.0",
+      "type": 4
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "17",
+    "fields": {
+      "permission": "userType/staff/bypassRateLimit",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "18",
+    "fields": {
+      "permission": "userType/staff/warningThreshold",
       "raw_value": "15",
       "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "19",
+    "fields": {
+      "permission": "userType/guest/bypassRateLimit",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "20",
+    "fields": {
+      "permission": "userType/guest/expireTime",
+      "raw_value": "+0/+1/+0",
+      "type": 5
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "21",
+    "fields": {
+      "permission": "userType/superuser/adminSiteAccess",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "22",
+    "fields": {
+      "permission": "userType/superuser/bypassRateLimit",
+      "raw_value": "true",
+      "type": 1
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "23",
+    "fields": {
+      "permission": "userType/superuser/deviceLimit",
+      "raw_value": "0",
+      "type": 2
+    }
+  },
+  {
+    "model": "login.permissions",
+    "pk": "24",
+    "fields": {
+      "permission": "user/guest/kioskOnly",
+      "raw_value": "true",
+      "type": 1
     }
   }
 ]

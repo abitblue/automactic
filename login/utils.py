@@ -31,7 +31,7 @@ class WhenType:
         self._offset_str = offset_str
         self._matched = self._validator.match(offset_str)
         if not self._matched:
-            raise ValidationError("Invalid schema")
+            raise ValidationError(f"Invalid schema: {offset_str}")
 
     def as_datetime(self, reftime=None) -> datetime:
         if reftime is None:
