@@ -2,6 +2,7 @@ import logging
 from typing import Optional, Union
 
 from django.db import models
+from django.http import HttpRequest
 from ipware import get_client_ip
 from macaddress.fields import MACAddressField
 
@@ -34,7 +35,9 @@ class LoginHistory(models.Model):
         return f'Login by {self.user} on {self.time.strftime("%b %d, %Y")} at {self.time.strftime("%I:%M:%S %p")}'
 
     @classmethod
-    def log(cls, request, user: Union[User, str], logged_in: bool, mac_updated: bool = False,  mac_address: Optional[MACAddress] = None):
+    def log(cls, request: HttpRequest,
+            user: Union[User, str], mac_address: Optional[MACAddress] = None,
+            logged_in: bool = False, mac_updated: bool = False):
         """
         :param request: the request
         :param user: the user trying to login
@@ -51,6 +54,8 @@ class LoginHistory(models.Model):
         try:
             # TODO: Fill in host
             client_ip, is_routable = get_client_ip(request)
+            cls._logger.info(f'Login Attempt: {user.username} from {client_ip} using {mac_address}. '
+                             f'Success: {logged_in}, Updated: {mac_updated}')
             cls.objects.create(user=user,
                                mac_address=str(mac_address),
                                ip=client_ip,
