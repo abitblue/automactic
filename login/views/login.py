@@ -1,4 +1,5 @@
-from typing import Optional
+import datetime
+from typing import Optional, TYPE_CHECKING
 
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -9,8 +10,11 @@ from django.utils.decorators import method_decorator
 
 from login.forms import UserLoginForm
 from login.models import LoginHistory
-from login.utils import MACAddress, restricted_network, attach_mac_to_session_or_redirect
+from login.utils import MACAddress, restricted_network, check_mac_redirect
 import interface.api as api
+
+if TYPE_CHECKING:
+    from login.models.permissions import WhenType
 
 # TODO: Show error if clearpass errors
 # TODO: Ability to select which device to replace if more than 1 device allowed.
@@ -18,7 +22,7 @@ import interface.api as api
 access = api.Token()
 
 
-@method_decorator([restricted_network, attach_mac_to_session_or_redirect], name='dispatch')
+@method_decorator([restricted_network, check_mac_redirect], name='dispatch')
 class Login(View):
     template_name = 'login/login.html'
     help_template = {
@@ -29,7 +33,7 @@ class Login(View):
 
     def get(self, request: HttpRequest, usertype: str, *args, **kwargs):
         # Check if this device is already registered. If it is, then redirect to an instructions page.
-        if access.get_device(mac=request.session['mac_address']) is not None:
+        if access.get_device(mac=request.session['mac_address']).status_code != 404:
             return redirect(f'{reverse("error")}?reason=alreadyRegistered')
 
         return render(request, self.template_name, {
@@ -55,12 +59,13 @@ class Login(View):
         # Grab Data
         user = form.user_cache
         device_name = form.cleaned_data.get('device_name')
+        print(device_name)
         clearpass_name = '{}:{}'.format(
             {
                 'guest': 'G',
                 'student': 'S',
                 'teacher': 'T'
-            }[str(usertype).lower()],
+            }[str(user.type).lower()],
             user.username
         )
 
@@ -78,13 +83,15 @@ class Login(View):
                 clearpass_user.device.sort(key=lambda x: x['start_time'])
                 access.update_device(device_id=clearpass_user.device[0]['id'], updated_fields={
                     'mac': str(mac_addr),
-                    'device_name': device_name,
+                    'notes': device_name,
                 })
                 LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
                 return redirect(reverse('success'))
 
         # If the user does not exist, or if limit not exceeded, create a new device, following the expireTime rules.
-        expire_time = user.get_permission('expireTime', default=None)
+        when: WhenType = user.get_permission('expireTime', default=None)
+        expire_time: Optional[datetime] = when.as_datetime(timezone.now()) if when is not None else None
+
         access.add_device(mac=mac_addr, username=clearpass_name, device_name=device_name, time=expire_time)
         LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
 

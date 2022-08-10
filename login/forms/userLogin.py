@@ -9,6 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationFo
 
 from login.models import User, LoginHistory, Permissions
 
+
 # TODO: Update Last Login!!!
 
 
@@ -45,6 +46,25 @@ class UserLoginForm(BaseAuthenticationForm):
         'mac_missing': 'Unable to determine the MAC address of this device',
     }
 
+    def clean(self):
+        username = self.cleaned_data.get("username")
+        if (user_obj := User.objects.filter(username=username)).exists():
+            user = user_obj.first()
+            limit = user.get_permission('rateLimit/passwordsPerHour', default=None)
+            if limit is not None:
+                history = LoginHistory.objects.filter(user=user,
+                                                              logged_in=False,
+                                                              time__gt=timezone.now() - timedelta(
+                                                                  hours=1)).count() > limit
+
+                if history:
+                    raise ValidationError(
+                        self.error_messages['rate_limit'],
+                        code='rate_limit'
+                    )
+
+        super().clean()
+
     def rate_limit_check(self, user: User):
         if user.get_permission('bypassRateLimit', default=False):
             return
@@ -54,26 +74,22 @@ class UserLoginForm(BaseAuthenticationForm):
             for perms in user.permissions().filter(suffix__startswith="rateLimit")
         }
 
-        not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > perms.get(
+        not_new_user = LoginHistory.objects.filter(user=user, mac_updated=True).count() > perms.get(
             'rateLimit/changesUntilOldUser')
-
-        password_per_hr_lim = LoginHistory.objects.filter(user=user, logged_in=False,
-                                                          time__gt=timezone.now() - timedelta(
-                                                              hours=1)).count() > perms.get(
-            'rateLimit/passwordsPerHour')
 
         modification_lim = LoginHistory.objects.filter(user=user, logged_in=True, mac_updated=True,
                                                        time__gt=(timezone.now() - timedelta(hours=1))
                                                        ).count() > perms.get('rateLimit/changesPerHour')
 
         unique_mac_lim = LoginHistory.objects.filter(user=user, mac_address=self.request.session.get('macaddr'),
-                                                     time__gt=timezone.now() - timedelta(perms.get("rateLimit/uniqueMacIntervalHours"))).exists()
+                                                     time__gt=timezone.now() - timedelta(
+                                                         hours=perms.get("rateLimit/uniqueMacIntervalHours"))).exists()
 
-        if password_per_hr_lim or (not_new_user and (modification_lim or unique_mac_lim)):
+        if not_new_user and (modification_lim or unique_mac_lim):
             raise ValidationError(
-                    self.error_messages['rate_limit'],
-                    code='rate_limit'
-                )
+                self.error_messages['rate_limit'],
+                code='rate_limit'
+            )
         # Rate limits attempts to prevent abuse by rapidly changing devices, and account brute-forcing
         # Default Rate Limit Rules (modified in settings)
         # Always rate limit username if 5 incorrect passwords were inputted in an hour.
