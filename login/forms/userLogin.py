@@ -7,7 +7,7 @@ from django.utils import timezone
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm as BaseAuthenticationForm
 
-from login.models import User, LoginHistory
+from login.models import User, LoginHistory, Permissions
 
 # TODO: Update Last Login!!!
 
@@ -55,20 +55,19 @@ class UserLoginForm(BaseAuthenticationForm):
         }
 
         not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > perms.get(
-            'rateLimit/modificationsUntilNotNewUser')
+            'rateLimit/changesUntilOldUser')
 
         password_per_hr_lim = LoginHistory.objects.filter(user=user, logged_in=False,
                                                           time__gt=timezone.now() - timedelta(
                                                               hours=1)).count() > perms.get(
-            'rateLimit/passwordPerHourLimit')
+            'rateLimit/passwordsPerHour')
 
         modification_lim = LoginHistory.objects.filter(user=user, logged_in=True, mac_updated=True,
-                                                       time__gt=(timezone.now() - timedelta(
-                                                           hours=1))).count() > perms.get(
-                                                           'rateLimit/passwordPerHourLimit')
+                                                       time__gt=(timezone.now() - timedelta(hours=1))
+                                                       ).count() > perms.get('rateLimit/changesPerHour')
 
         unique_mac_lim = LoginHistory.objects.filter(user=user, mac_address=self.request.session.get('macaddr'),
-                                                     time__gt=timezone.now() - timedelta(perms.get("rateLimit/uniqueMACAddressInterval"))).exists()
+                                                     time__gt=timezone.now() - timedelta(perms.get("rateLimit/uniqueMacIntervalHours"))).exists()
 
         if password_per_hr_lim or (not_new_user and (modification_lim or unique_mac_lim)):
             raise ValidationError(
@@ -86,5 +85,12 @@ class UserLoginForm(BaseAuthenticationForm):
         # This is called by the super().clean() method.
         # By the time this is called, the password is indeed correct
         self.password_correct = True
+
+        # Should account be disabled?
+        if (disable_time := user.get_permission('disableTime')) is not None:
+            if disable_time.as_datetime(reftime=user.start_time) <= timezone.now():
+                user.is_active = False
+                user.save(update_fields=["is_active"])
+
         super().confirm_login_allowed(user)
         self.rate_limit_check(user)

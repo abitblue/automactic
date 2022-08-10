@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from django.http import HttpRequest
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 
 from login.forms import UserLoginForm
@@ -62,6 +63,10 @@ class Login(View):
             }[str(usertype).lower()],
             user.username
         )
+
+        # Save last login data
+        user.last_login = timezone.now()
+        user.save(update_fields=["last_login"])
 
         # Check how many devices the user has. If it exceeds how many they should have, replace the earliest device.
         if (device_limit := user.get_permission('deviceLimit')) == 0:

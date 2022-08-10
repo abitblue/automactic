@@ -27,7 +27,7 @@ class WhenType:
         if not self._matched:
             raise ValidationError(f"Invalid schema: {offset_str}")
 
-    def as_datetime(self, reftime=None) -> datetime:
+    def as_datetime(self, reftime: datetime = None) -> datetime:
         if reftime is None:
             reftime = datetime.today()
 
