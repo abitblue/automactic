@@ -8,16 +8,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'style.css' %}">
     <title>{% block title %}{% endblock %} - Device Registration</title>
-    <a href="{% url '' %}" class="button"><span class="buttonSpan">Home</span></a>
 </head>
 <body>
-<div class="mobileChanges">
-    {% block header %}
+    <div class="mobileChanges">
+        {% block header %}
         <div class="header">
-            <img src="{% static 'logo1.svg' %}" srcset="{% static 'logo1.svgz' %}" alt="SITHS Logo">
-            <img src="{% static 'logo2.svg' %}" srcset="{% static 'logo2.svgz' %}" alt="SITHS Technology Dept">
-            <span class="headerText">Device Registration</span>
+            <div>
+                <img src="{% static 'logo1.svg' %}" srcset="{% static 'logo1.svgz' %}" alt="SITHS Logo">
+                <img src="{% static 'logo2.svg' %}" srcset="{% static 'logo2.svgz' %}" alt="SITHS Technology Dept">
+                <span class="headerText">Device Registration</span>
+            </div>
+            <div class="homebutton-container">
+                <a href="{% url 'index' %}" class="button"><span class="buttonSpan">Home</span></a>
+            </div>
         </div>
+
     {% endblock %}
 
     {% block content %} {% endblock %}

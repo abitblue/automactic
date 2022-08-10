@@ -39,7 +39,6 @@ class Login(View):
     def post(self, request: HttpRequest, usertype: str, *arg, **kwargs):
         form = UserLoginForm(request=request, user_type=usertype, data=request.POST)
         data = form.data
-
         try:
             api_access = api.Token()
             response = api_access.add_device(
@@ -50,7 +49,6 @@ class Login(View):
         except Exception as err:
             logging.error(err)
             return redirect(reverse('error') + f'?reason=clearpassAPI')
-
         if (response.err_msg == ''):
             return redirect(reverse('success'))
         elif ( response.err_msg == 'Invalid MAC address'):

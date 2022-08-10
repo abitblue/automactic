@@ -41,6 +41,18 @@ img {
     margin: 1% 1% 1.2em;
     font-size: 4.5vh;
     vertical-align: middle;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: left;
+}
+
+.homebutton{
+    position: relative;
+    right: 0%;
+}
+
+.homebutton-container{
+    text-align: right;
 }
 
 .headerText {
