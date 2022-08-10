@@ -72,9 +72,12 @@ class Login(View):
         )
 
         # Check how many devices the user has. If it exceeds how many they should have, replace the earliest device.
-        clearpass_user = access.get_device(name=clearpass_name)
-        if clearpass_user is not None:
-            if len(clearpass_user.device) >= user.get_permission('deviceLimit'):
+        if (device_limit := user.get_permission('deviceLimit')) == 0:
+            return redirect(f'{reverse("error")}?reason=restricted')
+
+        elif device_limit is not None:
+            clearpass_user = access.get_device(name=clearpass_name)
+            if clearpass_user is not None and len(clearpass_user.device) >= device_limit:
                 clearpass_user.device.sort(key=lambda x: x['start_time'])
                 access.update_device(device_id=clearpass_user.device[0]['id'], updated_fields={
                     'mac': str(mac_addr),
@@ -83,9 +86,7 @@ class Login(View):
                 LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
                 return redirect(reverse('success'))
 
-        # TODO: Handle 0 devices allowed.
-
-        # If the user does not exist, create a new device, following the expireTime rules.
+        # If the user does not exist, or if limit not exceeded, create a new device, following the expireTime rules.
         expire_time = user.get_permission('expireTime', default=None)
         access.add_device(mac=mac_addr, username=clearpass_name, device_name=device_name, time=expire_time)
         LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)

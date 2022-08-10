@@ -51,7 +51,7 @@ class UserLoginForm(BaseAuthenticationForm):
 
         perms = {
             perms.suffix: perms.value
-            for perms in User.objects.get(username=user).permissions().filter(suffix__startswith="rateLimit")
+            for perms in user.permissions().filter(suffix__startswith="rateLimit")
         }
 
         not_new_user = LoginHistory.objects.filter(user=user, mac_address__isnull=False).count() > perms.get(
