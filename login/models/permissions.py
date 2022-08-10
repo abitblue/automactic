@@ -6,9 +6,12 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from typing import TYPE_CHECKING
+from netaddr import IPNetwork
 
 from django.db.models import Q, Case, When, Count, QuerySet
 from django.db.models.functions import Substr
+
+from ..utils import WhenType
 
 if TYPE_CHECKING:
     from .user import User
@@ -19,30 +22,35 @@ class Datatype(models.IntegerChoices):
     BOOLEAN = 1
     INTEGER = 2
     STRING = 3
-
-
-    # TODO: Timedelta
-    # IPNetwork
+    FLOAT = 4
+    TIMEDELTA = 5
+    IPNetwork = 6
 
     @staticmethod
     def to_python(datatype: int):
-        # From DB (str)
+        # From DB (str) -> Python (Any)
         _map = {
             0: lambda x: None,
             1: lambda x: bool(json.loads(x.lower())),
             2: lambda x: int(json.loads(x)),
-            3: lambda x: x
+            3: lambda x: x,
+            4: lambda x: float(json.loads(x)),
+            5: lambda x: WhenType(x),
+            6: lambda x: IPNetwork(x)
         }
         return _map[datatype]
 
     @staticmethod
     def to_db(datatype: int):
-        # From Python (Any)
+        # From Python (Any) -> DB (str)
         _map = {
             0: lambda x: json.dumps(x),
             1: lambda x: json.dumps(x),
             2: lambda x: json.dumps(x),
-            3: lambda x: x
+            3: lambda x: x,
+            4: lambda x: json.dumps(x),
+            5: lambda x: str(x),
+            6: lambda x: str(x)
         }
         return _map[datatype]
 
