@@ -12,7 +12,7 @@ django-ipware = "~4.0"          # Used to more reliably obtain IP address behind
 django-macaddress = "~1.8"      # Mac Address Fields
 netaddr = "~0.8"                # Used for Mac Address Parsing
 psycopg2 = "~2.9"               # Used for Prod DB
-requests = "~2.28"              # Used for API
+httpx = "~0.23"                 # Used for API
 
 [tool.poetry.dev-dependencies]
 

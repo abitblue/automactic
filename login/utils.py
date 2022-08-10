@@ -1,6 +1,7 @@
 import random
 import re
 from datetime import datetime, timezone
+from functools import wraps
 from pathlib import Path
 from typing import Optional, TYPE_CHECKING
 
@@ -72,8 +73,19 @@ def attach_mac_to_session_or_redirect(view):
         if macaddr.is_locally_administered:
             return redirect(reverse('instructions'))
 
-
-
         return view(request, *args, **kwargs)
 
+    return wrapper
+
+
+def mutually_exclusive(keyword, *keywords):
+    keywords = (keyword,) + keywords
+
+    def wrapper(func):
+        @wraps(func)
+        def inner(*args, **kwargs):
+            if sum(k in keywords for k in kwargs) != 1:
+                raise TypeError('You must specify exactly one of {}'.format(', '.join(keywords)))
+            return func(*args, **kwargs)
+        return inner
     return wrapper

@@ -73,7 +73,7 @@ class Login(View):
             return redirect(f'{reverse("error")}?reason=restricted')
 
         elif device_limit is not None:
-            clearpass_user = access.get_device(name=clearpass_name)
+            clearpass_user = access.get_device(username=clearpass_name)
             if clearpass_user is not None and len(clearpass_user.device) >= device_limit:
                 clearpass_user.device.sort(key=lambda x: x['start_time'])
                 access.update_device(device_id=clearpass_user.device[0]['id'], updated_fields={
