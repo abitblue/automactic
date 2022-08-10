@@ -39,6 +39,7 @@ class Login(View):
     def post(self, request: HttpRequest, usertype: str, *arg, **kwargs):
         form = UserLoginForm(request=request, user_type=usertype, data=request.POST)
         data = form.data
+
         try:
             api_access = api.Token()
             response = api_access.add_device(

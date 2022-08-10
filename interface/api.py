@@ -48,7 +48,6 @@ class Token:
     def check_token(func):
         def check(*args, **kwargs):
             self = args[0]
-
             response = func(*args, **kwargs)
 
             if (response.status_code in self.erorr_code):
