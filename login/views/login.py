@@ -59,13 +59,12 @@ class Login(View):
         # Grab Data
         user = form.user_cache
         device_name = form.cleaned_data.get('device_name')
-        print(device_name)
         clearpass_name = '{}:{}'.format(
             {
                 'guest': 'G',
                 'student': 'S',
                 'teacher': 'T'
-            }[str(user.type).lower()],
+            }.get(str(user.type).lower(), 'O'),
             user.username
         )
 
