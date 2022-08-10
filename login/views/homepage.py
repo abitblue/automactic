@@ -3,10 +3,10 @@ from django.shortcuts import render
 from django.views import View
 from django.utils.decorators import method_decorator
 
-from login.utils import restricted_network
+from login.utils import restricted_network, attach_mac_to_session
 
 
-@method_decorator([restricted_network], name='dispatch')
+@method_decorator([restricted_network, attach_mac_to_session], name='dispatch')
 class Index(View):
     """Dispatches user to the instructions page, or shows the login page"""
     template_name = 'login/selection.html'

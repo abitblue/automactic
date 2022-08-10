@@ -45,7 +45,7 @@ def restricted_network(view):
     return wrapper
 
 
-def attach_mac_to_session_or_redirect(view):
+def attach_mac_to_session(view):
     def wrapper(request: HttpRequest, *args, **kwargs):
         """Finds the dnsmasq lease file and matches the client IP to the responding MAC Address."""
 
@@ -67,6 +67,14 @@ def attach_mac_to_session_or_redirect(view):
             macaddr = MACAddress(f'00ffff-{random.randrange(16 ** 6):06x}')
 
         request.session['mac_address'] = macaddr
+        return view(request, *args, **kwargs)
+
+    return wrapper
+
+
+def check_mac_redirect(view):
+    def wrapper(request: HttpRequest, *args, **kwargs):
+        macaddr = request.session['mac_address']
 
         if macaddr is None:
             return redirect(f'{reverse("error")}?reason=unknownMAC')
@@ -74,7 +82,6 @@ def attach_mac_to_session_or_redirect(view):
             return redirect(reverse('instructions'))
 
         return view(request, *args, **kwargs)
-
     return wrapper
 
 
