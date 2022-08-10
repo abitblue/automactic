@@ -5,7 +5,7 @@ import json
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from netaddr import IPNetwork
 
 from django.db.models import Q, Case, When, Count, Min
@@ -15,6 +15,7 @@ from ..utils import WhenType
 
 if TYPE_CHECKING:
     from .user import User
+    from . import UserType
 
 
 class Datatype(models.IntegerChoices):
@@ -60,11 +61,21 @@ class PermissionsManager(models.Manager):
     def get_raw_nodes(self, node_prefix: str):
         return self.filter(permission__istartswith=node_prefix)
 
-    def get_user(self, user: User, check_global=True):
+    def get_bulk(self, user: Optional[User] = None, usertype: Optional[UserType] = None,
+                 *, query_user=True, query_group=True, query_global=True):
+
+        if user is None:
+            query_user = False
+        else:
+            usertype = user.type
+
+        if usertype is None:
+            query_group = False
+
         # Substr is 1-indexed
-        group_prefix = f'userType/{user.type}/'
-        user_prefix = f'user/{user.username}/'
-        global_prefix = 'global/' if check_global else '\0'
+        user_prefix = f'user/{user.username}/' if query_user else '\0'
+        group_prefix = f'userType/{usertype}/' if query_group else '\0'
+        global_prefix = 'global/' if query_global else '\0'
 
         # Grab all related permissions that start with `group_prefix` or `user_prefix`
         # Annotate them with the key suffix
@@ -104,7 +115,7 @@ class PermissionsManager(models.Manager):
 
         return all_related_perms.exclude(id__in=exclusion_list)
 
-    def get_user_node(self, user: User, node_suffix: str):
+    def get_user_node(self, user: User, node_suffix: str, *, default=None):
         if not node_suffix:
             raise NameError("Cannot query with an empty node")
 
@@ -118,7 +129,7 @@ class PermissionsManager(models.Manager):
         if filtered := self.get_raw_nodes(f'global/{node_suffix}'):
             return filtered.first().value
 
-        return None
+        return default
 
 
 class Permissions(models.Model):

@@ -76,7 +76,7 @@ class User(AbstractBaseUser):
         return self.username
 
     def permissions(self):
-        return Permissions.objects.get_user(self)
+        return Permissions.objects.get_bulk(user=self)
 
     def get_permission(self, node: str, *, default=None):
         return Permissions.objects.get_user_node(self, node, default=default)
