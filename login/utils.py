@@ -1,3 +1,4 @@
+import logging
 import random
 import re
 from datetime import datetime, timezone
@@ -52,7 +53,7 @@ def attach_mac_to_session(view):
         # TODO: Remove reliance on dnsmasq running on same server??
 
         def get_mac(ip: str) -> MACAddress:
-            if (lease_file := Path('./var/lib/misc/dnsmasq.leases')).is_file():
+            if (lease_file := Path('/var/lib/misc/dnsmasq.leases')).is_file():
                 with open(lease_file) as fp:
                     for cnt, line in enumerate(fp):
                         line = line.strip().split(maxsplit=4)
@@ -61,6 +62,7 @@ def attach_mac_to_session(view):
 
         client_ip, routable = get_client_ip(request)
         macaddr: Optional[MACAddress] = get_mac(client_ip)
+        logging.getLogger('Attach').info(f'Attaching MAC {macaddr} to IP {client_ip}')
 
         # Localhost Testing: Use semi-random MAC
         if macaddr is None and settings.DEBUG:
