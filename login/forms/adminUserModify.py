@@ -88,7 +88,7 @@ class UserBulkImportForm(forms.Form):
                             code='invalid_data')
 
                     email, token = email_match.group(0), token_match.group()
-                    self._bulk_import_list.append(User(username=email, type=UserType.objects.get(name='Staff'),
+                    self._bulk_import_list.append(User(username=email, type=UserType.objects.get(name='Teacher'),
                                                        password=make_password(token, None, 'plain')))
 
                 case _:

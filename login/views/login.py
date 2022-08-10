@@ -59,7 +59,7 @@ class Login(View):
             {
                 'guest': 'G',
                 'student': 'S',
-                'staff': 'T'
+                'teacher': 'T'
             }[str(usertype).lower()],
             user.username
         )
