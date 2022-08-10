@@ -42,6 +42,7 @@ class Error(View):
             'Restricted Account',
             ['This account cannot add devices to the network.']
         ),
+        # alreadyRegistered: has its own page.
     }
 
     def get(self, request: HttpRequest):
