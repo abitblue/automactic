@@ -1,13 +1,12 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
-from netaddr import EUI, mac_bare
+from netaddr import EUI
 
 from interface.wrapper import ResponseData
 from django.utils import timezone
 from typing import Optional, Union
 import requests
 import logging
-import time
 import json
 import os
 
@@ -55,7 +54,7 @@ class Token:
 
             response = func(*args, **kwargs)
 
-            if (response.status_code in self.erorr_code):
+            if response.status_code in self.erorr_code:
                 self.renew_token()
                 response = func(*args, **kwargs)
 
@@ -67,7 +66,7 @@ class Token:
         return check
 
     @check_token
-    def add_device(self, mac: EUI, username: str, device_name: Optional[str] = None, enabled: bool = True,
+    def add_device(self, mac: EUI, username: str, device_name: Optional[str] = None,
                    time: Union[timedelta, datetime] = None) -> ResponseData:
 
         res = requests.post(f"{self.base_url}/device",
@@ -75,7 +74,7 @@ class Token:
                                 'expire_time': self._get_expire_date(time),
                                 'mac': str(mac),
                                 'notes': device_name,
-                                'enabled': enabled,
+                                'enabled': True,
                                 'visitor_name': username,
                                 'role_id': 2, # guest role
                                 'do_expire': 4,  # when the device expires delete the device
@@ -87,8 +86,8 @@ class Token:
         return ResponseData(res.status_code, res)
 
     @check_token
-    def delete_device(self, mac: str):
-        res = requests.delete(f"{self.base_url}/device/mac/{mac}",
+    def delete_device(self, mac: EUI):
+        res = requests.delete(f"{self.base_url}/device/mac/{EUI(mac)}",
                               #   params={'change_of_authorization': True},
                               headers=self._get_header(),
                               verify=False)
@@ -126,7 +125,6 @@ class Token:
             'start_time': self._get_expire_date(timezone.now() - timedelta(minutes=20))
         }
         if mac is not None:
-            print('JSLDHFWISUHFIUWH')
             res = requests.patch(f"{self.base_url}/device/mac/{mac}",
                                  # params={'change_of_authorization': True},
                                  data=json.dumps(updated_fields),
@@ -160,12 +158,12 @@ class Token:
 
     def _get_expire_date(self, time: Union[timedelta, datetime, None]) -> str:
         result = None
-        if (not time):
+        if not time:
             pass
-        elif (type(time) == timedelta):
-            result = datetime.timestamp(timezone.now() + time)
-        elif (type(time) == datetime):
-            result = datetime.timestamp(time)
+        elif type(time) == timedelta:
+            result = str(datetime.timestamp(timezone.now() + time))
+        elif type(time) == datetime:
+            result = str(datetime.timestamp(time))
         else:
             logging.error("Invalid time argument!")
 
