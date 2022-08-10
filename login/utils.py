@@ -33,7 +33,7 @@ class MACAddress(EUI):
 def restricted_network(view):
     def wrapper(request: HttpRequest, *args, **kwargs):
         try:
-            netwk = Permissions.objects.get_raw_nodes('global/loginIPRestriction').first()
+            netwk = Permissions.objects.get_raw_nodes('global/loginIPRestriction').first().value
         except OperationalError:
             netwk = IPNetwork('0.0.0.0/0')
 
