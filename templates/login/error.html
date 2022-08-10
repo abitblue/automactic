@@ -5,20 +5,20 @@
 {% block content %}
     <div class="formLeftAligned">
 
-    <h1>Uh oh. We were unable to add this device to the network.</h1>
-    <h2> {{ error_message }} </h2>
+        <h1>Uh oh. We were unable to add this device to the network.</h1>
+        <h2> {{ error_message }} </h2>
 
-    {% for line in error_fixes %}
-        <p>{{ line |safe }}</p>
-    {% endfor %}
+        {% for line in error_fixes %}
+            <p>{{ line |safe }}</p>
+        {% endfor %}
 
-    <br>
-    <a href="{% url 'index' %}" class="smallButton button"><span class="buttonSpan">Go Back</span></a>
+        <br>
+        <a href="{% url 'index' %}" class="smallButton button"><span class="buttonSpan">Go Back</span></a>
 
-    <br>
-    {# TODO: Move inline styling into CSS file #}
-    <p style="margin-top: 5rem;">Debug Info:</p>
-    <iframe src="{% url 'debug' %}" title="debug" width="100%" style="
+        <br>
+        {# TODO: Move inline styling into CSS file #}
+        <p style="margin-top: 5rem;">Debug Info:</p>
+        <iframe src="{% url 'debug' %}" title="debug" width="100%" style="
         overflow: hidden;
         border: unset;
         -ms-zoom: 0.75;
@@ -31,6 +31,7 @@
     "></iframe>
 
     </div>
+
 {% endblock %}
 
 {# Remove footer entirely #}
