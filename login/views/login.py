@@ -4,10 +4,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from django.http import HttpRequest
+from django.utils.decorators import method_decorator
 
 from login.forms import UserLoginForm
 from login.models import LoginHistory
-from login.utils import MACAddress
+from login.utils import MACAddress, restricted_network, attach_mac_to_session_or_redirect
 import interface.api as api
 
 # TODO: Show error if clearpass errors
@@ -16,6 +17,7 @@ import interface.api as api
 access = api.Token()
 
 
+@method_decorator([restricted_network, attach_mac_to_session_or_redirect], name='dispatch')
 class Login(View):
     template_name = 'login/login.html'
     help_template = {
@@ -23,16 +25,6 @@ class Login(View):
         'teacher': f"login/batch/teachers.html",
         'guest': f"login/batch/guest.html"
     }
-
-    def dispatch(self, request, *args, **kwargs):
-        addr: Optional[MACAddress] = request.session.get('mac_address')
-
-        if addr is None:
-            return redirect(f'{reverse("error")}?reason=unknownMAC')
-        if addr.is_locally_administered:
-            return redirect(reverse('instructions'))
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request: HttpRequest, usertype: str, *args, **kwargs):
         # Check if this device is already registered. If it is, then redirect to an instructions page.

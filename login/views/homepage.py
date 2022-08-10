@@ -1,38 +1,18 @@
-from typing import Optional
-
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.http import HttpRequest
+from django.shortcuts import render
 from django.views import View
 from django.utils.decorators import method_decorator
 
-# from login.forms.userLogin import UserLoginForm
-from login.models import LoginHistory
-from login.utils import attach_mac_to_session, MACAddress
+from login.utils import restricted_network
 
 
-@method_decorator(attach_mac_to_session, name='dispatch')
+@method_decorator([restricted_network], name='dispatch')
 class Index(View):
     """Dispatches user to the instructions page, or shows the login page"""
     template_name = 'login/selection.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        kiosk = kwargs.get('kiosk', False)
-
-        if not kiosk:
-            addr: Optional[MACAddress] = request.session.get('mac_address')
-
-            if addr is None:
-                return redirect(f'{reverse("error")}?reason=unknownMAC')
-
-            if addr.is_locally_administered:
-                return redirect(reverse('instructions'))
-
-        return super().dispatch(request, kiosk, *args, **kwargs)
-
-    def get(self, request: HttpRequest, kiosk: bool):
-        login_page = 'login' if not kiosk else 'kiosk_login'
-        return render(request, self.template_name, {'login_page': login_page})
+    def get(self, request: HttpRequest):
+        return render(request, self.template_name)
 
 
 class Instructions(View):

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import re
+from datetime import datetime, timezone
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -11,11 +13,34 @@ from netaddr import IPNetwork
 from django.db.models import Q, Case, When, Count, Min
 from django.db.models.functions import Substr
 
-from ..utils import WhenType
-
 if TYPE_CHECKING:
     from .user import User
     from . import UserType
+
+
+class WhenType:
+    _validator = re.compile(r'^(0[1-9]|1[012]|[+-]\d+?)/(0[1-9]|[12][0-9]|3[01]|[+-]\d+?)/(\d{4}|[+-]\d+?)$')
+
+    def __init__(self, offset_str: str):
+        self._offset_str = offset_str
+        self._matched = self._validator.match(offset_str)
+        if not self._matched:
+            raise ValidationError(f"Invalid schema: {offset_str}")
+
+    def as_datetime(self, reftime=None) -> datetime:
+        if reftime is None:
+            reftime = datetime.today()
+
+        # Evaluate each group to form the date
+        m, d, y = tuple(map(lambda ofst, ref: ref + eval(ofst) if ofst[0] in '+-' else int(ofst),
+                            self._matched.groups(),
+                            (reftime.month, reftime.day, reftime.year)
+                            ))
+
+        return datetime(y, m, d, tzinfo=timezone.utc)
+
+    def __str__(self):
+        return self._offset_str
 
 
 class Datatype(models.IntegerChoices):
