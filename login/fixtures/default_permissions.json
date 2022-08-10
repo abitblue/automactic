@@ -85,7 +85,7 @@
     "pk": "10",
     "fields": {
       "permission": "global/rateLimit/passwordsPerHour",
-      "raw_value": "5",
+      "raw_value": "15",
       "type": 2
     }
   },

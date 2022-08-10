@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import zoneinfo
 from datetime import datetime, timezone
 
 from django.core.exceptions import ValidationError
@@ -37,7 +38,7 @@ class WhenType:
                             (reftime.month, reftime.day, reftime.year)
                             ))
 
-        return datetime(y, m, d, tzinfo=timezone.utc)
+        return datetime(y, m, d, tzinfo=zoneinfo.ZoneInfo("America/New_York"))
 
     def __str__(self):
         return self._offset_str
