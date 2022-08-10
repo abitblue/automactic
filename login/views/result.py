@@ -38,6 +38,10 @@ class Error(View):
             'Internal server error',
             ['Seek assistance in room C56 or send an email to <i>byod@sitechhs.com</i> with a screenshot of this page.']
         ),
+        'restricted': (
+            'Restricted Account',
+            ['This account cannot add devices to the network.']
+        ),
     }
 
     def get(self, request: HttpRequest):

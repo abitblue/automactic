@@ -11,7 +11,7 @@ from django.db.models import Q
 from login.models import UserType, User
 
 
-class UserBulkImportFor(forms.Form):
+class UserBulkImportForm(forms.Form):
     _logger = logging.getLogger('BulkImportUsers')
 
     CHOICES = [('replace', 'Replace'),
@@ -88,7 +88,7 @@ class UserBulkImportFor(forms.Form):
                             code='invalid_data')
 
                     email, token = email_match.group(0), token_match.group()
-                    self._bulk_import_list.append(User(username=email, type=UserType.objects.get(name='Staff'),
+                    self._bulk_import_list.append(User(username=email, type=UserType.objects.get(name='Teacher'),
                                                        password=make_password(token, None, 'plain')))
 
                 case _:
@@ -103,15 +103,16 @@ class UserBulkImportFor(forms.Form):
         bulk_usernames = [user.username for user in self._bulk_import_list]
         self._logger.info(f"Importing Users: Mode: {mode} CSV Count: {len(self._bulk_import_list)}")
 
+        num_updated = 0
         if mode == 'replace':
-            # For all students and staff not in list, set active to false.
-            # User.objects.all().exclude(Q(type__name='Superuser') | Q(type__name='Guest') | Q(username__in=bulk_usernames)).bulk_update()
-            # TODO: Bulk update `is_active=False` for all users not in bulk_usernames and is not a superuser or guest acct
-            pass
+            # Bulk update `is_active=False` for all students and staff not in list and is not a superuser or guest acct
+            num_updated = User.objects.all().exclude(
+                Q(type__name='Superuser') | Q(type__name='Guest') | Q(username__in=bulk_usernames)
+            ).update(is_active=False)
 
         # Replacing and Inserting:
-        # Bulk create users. Ignore already existing ones. Set all of them to true.
+        # Bulk create users. Ignore already existing ones. Set all of them to active=true.
+        num_updated += User.objects.filter(username__in=bulk_usernames).update(is_active=True)
         objs_created = User.objects.bulk_create(self._bulk_import_list, ignore_conflicts=True)
-        # TODO: Bulk update `is_active=True` field for all users in list
 
-        # TOOD: Count modified and created and return number
+        return len(objs_created)

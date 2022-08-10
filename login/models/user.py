@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from django.utils import timezone
 
 from .usertype import UserType
 from .permissions import Permissions
@@ -64,6 +65,8 @@ class User(AbstractBaseUser):
     # The number of times the MAC address has been modified
     mac_modifications = models.PositiveIntegerField(default=0)
 
+    start_time = models.DateTimeField(default=timezone.now)
+
     objects = UserManager()
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['type']
@@ -76,7 +79,7 @@ class User(AbstractBaseUser):
         return self.username
 
     def permissions(self):
-        return Permissions.objects.get_user(self)
+        return Permissions.objects.get_bulk(user=self)
 
     def get_permission(self, node: str, *, default=None):
         return Permissions.objects.get_user_node(self, node, default=default)

@@ -1,12 +1,16 @@
 from django.contrib import admin
 
+from login.forms import UserBulkImportForm
+
 
 class CustomAdminSite(admin.AdminSite):
     site_header = 'automactic'
     index_title = 'Administrative Portal'
+    index_template = 'admin/admin_index.html'
 
-    def index(self, *args, **kwargs):
-        return super().index(*args, **kwargs)
+    def index(self, request, extra_context=None):
+        extra_context = {'bulkImportForm': UserBulkImportForm()}
+        return super().index(request, extra_context)
 
     def get_app_list(self, request):
         values = super().get_app_list(request)
