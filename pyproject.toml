@@ -13,6 +13,7 @@ django-macaddress = "~1.8"      # Mac Address Fields
 netaddr = "~0.8"                # Used for Mac Address Parsing
 psycopg2 = "~2.9"               # Used for Prod DB
 httpx = "~0.23"                 # Used for API
+uvicorn = "~0.18"               # used for deploy
 
 [tool.poetry.dev-dependencies]
 
