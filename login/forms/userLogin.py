@@ -63,6 +63,12 @@ class UserLoginForm(BaseAuthenticationForm):
                         code='rate_limit'
                     )
 
+            if not user.is_active:
+                raise ValidationError(
+                    self.error_messages["inactive"],
+                    code="inactive",
+                )
+
         super().clean()
 
     def rate_limit_check(self, user: User):
