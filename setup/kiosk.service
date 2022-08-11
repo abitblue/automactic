@@ -7,6 +7,9 @@ ExecStart=/bin/bash /etc/systemd/user/kiosk.sh
 Type=simple
 Restart=always
 RestartSec=0
+Environment="CLIENT_ID=automactic"
+Environment="CLIENT_SECRET=Z7UrbZPZV6y4z5O95pGjd/wi+ZyXkSLVko0E/VQvDaS8"
+Environment="BASE_URL=https://10.94.160.116/api"
 
 [Install]
 WantedBy=graphical-session.target
