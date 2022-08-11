@@ -156,5 +156,7 @@ class UserAdmin(BaseUserAdmin):
         return True
 
     def has_delete_permission(self, request: HttpRequest, obj: User = None):
-        # If you can change, you can delete
-        return self.has_change_permission(request, obj)
+        if obj is None:
+            return False
+        # Unless you are a superuser, you cannot delete.
+        return obj.type.name.lower() == 'superuser'
