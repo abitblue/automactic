@@ -89,7 +89,7 @@ class UserLoginForm(BaseAuthenticationForm):
 
         unique_mac_lim = LoginHistory.objects.filter(user=user, mac_address=self.request.session.get('macaddr'),
                                                      time__gt=timezone.now() - timedelta(
-                                                         hours=perms.get("rateLimit/uniqueMacIntervalHours"))).exists()
+                                                         hours=perms.get("rateLimit/uniqueMacIntervalByHours"))).exists()
 
         if not_new_user and (modification_lim or unique_mac_lim):
             raise ValidationError(

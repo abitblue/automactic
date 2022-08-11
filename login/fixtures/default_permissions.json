@@ -120,7 +120,7 @@
     "model": "login.permissions",
     "pk": "14",
     "fields": {
-      "permission": "global/rateLimit/uniqueMacIntervalHours",
+      "permission": "global/rateLimit/uniqueMacIntervalByHours",
       "raw_value": "0.0",
       "type": 4
     }
@@ -156,7 +156,7 @@
     "model": "login.permissions",
     "pk": "18",
     "fields": {
-      "permission": "userType/student/rateLimit/uniqueMacHoursInterval",
+      "permission": "userType/student/rateLimit/uniqueMacIntervalByHours",
       "raw_value": "18.0",
       "type": 4
     }
