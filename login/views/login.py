@@ -1,6 +1,7 @@
 import datetime
 from typing import Optional, TYPE_CHECKING
 
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -33,8 +34,8 @@ class Login(View):
 
     def get(self, request: HttpRequest, usertype: str, *args, **kwargs):
         # Check if this device is already registered. If it is, then redirect to an instructions page.
-        # if access.get_device(mac=request.session['mac_address']).status_code != 404:
-        #     return redirect(f'{reverse("error")}?reason=alreadyRegistered')
+        if not settings.DEBUG and access.get_device(mac=request.session['mac_address']).status_code != 404:
+            return redirect(f'{reverse("error")}?reason=alreadyRegistered')
 
         return render(request, self.template_name, {
             'usertype': usertype,
