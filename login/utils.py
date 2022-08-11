@@ -70,7 +70,7 @@ def attach_mac_to_session(view):
             macaddr = MACAddress(f'00ffff-{random.randrange(16 ** 6):06x}')
 
         if macaddr is not None:
-            logging.getLogger('Attach').info(f'{macaddr} {"(Randomized)" if macaddr.is_locally_administered else " "}'
+            logging.getLogger('Attach').info(f'{macaddr} {"(Randomized)" if macaddr.is_locally_administered else ""}'
                                              f'to {client_ip} '
                                              f'in {(time.perf_counter() - start)*1000:.2f} ms')
 
