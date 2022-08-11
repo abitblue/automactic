@@ -3,7 +3,7 @@ Description=Start Chromium Kiosk
 PartOf=graphical-session.target
 
 [Service]
-ExecStart=/bin/bash /etc/systemd/user/kiosk.sh
+ExecStart=/bin/bash /etc/systemd/user/kioskdjango.sh
 Type=simple
 Restart=always
 RestartSec=5
