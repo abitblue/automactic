@@ -6,7 +6,7 @@ PartOf=graphical-session.target
 ExecStart=/bin/bash /etc/systemd/user/kiosk.sh
 Type=simple
 Restart=always
-RestartSec=1
+RestartSec=0
 
 [Install]
 WantedBy=graphical-session.target
