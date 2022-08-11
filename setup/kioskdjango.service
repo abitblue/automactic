@@ -3,7 +3,7 @@ Description=Start Chromium Kiosk
 PartOf=graphical-session.target
 
 [Service]
-ExecStart=/bin/bash /etc/systemd/user/kioskdjango.sh
+ExecStart=/usr/bin/python /home/anya/Desktop/automactic/manage.py runserver
 Type=simple
 Restart=always
 RestartSec=5
