@@ -156,7 +156,7 @@
     "model": "login.permissions",
     "pk": "18",
     "fields": {
-      "permission": "userType/staff/bypassRateLimit",
+      "permission": "userType/faculty/bypassRateLimit",
       "raw_value": "true",
       "type": 1
     }
@@ -165,7 +165,7 @@
     "model": "login.permissions",
     "pk": "19",
     "fields": {
-      "permission": "userType/staff/warningThreshold",
+      "permission": "userType/faculty/warningThreshold",
       "raw_value": "15",
       "type": 2
     }

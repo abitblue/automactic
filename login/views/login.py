@@ -26,15 +26,15 @@ access = api.Token()
 class Login(View):
     template_name = 'login/login.html'
     help_template = {
-        'student': f"login/batch/students.html",
-        'teacher': f"login/batch/teachers.html",
+        'student': f"login/batch/student.html",
+        'faculty': f"login/batch/faculty.html",
         'guest': f"login/batch/guest.html"
     }
 
     def get(self, request: HttpRequest, usertype: str, *args, **kwargs):
         # Check if this device is already registered. If it is, then redirect to an instructions page.
-        if access.get_device(mac=request.session['mac_address']).status_code != 404:
-            return redirect(f'{reverse("error")}?reason=alreadyRegistered')
+        # if access.get_device(mac=request.session['mac_address']).status_code != 404:
+        #     return redirect(f'{reverse("error")}?reason=alreadyRegistered')
 
         return render(request, self.template_name, {
             'usertype': usertype,
@@ -63,7 +63,7 @@ class Login(View):
             {
                 'guest': 'G',
                 'student': 'S',
-                'teacher': 'T'
+                'faculty': 'T'
             }.get(str(user.type).lower(), 'O'),
             user.username
         )

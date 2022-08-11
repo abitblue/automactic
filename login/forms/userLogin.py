@@ -23,7 +23,7 @@ class UserLoginForm(BaseAuthenticationForm):
     def __init__(self, user_type: str, request=None, *args, **kwargs):
         widget_placeholders = {
             'student': ('OSIS *', 'DOB (MMDDYYYY) * '),
-            'teacher': ('Email (jdoe1@schools.nyc.gov) *', 'Password *'),
+            'faculty': ('Email (jdoe1@schools.nyc.gov) *', 'Password *'),
             'guest': ('Username *', 'Token *'),
         }
 
