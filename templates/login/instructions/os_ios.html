@@ -8,10 +8,16 @@
 {% else %}
 
     {% if version_check == "left" %}
-        {% include 'login/instructions/nodefault.html' %}
-
+        <p class="bodyText"><b>Step 1:</b> Navigate to the settings app of your iOS device.</p>
+        <img class="instructions-img" src="{% static 'instructions/home_settings_ios.jpg' %}" alt="iphone home screen with red box around settings">
+        <p class="bodyText"><b>Step 2:</b> Click on Wi-Fi</p>
+        <img class="instructions-img" src="{% static 'instructions/wifi_settings_ios.jpg' %}" alt="wifi settings within the settings app">
+        <p class="bodyText"><b>Step 3:</b> Tap the Information button next to <b>ncpsp</b></p>
+        <img class="instructions-img" src="{% static 'instructions/ios14_1.png' %}" alt="blue information icon next to network">
+        <p class="bodyText"><b>Step 4:</b> Locate "Wi-Fi Address" and COPY IT DOWN and press continue</p>
+        <img class="instructions-img" src="{% static 'instructions/ios14_2.png' %}" alt="copt the wifi address">
     {% else %} {# version_check == "right" #}
-       <p class="bodyText"><b>Step 1:</b> Navigate to the settings app of your iOS device.</p>
+        <p class="bodyText"><b>Step 1:</b> Navigate to the settings app of your iOS device.</p>
         <img class="instructions-img" src="{% static 'instructions/home_settings_ios.jpg' %}" alt="iphone home screen with red box around settings">
         <p class="bodyText"><b>Step 2:</b> Click on Wi-Fi</p>
         <img class="instructions-img" src="{% static 'instructions/wifi_settings_ios.jpg' %}" alt="wifi settings within the settings app">
