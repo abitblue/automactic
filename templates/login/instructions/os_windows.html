@@ -4,13 +4,35 @@
     <h1>What version of Windows are you using?</h1>
     <p class="bodyText">You can check by running <i>"winver"</i> from the search box.</p>
     <a href="{% url 'instructions' %}?os=windows&version_check=left" class="button"><span class="buttonSpan">Windows 8.1 or lower</span></a>
-    <a href="{% url 'instructions' %}?os=windows&version_check=right" class="button"><span class="buttonSpan">Windows 10 or higher</span></a>
+    <a href="{% url 'instructions' %}?os=windows&version_check=middle" class="button"><span class="buttonSpan">Windows 10</span></a>
+    <a href="{% url 'instructions' %}?os=windows&version_check=right" class="button"><span class="buttonSpan">Windows 11 or higher</span></a>
 {% else %}
 
     {% if version_check == "left" %}
         {% include 'login/instructions/nodefault.html' %}
 
-    {% else %} {# version_check == "right" #}
+    {% elif version_check == "right" %}
+        <p class="bodyText">- <b>Step 1:</b> Connect to ncpsp.</p>
+        <img class="instructions-img" src="{% static 'instructions/windows11_1.png' %}" alt="connect to the wifi ncpsp">
+        <p class="bodyText">- <b>Step 2:</b>Press the windows key and search "settings".</p>
+        <img class="instructions-img" src="{% static 'instructions/windows11_2.png' %}" alt="press the windows key">
+        <br>
+        <br>
+        <img class="instructions-img" src="{% static 'instructions/windows11_3.png' %}" alt="type in settings">
+        <p class="bodyText">- <b>Step 3:</b> Select "Network & Internet".</p>
+        <img class="instructions-img" src="{% static 'instructions/windows11_4.png' %}" alt="select network and internet">
+        <p class="bodyText">- <b>Step 4:</b> Select "Wi-Fi".</p>
+        <img class="instructions-img" src="{% static 'instructions/windows11_5.png' %}" alt="select wifi">
+        <p class="bodyText">- <b>Step 5:</b> Select "Random Hardware Address" and turn it off.</p>
+        <img class="instructions-img" src="{% static 'instructions/windows11_6.png' %}" alt="select wifi">
+        <br>
+        <br>
+        <img class="instructions-img" src="{% static 'instructions/windows11_7.png' %}" alt="select wifi">
+        <br>
+        <p class="bodyText">- <b>Step 5:</b> Select "Physical Mac Address" and COPY IT DOWN and press continue.</p>
+        <img class="instructions-img" src="{% static 'instructions/windows11_8.png' %}" alt="select wifi">
+
+    {% else %} {# version_check == "middle" #}
         <p class="bodyText">- <b>Step 1:</b> Navigate to the settings of your Windows 10 device.</p>
         <p class="bodyText">- <b>Step 2:</b> Click on Network & Internet</p>
         <img class="instructions-img" src="{% static 'instructions/settings_windows.jpg' %}" alt="windows 10 network and internet settings">
@@ -18,5 +40,5 @@
         <img class="instructions-img" src="{% static 'instructions/random_mac_address.png' %}" alt="location of private address setting toggle">
     {% endif %}
 
-    <!-- {% include 'login/instructions/fotter_buttons.html' %} -->
+    {% include 'login/instructions/fotter_buttons.html' %}
 {% endif %}
