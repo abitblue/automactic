@@ -64,13 +64,15 @@ def attach_mac_to_session(view):
         start = time.perf_counter()
         client_ip, routable = get_client_ip(request)
         macaddr: Optional[MACAddress] = get_mac(client_ip)
-        logging.getLogger('Attach').info(f'Attaching MAC {macaddr} '
-                                         f'to IP {client_ip} '
-                                         f'in {(time.perf_counter() - start)*1000:.2f} ms')
 
         # Localhost Testing: Use semi-random MAC
         if macaddr is None and settings.DEBUG:
             macaddr = MACAddress(f'00ffff-{random.randrange(16 ** 6):06x}')
+
+        if macaddr is not None:
+            logging.getLogger('Attach').info(f'{macaddr} {"(Randomized)" if macaddr.is_locally_administered else " "}'
+                                             f'to {client_ip} '
+                                             f'in {(time.perf_counter() - start)*1000:.2f} ms')
 
         request.session['mac_address'] = macaddr
         return view(request, *args, **kwargs)
