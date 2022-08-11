@@ -1,0 +1,12 @@
+[Unit]
+Description=Start Kiosk Chromium
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/etc/systemd/user/kiosk.sh
+Restart=always
+RestartSec=0
+
+[Install]
+WantedBy=graphical-session.target

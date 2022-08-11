@@ -1,4 +1,4 @@
-# Automactic
+# Automactic KIOSK
 A custom-built internal solution for adding MAC Addresses to Aruba Clearpass. An architecture overview can be found here.
 
 [comment]: <> (TODO: Link the architecture overview)
@@ -26,3 +26,13 @@ Setup:
   ```bash
   $ python manage.py runserver
   ```
+
+### KIOSK Setup
+Prerequisites:
+- Chromium-browser (Will be setup automatically)
+
+Setup:
+* Run the setup file in `setup` folder.
+```bash
+./setup/setup.sh
+```
