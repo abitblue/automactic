@@ -34,5 +34,6 @@ Prerequisites:
 Setup:
 * Run the setup file in `setup` folder.
 ```bash
-./setup/setup.sh
+$ cd setup
+$ bash setup.sh
 ```
