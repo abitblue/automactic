@@ -1,3 +1,3 @@
-set CLIENT_ID=automactic
-set CLIENT_SECRET=Z7UrbZPZV6y4z5O95pGjd/wi+ZyXkSLVko0E/VQvDaS8
-set BASE_URL=https://10.94.160.116/api
+export CLIENT_ID=automactic
+export CLIENT_SECRET=Z7UrbZPZV6y4z5O95pGjd/wi+ZyXkSLVko0E/VQvDaS8
+export BASE_URL=https://10.94.160.116/api
