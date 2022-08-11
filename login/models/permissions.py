@@ -107,8 +107,8 @@ class PermissionsManager(models.Manager):
             query_group = False
 
         # Substr is 1-indexed
-        user_prefix = f'user/{user.username}/' if query_user else 'NULL'
-        group_prefix = f'userType/{usertype}/' if query_group else 'NULL'
+        user_prefix = f'user/{user.username.lower()}/' if query_user else 'NULL'
+        group_prefix = f'userType/{usertype.name.lower()}/' if query_group else 'NULL'
         global_prefix = 'global/' if query_global else 'NULL'
 
         # Grab all related permissions that start with `group_prefix` or `user_prefix`
