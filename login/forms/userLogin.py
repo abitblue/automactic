@@ -11,19 +11,19 @@ class UserLoginForm(BaseAuthenticationForm):
     device_name = forms.CharField(label='', required=False,
                                   widget=forms.TextInput(attrs={
                                       'maxlength': 40,
-                                      'placeholder': 'Device Name',
+                                      'placeholder': 'Device Name (Ex: Sussy\'s Phone 13)',
                                   }))
 
     mac_address = forms.CharField(label='', required=True,
                                   widget=forms.TextInput(attrs={
                                       'maxlength': 17,
-                                      'placeholder': 'Mac Address',
+                                      'placeholder': 'Mac Address (Ex: C3:F6:3E:0F:56:13)',
                                   }))
 
     def __init__(self, user_type: str, request=None, *args, **kwargs):
         widget_placeholders = {
             'student': ('OSIS *', 'DOB (MMDDYYYY) * '),
-            'teacher': ('Email (jdoe1@schools.nyc.gov) *', 'Mac Address *'),
+            'teacher': ('Email (Ex: youweee@schools.nyc.gov) *', 'Mac Address *'),
             'guest': ('Username *', 'Token *'),
         }
 

@@ -46,9 +46,20 @@ img {
     place-items: left;
 }
 
-.homebutton{
-    position: relative;
-    right: 0%;
+.homebutton {
+    background-color: var(--color-techgold);
+    text-align: center;
+    border: none;
+    font-size: 2vh;
+    width: 15vh;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.7vw 0;
+    border-radius: 10px;
+    margin: 1vh 1vw;
+    color: inherit;
 }
 
 .homebutton-container{
