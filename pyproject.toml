@@ -11,7 +11,7 @@ django-debug-toolbar = "~3.5"   # Debug Info on Site
 django-ipware = "~4.0"          # Used to more reliably obtain IP address behind a proxy
 django-macaddress = "~1.8"      # Mac Address Fields
 netaddr = "~0.8"                # Used for Mac Address Parsing
-psycopg2 = "~2.9"               # Used for Prod DB
+requests = "~2.27"
 
 [tool.poetry.dev-dependencies]
 
