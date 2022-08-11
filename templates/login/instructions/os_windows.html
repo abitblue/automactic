@@ -16,7 +16,7 @@
         <img class="instructions-img" src="{% static 'instructions/settings_windows.jpg' %}" alt="windows 10 network and internet settings">
         <p class="bodyText">- <b>Step 3:</b> Locate "Use Random Hardware Address" and switch it off</p>
         <img class="instructions-img" src="{% static 'instructions/random_mac_address.png' %}" alt="location of private address setting toggle">
+        {% include 'login/instructions/footer_buttons.html' %}
     {% endif %}
 
-    {% include 'login/instructions/fotter_buttons.html' %}
 {% endif %}
