@@ -94,6 +94,16 @@ class User(AbstractBaseUser):
     def get_short_name(self):
         return self.username
 
+    @property
+    def clearpass_name(self):
+        prefix = {
+            'guest': 'G',
+            'student': 'S',
+            'faculty': 'T'
+        }.get(self.type.name.lower(), 'O')
+
+        return f'{prefix}:{self.username}'
+
     @cached_property
     def is_staff(self):
         """Returns true if the user is allowed to access the admin portal"""

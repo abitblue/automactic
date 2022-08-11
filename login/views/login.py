@@ -60,14 +60,6 @@ class Login(View):
         # Grab Data
         user = form.user_cache
         device_name = form.cleaned_data.get('device_name')
-        clearpass_name = '{}:{}'.format(
-            {
-                'guest': 'G',
-                'student': 'S',
-                'faculty': 'T'
-            }.get(str(user.type).lower(), 'O'),
-            user.username
-        )
 
         # Save last login data
         user.last_login = timezone.now()
@@ -78,7 +70,7 @@ class Login(View):
             return redirect(f'{reverse("error")}?reason=restricted')
 
         elif device_limit is not None:
-            clearpass_user = access.get_device(username=clearpass_name)
+            clearpass_user = access.get_device(username=user.clearpass_name)
             if clearpass_user is not None and len(clearpass_user.device) >= device_limit:
                 clearpass_user.device.sort(key=lambda x: x['start_time'])
                 access.update_device(device_id=clearpass_user.device[0]['id'], updated_fields={
@@ -92,7 +84,7 @@ class Login(View):
         when: WhenType = user.get_permission('expireTime', default=None)
         expire_time: Optional[datetime] = when.as_datetime(timezone.now()) if when is not None else None
 
-        access.add_device(mac=mac_addr, username=clearpass_name, device_name=device_name, time=expire_time)
+        access.add_device(mac=mac_addr, username=user.clearpass_name, device_name=device_name, time=expire_time)
         LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
 
         return redirect(reverse('success'))

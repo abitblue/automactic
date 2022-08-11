@@ -6,10 +6,14 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import linebreaks
 from django.utils.safestring import mark_safe
+from netaddr import EUI
 
+from interface.api import Token
 from login.models import User, UserSession, LoginHistory
 from django.db.models import QuerySet
 from django.http import HttpRequest
+
+access = Token()
 
 
 @admin.action(description='Reset MAC modifications')
@@ -40,6 +44,14 @@ def remove_sessions(model_admin, request: HttpRequest, queryset: QuerySet):
         user_sessions.delete()
 
 
+@admin.action(description='Remove all devices')
+def remove_devices(model_admin, request: HttpRequest, queryset: QuerySet):
+    for user in queryset:
+        resp = access.get_device(username=user.clearpass_name)
+        for device in resp.device:
+            access.delete_device(mac=EUI(device['mac']))
+
+
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     list_display = ('is_active', 'username', 'type', 'get_modifications', 'last_login', 'start_time')
@@ -48,7 +60,7 @@ class UserAdmin(BaseUserAdmin):
     search_help_text = "Searches filter by username"
     list_filter = ('type__name', 'is_active')
     ordering = ('username',)
-    actions = [reset_modified, set_inactive, set_active, remove_sessions]
+    actions = [reset_modified, set_inactive, set_active, remove_sessions, remove_devices]
 
     @admin.display(description='Type')
     def get_type(self, obj: User):
@@ -73,6 +85,15 @@ class UserAdmin(BaseUserAdmin):
             ) + f'\n\n<a href={reverse("admin:login_permissions_add")}?permission=user/{obj.username}/>'
                 f'(+ Add a new permission for this user)</a>'
         ))
+
+    @admin.display(description='Devices')
+    def get_devices(self, obj: User):
+        resp = access.get_device(username=obj.clearpass_name)
+        if resp.device:
+            return mark_safe(linebreaks(
+                '\n'.join(device['mac'] for device in resp.device)
+            ))
+        return 'None'
 
     @admin.display(description='Login History')
     def get_login_history(self, obj: User):
@@ -101,7 +122,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {
             'classes': ('',),
-            'fields': ('username', 'password', 'type')
+            'fields': ('username', 'password', 'type', 'get_devices')
         }),
         ('Permissions', {
             'classes': ('',),
@@ -118,7 +139,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'password1', 'password2', 'type'),
         }),
     )
-    readonly_fields = ('get_permissions', 'get_login_history', 'get_sessions')
+    readonly_fields = ('get_permissions', 'get_login_history', 'get_sessions', 'get_devices')
 
     # Cannot change superusers from admin site unless also a superuser
     def has_change_permission(self, request: HttpRequest, obj: User = None):
