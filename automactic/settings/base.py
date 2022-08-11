@@ -133,9 +133,8 @@ LOGGING = {
             'format': '%(asctime)-15s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
-        'standard_nodate': {
-            'format': '%(asctime)-8s | %(process)-6s | %(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
-            'datefmt': '%Y-%m-%d %H:%M:%S',
+        'standard_notime': {
+            'format': '%(name)-26s | %(levelname)-8s {%(filename)s:%(lineno)d} : %(message)s',
         }
     },
     'filters': {
@@ -146,14 +145,14 @@ LOGGING = {
     'handlers': {
         'console': {
             'level': 'DEBUG' if _debug else 'INFO',
-            'formatter': 'standard',
+            'formatter': 'standard_notime' if _debug else 'standard_notime',
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',
         },
         'null': {
             'level': 'DEBUG',
             'class': 'logging.NullHandler',
-            'formatter': 'standard_nodate',
+            'formatter': 'standard_notime',
         }
     },
     'loggers': {
