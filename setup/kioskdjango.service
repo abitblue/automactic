@@ -3,7 +3,7 @@ Description=Start Chromium Kiosk
 PartOf=graphical-session.target
 
 [Service]
-ExecStart=/usr/bin/python /home/anya/Desktop/automactic/manage.py runserver
+ExecStart=pathOfVenvHere/python pathOfProjectHere/manage.py runserver
 Type=simple
 Restart=always
 RestartSec=5

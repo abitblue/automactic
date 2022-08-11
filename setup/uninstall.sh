@@ -9,5 +9,4 @@ echo "===Uninstalling Kiosk Service==="
 sudo rm /etc/systemd/user/kiosk.sh 
 sudo rm /etc/systemd/user/kiosk.service
 sudo rm /etc/systemd/user/kioskdjango.service
-sudo rm /etc/systemd/user/kioskdjango.sh
 echo "===Uninstallation Complete==="

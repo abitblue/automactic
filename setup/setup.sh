@@ -5,8 +5,6 @@ sudo cp kiosk.sh /etc/systemd/user
 sudo cp kiosk.service /etc/systemd/user
 sudo chmod +x /etc/systemd/user/kiosk.sh
 sudo cp kioskdjango.service /etc/systemd/user
-sudo cp kioskdjango.sh /etc/systemd/user
-sudo chmod +x /etc/systemd/user/kioskdjango.sh
 echo "===Enabling Kiosk Service==="
 systemctl --user enable kiosk.service
 systemctl --user start kiosk.service
