@@ -2,31 +2,73 @@
 
 {% if not version_check %}
     <h1>What version of Android are you using?</h1>
-    <p class="bodyText">You can check by going to Settings > About Device > Android Version. <br> <i>Note that your device may have a different layout</i></p>
+    <p class="bodyText">You can check by going to Settings > About Device > Android Version. <br> <i>Note that your
+        device may have a different layout</i></p>
     <a href="{% url 'instructions' %}?os=android&version_check=left" class="button"><span class="buttonSpan">Android 9 or lower</span></a>
     <a href="{% url 'instructions' %}?os=android&version_check=right" class="button"><span class="buttonSpan">Android 10 or higher</span></a>
 {% else %}
 
     {% if version_check == "left" %}
-        {% include 'login/instructions/nodefault.html' %}
+        <p class="bodyText"><b>Step 1:</b> Go to the home settings page and find <b>ABOUT PHONE</b> and click it
+        </p>
+        <img class="instructions-img" src="{% static 'instructions/about_phone_android.jpg' %}"
+             alt="about phone on android settings">
+        <p class="bodyText"><b>Step 2:</b> Click on Status</p>
+        <img class="instructions-img" src="{% static 'instructions/status_android_setting.jpg' %}"
+             alt="status on android settings">
+        <p class="bodyText"><b>Step 3:</b> Copy the Mac address and <b>SAVE FOR LATER USE(WILL BE USED LATER)</b></p>
+        <img class="instructions-img" src="{% static 'instructions/mac_address_android_settings.jpg' %}"
+             alt="mac address on android settings">
+        <p class="bodyText"><b>Step 4:</b> Navigate to the Wi-Fi/Connection settings of your Android Device.</p>
+        <img class="instructions-img" src="{% static 'instructions/wifi_network_android.jpg' %}"
+             alt="wifi and network settings on android">
+        <p class="bodyText"><b>Step 5:</b> Click on the ncpsp or the gear(if there is) next to ncpsp.</p>
+        <img class="instructions-img" src="{% static 'instructions/gear_android.jpg' %}"
+             alt="gear icon next to the wifi network">
+        <p class="bodyText"><b>Step 6:</b> Open up Advanced settings in the network.</p>
+        <img class="instructions-img" src="{% static 'instructions/details_android.jpg' %}"
+             alt="advanced settings dropdown">
+        <p class="bodyText"><b>Step 7:</b> Locate the Privacy setting and make sure you are using your Device/Phone MAC.
+        </p>
+        <img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'instructions/advanced_android.jpg' %}"
+             alt="location of the privacy setting">
+        <br>
+        <img class="instructions-img" src="{% static 'instructions/mac_address_android.jpg' %}"
+             alt="selection of use device MAC">
+        <p class="bodyText"><b>Step 8:</b> Press the Continue Button
+        </p>
 
     {% else %} {# version_check == "right" #}
-        <p class="bodyText"><b>Step 1:</b> Navigate to the Wi-Fi/Connection settings of your Android Device.</p>
-        <img class="instructions-img" src="{% static 'instructions/wifi_network_android.jpg' %}" alt="wifi and network settings on android">
-        <p class="bodyText"><b>Step 2:</b> Click on the ncpsp or the gear(if there is) next to ncpsp.</p>
-        <img class="instructions-img" src="{% static 'instructions/gear_android.jpg' %}" alt="gear icon next to the wifi network">
-        <p class="bodyText"><b>Step 3:</b> Open up Advanced settings in the network.</p>
-        <img class="instructions-img" src="{% static 'instructions/details_android.jpg' %}" alt="advanced settings dropdown">
-        <p class="bodyText"><b>Step 4:</b> Locate the Privacy setting and make sure you are using your Device/Phone MAC.</p>
-        <img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'instructions/advanced_android.jpg' %}" alt="location of the privacy setting">
+        <p class="bodyText"><b>Step 1:</b> Go to the home settings page and find <b>ABOUT PHONE</b> and click it
+        </p>
+        <img class="instructions-img" src="{% static 'instructions/about_phone_android.jpg' %}"
+             alt="about phone on android settings">
+        <p class="bodyText"><b>Step 2:</b> Click on Status</p>
+        <img class="instructions-img" src="{% static 'instructions/status_android_setting.jpg' %}"
+             alt="status on android settings">
+        <p class="bodyText"><b>Step 3:</b> Copy the Mac address and <b>SAVE FOR LATER USE(WILL BE USED LATER)</b></p>
+        <img class="instructions-img" src="{% static 'instructions/mac_address_android_settings.jpg' %}"
+             alt="mac address on android settings">
+        <p class="bodyText"><b>Step 4:</b> Navigate to the Wi-Fi/Connection settings of your Android Device.</p>
+        <img class="instructions-img" src="{% static 'instructions/wifi_network_android.jpg' %}"
+             alt="wifi and network settings on android">
+        <p class="bodyText"><b>Step 5:</b> Click on the ncpsp or the gear(if there is) next to ncpsp.</p>
+        <img class="instructions-img" src="{% static 'instructions/gear_android.jpg' %}"
+             alt="gear icon next to the wifi network">
+        <p class="bodyText"><b>Step 6:</b> Open up Advanced settings in the network.</p>
+        <img class="instructions-img" src="{% static 'instructions/details_android.jpg' %}"
+             alt="advanced settings dropdown">
+        <p class="bodyText"><b>Step 7:</b> Locate the Privacy setting and make sure you are using your Device/Phone MAC.
+        </p>
+        <img class="instructions-img" style="margin-bottom: 5vh" src="{% static 'instructions/advanced_android.jpg' %}"
+             alt="location of the privacy setting">
         <br>
-        <img class="instructions-img" src="{% static 'instructions/mac_address_android.jpg' %}" alt="selection of use device MAC">
-        <p class="bodyText"><b>Step 5:</b> Go back to the home settings page and find <b>ABOUT PHONE</b> and click it</p>
-        <img class="instructions-img" src="{% static 'instructions/about_phone_android.jpg' %}" alt="about phone on android settings">
-         <p class="bodyText"><b>Step 6:</b>Click on Status</p>
-         <img class="instructions-img" src="{% static 'instructions/status_android_setting.jpg' %}" alt="status on android settings">
-        <p class="bodyText"><b>Step 7:</b>Copy the Mac address and press the continue button</p>
-         <img class="instructions-img" src="{% static 'instructions/mac_address_android_settings.jpg' %}" alt="mac address on android settings">
+        <img class="instructions-img" src="{% static 'instructions/mac_address_android.jpg' %}"
+             alt="selection of use device MAC">
+        <p class="bodyText"><b>Step 8:</b> Press the Continue Button
+        </p>
+
+
 
 
     {% endif %}

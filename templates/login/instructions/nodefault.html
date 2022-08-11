@@ -1,6 +1,14 @@
+{% load static %}
+
 <div class="bodyText">
     Your selected version of {{ device_os_verbose }} does not supply a method of MAC randomization by default.
     If you use a third party application to do this, or have manually done so, please use the original MAC
     address of the device before proceeding.
 </div>
+<p class="bodyText"><b>Step 1:</b> Hold the option key on your keyboard and click on the wifi icon on the top of your
+    macintosh</p>
+<p class="bodyText"><b>Step 2:</b> Navigate to address and copy that address(which is your device Mac address) and use
+    that address in the next step, press Continue </p>
+<img class="instructions-img" src="{% static 'instructions/mac_instuctions_mac.jpg' %}"
+     alt="wifi and network settings on android">
 {% include 'login/instructions/fotter_buttons.html' %}
