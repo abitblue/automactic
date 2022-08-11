@@ -81,7 +81,7 @@ class UserBulkImportForm(forms.Form):
                                                        password=make_password(dob, None, 'plain')))
 
                 case 'staff':
-                    email_match, token_match = self.osis_re.match(item['username']), self.date_re.match(item['token'])
+                    email_match, token_match = self.email_re.match(item['username']), self.token_re.match(item['token'])
                     if not (email_match and token_match):
                         raise ValidationError(
                             self.error_messages['invalid_data'].format(lineno, f'"{item}" - Email or Token invalid'),
