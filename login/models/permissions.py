@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import json
 import re
 import zoneinfo
@@ -87,7 +88,11 @@ class Datatype(models.IntegerChoices):
 
 class PermissionsManager(models.Manager):
 
-    def get_raw_nodes(self, node_prefix: str):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.get_raw_nodes = functools.lru_cache(maxsize=8)(self._get_raw_nodes)
+
+    def _get_raw_nodes(self, node_prefix: str):
         return self.filter(permission__istartswith=node_prefix)
 
     def get_bulk(self, user: Optional[User] = None, usertype: Optional[UserType] = None,

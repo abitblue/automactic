@@ -42,7 +42,7 @@ def remove_sessions(model_admin, request: HttpRequest, queryset: QuerySet):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('is_active', 'username', 'get_type', 'get_modifications', 'last_login', 'start_time')
+    list_display = ('is_active', 'username', 'type', 'get_modifications', 'last_login', 'start_time')
     list_display_links = ('username',)
     search_fields = ('username',)
     search_help_text = "Searches filter by username"

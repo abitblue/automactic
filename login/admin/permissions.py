@@ -9,7 +9,7 @@ class PermissionsAdmin(admin.ModelAdmin):
     list_display = ('permission', 'raw_value', 'value', 'type')
     search_fields = ('permission', )
     search_help_text = "Searches filter by permission node"
-    ordering = ('permission',)
+    ordering = ('id', 'permission',)
     list_filter = ('type',)
 
     def has_change_permission(self, request: HttpRequest, obj: Permissions = None):
