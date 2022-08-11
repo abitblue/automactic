@@ -1,0 +1,15 @@
+[Unit]
+Description=Start Chromium Kiosk
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/python /home/anya/Desktop/automactic/manage.py runserver
+Type=simple
+Restart=always
+RestartSec=5
+Environment="CLIENT_ID=automactic"
+Environment="CLIENT_SECRET=Z7UrbZPZV6y4z5O95pGjd/wi+ZyXkSLVko0E/VQvDaS8"
+Environment="BASE_URL=https://10.94.160.116/api"
+
+[Install]
+WantedBy=graphical-session.target

@@ -44,7 +44,7 @@ class Login(View):
             response = api_access.add_device(
                 mac=form.data['mac_address'],
                 username=f"TK:{data['username']}",
-                device_name=data['device_name'],
+                # device_name=data['device_name'],
             )
         except Exception as err:
             logging.error(err)

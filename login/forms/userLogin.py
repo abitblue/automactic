@@ -8,11 +8,11 @@ from login.models import User, UserType
 
 class UserLoginForm(BaseAuthenticationForm):
 
-    device_name = forms.CharField(label='', required=False,
-                                  widget=forms.TextInput(attrs={
-                                      'maxlength': 40,
-                                      'placeholder': 'Device Name (Ex: Sussy\'s Phone 13)',
-                                  }))
+    # device_name = forms.CharField(label='', required=False,
+    #                               widget=forms.TextInput(attrs={
+    #                                   'maxlength': 40,
+    #                                   'placeholder': 'Device Name (Ex: Sussy\'s Phone 13)',
+    #                               }))
 
     mac_address = forms.CharField(label='', required=True,
                                   widget=forms.TextInput(attrs={
