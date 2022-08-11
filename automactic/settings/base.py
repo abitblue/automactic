@@ -37,6 +37,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'login.middleware.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'automactic.urls'

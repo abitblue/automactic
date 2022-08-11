@@ -3,6 +3,7 @@ from typing import Optional, Union
 
 from django.db import models
 from django.http import HttpRequest
+from django.utils import timezone
 from ipware import get_client_ip
 from macaddress.fields import MACAddressField
 
@@ -13,7 +14,7 @@ from ..utils import MACAddress
 class LoginHistory(models.Model):
     _logger = logging.getLogger('LoginLog')
 
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user), related_name='logins')
     mac_address = MACAddressField(null=True, integer=False)
     ip = models.GenericIPAddressField()
