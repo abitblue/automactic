@@ -43,6 +43,9 @@ class WhenType:
     def __str__(self):
         return self._offset_str
 
+    def __eq__(self, other: WhenType):
+        return self._offset_str == other._offset_str
+
 
 class Datatype(models.IntegerChoices):
     NULL = 0
@@ -169,7 +172,10 @@ class Permissions(models.Model):
         verbose_name = 'Permission'
 
     def __str__(self):
-        return f'{self.permission} = {self.raw_value}'
+        value = self.value
+        if str(value) != self.raw_value:
+            return f'{self.permission} = {self.value} ({self.raw_value})'
+        return f'{self.permission} = {self.value}'
 
     @property
     def value(self):
@@ -178,7 +184,12 @@ class Permissions(models.Model):
     def clean(self):
         super().clean()
         try:
-            test_value = Datatype.to_python(self.type)(self.raw_value)
+            decoded1 = Datatype.to_python(self.type)(self.raw_value)
+            encoded = Datatype.to_db(self.type)(decoded1)
+            decoded2 = Datatype.to_python(self.type)(encoded)
+
+            assert decoded1 == decoded2
+
         except Exception as e:
             raise ValidationError(f'Could not interpret, "{self.raw_value}", as type, {Datatype(self.type).name}')
 

@@ -16,13 +16,16 @@ from django.http import HttpRequest
 def reset_modified(model_admin, request: HttpRequest, queryset: QuerySet):
     queryset.update(mac_modifications=0)
 
+
 @admin.action(description='Set inactive')
 def set_inactive(model_admin, request: HttpRequest, queryset: QuerySet):
     queryset.update(is_active=False)
 
+
 @admin.action(description='Set active')
 def set_active(model_admin, request: HttpRequest, queryset: QuerySet):
     queryset.update(is_active=True, start_time=timezone.now())
+
 
 @admin.action(description='Remove sessions')
 def remove_sessions(model_admin, request: HttpRequest, queryset: QuerySet):
@@ -61,7 +64,14 @@ class UserAdmin(BaseUserAdmin):
     @admin.display(description='Permissions')
     def get_permissions(self, obj: User):
         return mark_safe(linebreaks(
-            '\n'.join(f'{item!s}' for item in obj.permissions().iterator())
+            '\n'.join(
+                '<a href="{}">{}</a>'.format(
+                    reverse("admin:login_permissions_change", args=(item.pk,)),
+                    str(item)
+                ) if str(item).startswith('user/') else str(item)
+                for item in obj.permissions().iterator()
+            ) + f'\n\n<a href={reverse("admin:login_permissions_add")}?permission=user/{obj.username}/>'
+                f'(+ Add a new permission for this user)</a>'
         ))
 
     @admin.display(description='Login History')
