@@ -1,6 +1,7 @@
 import logging
 import random
 import re
+import time
 from datetime import datetime, timezone
 from functools import wraps
 from pathlib import Path
@@ -60,9 +61,12 @@ def attach_mac_to_session(view):
                         if line[2] == ip:
                             return MACAddress(line[1])
 
+        start = time.perf_counter()
         client_ip, routable = get_client_ip(request)
         macaddr: Optional[MACAddress] = get_mac(client_ip)
-        logging.getLogger('Attach').info(f'Attaching MAC {macaddr} to IP {client_ip}')
+        logging.getLogger('Attach').info(f'Attaching MAC {macaddr} '
+                                         f'to IP {client_ip} '
+                                         f'in {(time.perf_counter() - start)*1000:.2f} ms')
 
         # Localhost Testing: Use semi-random MAC
         if macaddr is None and settings.DEBUG:

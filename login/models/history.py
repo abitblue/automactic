@@ -55,7 +55,7 @@ class LoginHistory(models.Model):
         try:
             # TODO: Fill in host
             client_ip, is_routable = get_client_ip(request)
-            cls._logger.info(f'Login Attempt: {user.username} from {client_ip} using {mac_address}. '
+            cls._logger.info(f'Login: {user.username} from {client_ip} using {mac_address}. '
                              f'Success: {logged_in}, Updated: {mac_updated}')
             cls.objects.create(user=user,
                                mac_address=str(mac_address),
