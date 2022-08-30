@@ -12,26 +12,24 @@
         {% include 'login/instructions/nodefault.html' %}
 
     {% elif version_check == "right" %}
-        <p class="bodyText">- <b>Step 1:</b> Connect to ncpsp.</p>
+        <p class="bodyText">- <b>Step 1:</b> Click the windows key on your keyboard.</p>
         <img class="instructions-img" src="{% static 'instructions/windows11_1.png' %}" alt="connect to the wifi ncpsp">
-        <p class="bodyText">- <b>Step 2:</b>Press the windows key and search "settings".</p>
+        <p class="bodyText">- <b>Step 2:</b> Search up Settings in the <b>Search Bar</b> </p>
         <img class="instructions-img" src="{% static 'instructions/windows11_2.png' %}" alt="press the windows key">
         <br>
         <br>
-        <img class="instructions-img" src="{% static 'instructions/windows11_3.png' %}" alt="type in settings">
         <p class="bodyText">- <b>Step 3:</b> Select "Network & Internet".</p>
+        <img class="instructions-img" src="{% static 'instructions/windows11_3.png' %}" alt="type in settings">
+        <br>
+        <br>
+        <p class="bodyText">- <b>Step 4:</b> Turn off Random hardware address.</p>
         <img class="instructions-img" src="{% static 'instructions/windows11_4.png' %}" alt="select network and internet">
-        <p class="bodyText">- <b>Step 4:</b> Select "Wi-Fi".</p>
+        <p class="bodyText">- <b>Step 5:</b> Click on Hardware Properties.</p>
         <img class="instructions-img" src="{% static 'instructions/windows11_5.png' %}" alt="select wifi">
-        <p class="bodyText">- <b>Step 5:</b> Select "Random Hardware Address" and turn it off.</p>
+        <p class="bodyText">- <b>Step 6:</b> <b>COPY DOWN</b> the "Physical Address (MAC)" and press continue.</p>
         <img class="instructions-img" src="{% static 'instructions/windows11_6.png' %}" alt="select wifi">
         <br>
         <br>
-        <img class="instructions-img" src="{% static 'instructions/windows11_7.png' %}" alt="select wifi">
-        <br>
-        <p class="bodyText">- <b>Step 5:</b> Select "Physical Mac Address" and COPY IT DOWN and press continue.</p>
-        <img class="instructions-img" src="{% static 'instructions/windows11_8.png' %}" alt="select wifi">
-
     {% else %} {# version_check == "middle" #}
         <p class="bodyText">- <b>Step 1:</b> Navigate to the settings of your Windows 10 device.</p>
         <p class="bodyText">- <b>Step 2:</b> Click on Network & Internet</p>
@@ -40,7 +38,7 @@
         <img class="instructions-img" src="{% static 'instructions/random_mac_address.png' %}" alt="location of private address setting toggle">
         <p class="bodyText">- <b>Step 4:</b> Go to Wi-Fi settings and select "Hardware Properties"</p>
         <img class="instructions-img" src="{% static 'instructions/windows10_1.png' %}" alt="select 'Hardware Properties'">
-        <p class="bodyText">- <b>Step 5:</b> COPY DOWN the "Physicla Address (MAC)" and press continue.</p>
+        <p class="bodyText">- <b>Step 5:</b> COPY DOWN the "Physical Address (MAC)" and press continue.</p>
         <img class="instructions-img" src="{% static 'instructions/windows10_2.png' %}" alt="copy physical address">
     {% endif %}
 
