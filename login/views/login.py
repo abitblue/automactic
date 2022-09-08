@@ -94,6 +94,5 @@ class Login(View):
             LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
             return redirect(reverse('success'))
 
-        else:
-            LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=False)
-            return redirect(f'{reverse("error")}?reason=clearpassAPI')
+        LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=False)
+        return redirect(f'{reverse("error")}?reason=clearpassAPI')
