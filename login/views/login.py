@@ -16,6 +16,7 @@ import interface.api as api
 
 if TYPE_CHECKING:
     from login.models.permissions import WhenType
+    from login.models import User
 
 # TODO: Show error if clearpass errors
 # TODO: Ability to select which device to replace if more than 1 device allowed.
@@ -58,12 +59,14 @@ class Login(View):
             })
 
         # Grab Data
-        user = form.user_cache
+        user: User = form.user_cache
         device_name = form.cleaned_data.get('device_name')
 
         # Save last login data
         user.last_login = timezone.now()
         user.save(update_fields=["last_login"])
+
+        result = None
 
         # Check how many devices the user has. If it exceeds how many they should have, replace the earliest device.
         if (device_limit := user.get_permission('deviceLimit')) == 0:
@@ -73,18 +76,24 @@ class Login(View):
             clearpass_user = access.get_device(username=user.clearpass_name)
             if clearpass_user is not None and len(clearpass_user.device) >= device_limit:
                 clearpass_user.device.sort(key=lambda x: x['start_time'])
-                access.update_device(device_id=clearpass_user.device[0]['id'], updated_fields={
+                result = access.update_device(device_id=clearpass_user.device[0]['id'], updated_fields={
                     'mac': str(mac_addr),
                     'notes': device_name,
                 })
-                LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
-                return redirect(reverse('success'))
 
-        # If the user does not exist, or if limit not exceeded, create a new device, following the expireTime rules.
-        when: WhenType = user.get_permission('expireTime', default=None)
-        expire_time: Optional[datetime] = when.as_datetime(timezone.now()) if when is not None else None
+        else:
+            # If the user does not exist, or if limit not exceeded, create a new device, following the expireTime rules
+            when: WhenType = user.get_permission('expireTime', default=None)
+            expire_time: Optional[datetime] = when.as_datetime(timezone.now()) if when is not None else None
+            result = access.add_device(mac=mac_addr, username=user.clearpass_name, device_name=device_name, time=expire_time)
 
-        access.add_device(mac=mac_addr, username=user.clearpass_name, device_name=device_name, time=expire_time)
-        LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
+        # Check result status and show user success or API error page
+        if result and str(result.status_code)[0] == '2':
+            user.mac_modifications += 1
+            user.save(update_fields=["mac_modifications"])
+            LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=True)
+            return redirect(reverse('success'))
 
-        return redirect(reverse('success'))
+        else:
+            LoginHistory.log(request=request, user=user, mac_address=mac_addr, logged_in=True, mac_updated=False)
+            return redirect(f'{reverse("error")}?reason=clearpassAPI')
